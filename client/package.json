@@ -11,7 +11,9 @@
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/vite.svg"
   },
   "dependencies": {
+    "@types/cytoscape": "^3.19.16",
     "cytoscape": "^3.28.1",
+    "cytoscape-cose-bilkent": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.2",
