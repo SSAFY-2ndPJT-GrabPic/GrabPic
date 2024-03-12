@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom"
-import Chart from "../test/Chart"
-import Map from "../test/Map"
+import Chart from "../test/chart"
+import Map from "./maps/map"
 
 export default function Router() {
   return (
