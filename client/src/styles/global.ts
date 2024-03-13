@@ -1,8 +1,8 @@
 import { createGlobalStyle } from "styled-components"
-import bmJUA from "./fonts/BMJUA_ttf.ttf";
-import jalnan from "./fonts/Jalnan2TTF.ttf";
-import tmoneyExtra from "./fonts/TmoneyRoundWindExtraBold.ttf";
-import tmoneyReqular from "./fonts/TmoneyRoundWindRegular.ttf";
+import bmJUA from "../fonts/BMJUA_ttf.ttf";
+import jalnan from "../fonts/Jalnan2TTF.ttf";
+import tmoneyExtra from "../fonts/TmoneyRoundWindExtraBold.ttf";
+import tmoneyReqular from "../fonts/TmoneyRoundWindRegular.ttf";
 
 export const GlobalStyle = createGlobalStyle`
   @font-face {
