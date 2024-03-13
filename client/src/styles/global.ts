@@ -6,26 +6,28 @@ import tmoneyReqular from "../fonts/TmoneyRoundWindRegular.ttf";
 
 export const GlobalStyle = createGlobalStyle`
   @font-face {
-    font-family: 'BMJUA_ttf';
+    font-family: 'BMJUA';
     src: url(${bmJUA}) format('truetype');
     font-weight: normal;
   }
 
   @font-face {
-    font-family: 'Jalnan2TTF';
+    font-family: 'Jalnan';
     src: url(${jalnan}) format('truetype');
     font-weight: normal;
   }
 
   @font-face {
-    font-family: 'TmoneyRoundWindExtraBold';
+    font-family: 'TmoneyEB';
     src: url(${tmoneyExtra}) format('truetype');
     font-weight: 800;
   }
 
   @font-face {
-    font-family: 'TmoneyRoundWindRegular';
+    font-family: 'TmoneyR';
     src: url(${tmoneyReqular}) format('truetype');
     font-weight: normal;
   }
+
+  
 `;
