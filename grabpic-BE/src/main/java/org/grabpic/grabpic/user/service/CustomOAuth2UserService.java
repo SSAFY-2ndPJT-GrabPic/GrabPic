@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
 import org.grabpic.grabpic.user.db.dto.KakaoResponse;
 import org.grabpic.grabpic.user.db.dto.OAuth2Response;
+import org.grabpic.grabpic.user.db.entity.User;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -29,8 +30,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2Response oAuth2Response = null;
 
         if (registrationId.equals("kakao")) {
-
-            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
+            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());;
+            String email = oAuth2Response.getEmail();
+            
+            User user = userRepository.findByEmail(email);
+            //소셜로그인은 되었지만, 우리 사이트에 회원등록이 안된 상태 전달
+            if( user == null) {
+                return new CustomOAuth2User(oAuth2Response, "ROLE_UNKNOWN");
+            } else {
+                // email빼고 다 없어도 됨
+                return new CustomOAuth2User(oAuth2Response, user.getRole());
+            }
 
         }
 //        else if (registrationId.equals("naver")) {
@@ -48,7 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
 
-        return new CustomOAuth2User(oAuth2Response, "ROLE_USER");
+        //return new CustomOAuth2User(oAuth2Response, "ROLE_USER");
 
     }
 }

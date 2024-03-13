@@ -3,12 +3,20 @@ package org.grabpic.grabpic.user.service;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import org.grabpic.grabpic.user.config.JWTUtil;
+import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
+import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
 import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.grabpic.grabpic.user.db.entity.User;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,7 +36,6 @@ public class UserServiceImpl implements UserService {
     public void joinProcess(JoinDTO joinDTO) {
 
         String email = joinDTO.getEmail();
-        String password = joinDTO.getPassword();
 
         Boolean isExist = userRepository.existsByEmail(email);
 
@@ -38,11 +45,15 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
-        User data = new User();
+        User data = User.builder()
+                        .email(email)
+                        .password(bCryptPasswordEncoder.encode(joinDTO.getPassword()))
+                        .nickname(joinDTO.getNickname())
+                        .name(joinDTO.getName())
+                        .birth(joinDTO.getBirth())
+                        .role("ROLE_USER")
+                        .build();
 
-        data.setEmail(email);
-        data.setPassword(bCryptPasswordEncoder.encode(password));
-        data.setRole("ROLE_ADMIN");
 
         userRepository.save(data);
     }
@@ -54,6 +65,23 @@ public class UserServiceImpl implements UserService {
         dto.setEmail(jwtUtil.getEmail(accessToken));
 
         return dto;
+    }
+
+    @Override
+    public JoinDTO setSocialInfo() {
+        //OAuth2User
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+
+        if(customUserDetails.getProvider().equals("kakao")) {
+            JoinDTO joinDTO = new JoinDTO();
+            joinDTO.setEmail(customUserDetails.getEmail());
+            joinDTO.setProvider(customUserDetails.getProvider());
+            joinDTO.setName(customUserDetails.getName());
+            return joinDTO;
+        }
+        return null;
     }
 
     public String reissue(Cookie[] cookies) {
@@ -97,5 +125,29 @@ public class UserServiceImpl implements UserService {
 
         //make new JWT
         return jwtUtil.createJwt("access", email, role, 20000L);
+    }
+
+    @Override
+    public int duplicationNicknameCheck(String nickname) {
+        if( nickname.equals("부적절한 이름의 리스트")) {
+            return 2;
+        } else if (userRepository.existsByNickname(nickname)){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public InfoDTO userInfo(long userId) {
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+        InfoDTO infoDTO = userRepository.findInfoDTOById(userId);
+        if(infoDTO != null) {
+            System.out.println(infoDTO.toString());
+            return infoDTO;
+        } else {
+            System.out.println("존재하지 않는 사용자");
+            return null;
+        }
     }
 }
