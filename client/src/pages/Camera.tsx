@@ -1,6 +1,21 @@
-export default function Camera () {
-  
+import { useEffect, useRef } from "react";
+import { WebCam } from "../components/camera/WebCam";
+
+export default function Camera() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const webCam = new WebCam();
+
+  useEffect(() => {
+    webCam.open(videoRef.current);
+    return () => {
+      webCam.close(videoRef.current);
+    };
+  }, []);
+
   return (
-    <h1>Camera</h1>
-  )
+    <div>
+      <h1>Camera</h1>
+      <video autoPlay muted ref={videoRef} />
+    </div>
+  );
 }
