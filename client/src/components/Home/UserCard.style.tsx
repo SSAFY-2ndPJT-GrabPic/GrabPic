@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
+  margin-top: 28px;
   width: 100%;
   height: 162px;
   box-shadow: 0px 3px 4px rgb(0, 0, 0, 0.25);
@@ -34,7 +36,7 @@ export const NickName = styled.div`
 
 export const DetailTypo = styled.div`
   font-family: 'TmoneyR';
-  font-size: 12px;
+  font-size: 16px;
 `
 
 export const BtnsWrap = styled.div`
@@ -43,8 +45,14 @@ export const BtnsWrap = styled.div`
   gap: 22px;
 `
 
-export const Btn = styled.div`
+export const Btn = styled(Link)`
+  width: 100%;
   height: 35px;
   background-color: #B2EB78;
-
+  border-radius: 10px;
+  font-family: "BMJUA";
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `

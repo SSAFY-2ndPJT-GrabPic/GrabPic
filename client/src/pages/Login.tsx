@@ -8,7 +8,7 @@ const Login: React.FC = () => {
   // /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
 
   return (
-    <div className="flex flex-col px-10">
+    <div className="flex flex-col px-6">
       <L.LoginText>로그인</L.LoginText>
       <G.InputContainer>
         <span>이메일</span>

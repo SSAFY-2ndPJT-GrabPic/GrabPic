@@ -1,7 +1,5 @@
 import * as U from './UserCard.style'
 import React from 'react';
-import { Link } from "react-router-dom";
-import UserInfo from '../../pages/UserInfo';
 
 interface UserCardProps {}
 
@@ -27,8 +25,8 @@ const UserCard: React.FC<UserCardProps> = () => {
       </U.UserInfoWrap>
 
       <U.BtnsWrap>
-        <U.Btn>차트</U.Btn>
-        <U.Btn>컬렉션</U.Btn>
+        <U.Btn to='/encyclopedia'>차트</U.Btn>
+        <U.Btn to='/encyclopedia'>컬렉션</U.Btn>
       </U.BtnsWrap>
     </U.Container>
   );
