@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import Chart from "../test/Chart"
+import Chart from "../test/Chart";
 import Home from "../pages/Home";
 
 export default function Router() {
