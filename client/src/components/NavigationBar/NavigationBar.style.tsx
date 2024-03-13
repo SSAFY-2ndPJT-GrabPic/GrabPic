@@ -1,10 +1,5 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import encyIcon from '../../assets/NavigationBar/encyIcon.png'
-import mapIcon from '../../assets/NavigationBar/mapIcon.png'
-import cameraIcon from '../../assets/NavigationBar/cameraIcon.png'
-import galleryIcon from '../../assets/NavigationBar/galleryIcon.png'
-import settingIcon from '../../assets/NavigationBar/settingIcon.png'
 
 export const Container = styled.div`
   position: absolute;
