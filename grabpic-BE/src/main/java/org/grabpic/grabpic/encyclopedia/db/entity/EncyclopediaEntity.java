@@ -7,7 +7,7 @@ import org.grabpic.grabpic.user.db.entity.UserEntity;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity( name = "encyclopedia" )
 @Getter
 @Builder
 @RequiredArgsConstructor

@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-@Entity
+@Entity( name = "biologyList" )
 @Getter
 @Builder
 @RequiredArgsConstructor

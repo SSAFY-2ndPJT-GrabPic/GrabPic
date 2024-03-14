@@ -8,7 +8,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "user")
 @Getter
 @Builder
 @RequiredArgsConstructor
