@@ -1,11 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as L from './Login.style';
 import * as G from '../styles/globalCSS';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   // const [loginData, setLoginData] = useState<{email:string;password:string}>({ email: "", password: "" });
   // const emailRegEx =
   // /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+
+  const move = (path:string) => {
+    if(path === 'pwSet'){
+      navigate("/resetpw");
+    }else if(path === 'join'){
+      navigate("/join")
+    }
+  }
 
   return (
     <div className="flex flex-col px-6">
@@ -22,8 +32,8 @@ const Login: React.FC = () => {
       </G.InputContainer>
       <G.InputButtonActive>로그인</G.InputButtonActive>
       <div className="flex flex-row items-center self-end mt-3">
-        <L.AnotherBtn className="mr-5">비밀번호 재설정</L.AnotherBtn>
-        <L.AnotherBtn>회원가입</L.AnotherBtn>
+        <L.AnotherBtn className="mr-5" onClick={() => move('pwSet')}>비밀번호 재설정</L.AnotherBtn>
+        <L.AnotherBtn onClick={() => move('join')}>회원가입</L.AnotherBtn>
       </div>
       <div className="flex flex-row mt-10 items-center mb-3">
         <L.LoginLine></L.LoginLine>
