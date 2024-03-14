@@ -1,6 +1,8 @@
+import CustomMap from '../components/maps/CustomMap'
+
 export default function Map () {
   
   return (
-    <h1>Map</h1>
+    <CustomMap lat={36.10710} lng={128.4162}/>
   )
 }
