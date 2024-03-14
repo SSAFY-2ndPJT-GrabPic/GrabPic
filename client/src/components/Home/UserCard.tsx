@@ -1,5 +1,6 @@
 import * as U from './UserCard.style'
 import React from 'react';
+import ProfileUrl from '../../assets/Home/Profile.png';
 
 interface UserCardProps {}
 
@@ -13,7 +14,7 @@ const UserCard: React.FC<UserCardProps> = () => {
   return (
     <U.Container>
       <U.UserInfoWrap>
-        <U.ProfileImg src="src/assets/Home/Profile.png" />
+        <U.ProfileImg src={ProfileUrl}/>
         
         <U.DetailInfo>
           <div className='flex items-center'>

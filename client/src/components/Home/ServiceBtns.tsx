@@ -1,5 +1,9 @@
 import * as S from './ServiceBtns.style'
 import React from 'react';
+import MapIconUrl from '../../assets/Home/MapIcon.png'
+import CameraIconUrl from '../../assets/Home/CameraIcon.png'
+import GalleryIconUrl from '../../assets/Home/GalleryIcon.png'
+
 
 interface ServiceBtnsProps {}
 
@@ -18,7 +22,7 @@ const ServiceBtns: React.FC<ServiceBtnsProps> = () => {
               </S.BtnSub>
             </S.BtnsGap>
             <S.IconAlign>
-              <S.MapIcon src="src/assets/Home/MapIcon.png" alt="" />
+              <S.MapIcon src={MapIconUrl} alt="" />
             </S.IconAlign>
           </S.MapBtn>
 
@@ -30,7 +34,7 @@ const ServiceBtns: React.FC<ServiceBtnsProps> = () => {
               </S.BtnSub>
             </S.BtnsGap>
             <S.IconAlign>
-              <S.CamIcon src="src/assets/Home/CameraIcon.png" alt="" />
+              <S.CamIcon src={CameraIconUrl} alt="" />
             </S.IconAlign>
 
           </S.CamBtn>
@@ -43,7 +47,7 @@ const ServiceBtns: React.FC<ServiceBtnsProps> = () => {
             갤러리에서 다른 유저들이 수집한 <br/> 다양한 개체를 확인해보세요!
             </S.BtnSub>
           </S.BtnsGap>
-          <S.GallIcon src="src/assets/Home/GalleryIcon.png" alt="" />
+          <S.GallIcon src={GalleryIconUrl} alt="" />
         </S.GallBtn>
       </S.BtnsWrap>
     </S.Container>

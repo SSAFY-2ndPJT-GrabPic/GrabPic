@@ -1,5 +1,11 @@
 import * as N from './NavigationBar.style'
 import React from 'react';
+import EncyIconUrl from '../../assets/NavigationBar/encyIcon.png'
+import MapIconUrl from '../../assets/NavigationBar/mapIcon.png'
+import CameraIconUrl from '../../assets/NavigationBar/cameraIcon.png'
+import GalleryIconUrl from '../../assets/NavigationBar/galleryIcon.png'
+import SettingIconUrl from '../../assets/NavigationBar/settingIcon.png'
+
 
 interface HeaderProps {}
 
@@ -7,24 +13,24 @@ const Header: React.FC<HeaderProps> = () => {
   return (
     <N.Container>
       <N.NavCol to="/encyclopedia">
-        <img src="src/assets/NavigationBar/encyIcon.png" alt="" />
+        <img src={EncyIconUrl} alt="" />
       </N.NavCol>
 
 
       <N.NavCol to="/map">
-        <img src="src/assets/NavigationBar/mapIcon.png" alt="" />
+        <img src={MapIconUrl} alt="" />
       </N.NavCol>
 
       <N.NavCol to="/camera">
-        <img id='camIcon' src="src/assets/NavigationBar/cameraIcon.png" alt="" />
+        <img id='camIcon' src={CameraIconUrl} alt="" />
       </N.NavCol>
 
       <N.NavCol to="/gallery">
-        <img src="src/assets/NavigationBar/galleryIcon.png" alt="" />
+        <img src={GalleryIconUrl} alt="" />
       </N.NavCol>
 
       <N.NavCol to="/setting">
-        <img src="src/assets/NavigationBar/settingIcon.png" alt="" />
+        <img src={SettingIconUrl} alt="" />
       </N.NavCol>
     </N.Container>
   );
