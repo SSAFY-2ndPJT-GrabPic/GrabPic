@@ -1,13 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { isLoginState } from '../recoil/atoms/UserState'
 import * as L from './Login.style';
 import * as G from '../styles/globalCSS';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+
+  const [isLogin,setIsLogin] = useRecoilState<boolean>(isLoginState)
   // const [loginData, setLoginData] = useState<{email:string;password:string}>({ email: "", password: "" });
-  // const emailRegEx =
-  // /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+
 
   const move = (path:string) => {
     if(path === 'pwSet'){
@@ -15,6 +18,12 @@ const Login: React.FC = () => {
     }else if(path === 'join'){
       navigate("/join")
     }
+  }
+  
+  const loginCheck = () =>{
+    console.log(isLogin);
+    setIsLogin(true);
+    navigate("/");
   }
 
   return (
@@ -30,7 +39,7 @@ const Login: React.FC = () => {
         <G.InputBox></G.InputBox>
         {/* <G.InputError>test</G.InputError> */}
       </G.InputContainer>
-      <G.InputButtonActive>로그인</G.InputButtonActive>
+      <G.InputButtonActive onClick={loginCheck}>로그인</G.InputButtonActive>
       <div className="flex flex-row items-center self-end mt-3">
         <L.AnotherBtn className="mr-5" onClick={() => move('pwSet')}>비밀번호 재설정</L.AnotherBtn>
         <L.AnotherBtn onClick={() => move('join')}>회원가입</L.AnotherBtn>
