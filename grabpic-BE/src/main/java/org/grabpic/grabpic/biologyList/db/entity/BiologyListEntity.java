@@ -9,7 +9,8 @@ import lombok.*;
 @Entity( name = "biologyList" )
 @Getter
 @Builder
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class BiologyListEntity {
 
     @Id
