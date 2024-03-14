@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route,useLocation  } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { isLoginState } from '../recoil/atoms/UserState';
 import { useNavigate } from 'react-router-dom';
@@ -20,12 +20,14 @@ import { useEffect } from 'react';
 export default function Router() {
   const isLogin = useRecoilValue(isLoginState);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (!isLogin) {
+    // console.log(location.pathname);
+    if (!isLogin  && (!location.pathname.includes('resetpw') && !location.pathname.includes('join'))) {
       navigate('/login');
     }
-  }, [isLogin, navigate])
+  }, [isLogin, location.pathname, navigate])
 
   return (
     <Routes>
