@@ -123,8 +123,8 @@ public class UserServiceImpl implements UserService {
         String email = jwtUtil.getEmail(refresh);
         String role = jwtUtil.getRole(refresh);
 
-        //make new JWT
-        return jwtUtil.createJwt("access", email, role, 20000L);
+        //make new JWT 5분
+        return jwtUtil.createJwt("access", email, role, 300000L);
     }
 
     @Override
