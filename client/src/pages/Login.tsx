@@ -5,6 +5,10 @@ import { isLoginState } from '../recoil/atoms/UserState'
 import * as L from './Login.style';
 import * as G from '../styles/globalCSS';
 
+import googleIconUrl from '../assets/Login/google.png'
+import naverIconUrl from '../assets/Login/naver.png'
+import kakaoIconUrl from '../assets/Login/kakao.png'
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
 
@@ -50,15 +54,15 @@ const Login: React.FC = () => {
         <L.LoginLine></L.LoginLine>
       </div>
       <L.AnothLogin>
-        <img src="src/assets/Login/google.png" className="mr-3" />
+        <img src={googleIconUrl} className="mr-3" />
         구글 로그인
       </L.AnothLogin>
       <L.AnothLogin>
-        <img src="src/assets/Login/naver.png" className="mr-3" />
+        <img src={naverIconUrl} className="mr-3" />
         네이버 로그인
       </L.AnothLogin>
       <L.AnothLogin>
-        <img src="src/assets/Login/kakao.png" className="mr-3" />
+        <img src={kakaoIconUrl} className="mr-3" />
         카카오 로그인
       </L.AnothLogin>
     </div>
