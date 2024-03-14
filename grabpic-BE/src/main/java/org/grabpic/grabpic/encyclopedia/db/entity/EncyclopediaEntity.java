@@ -1,21 +1,17 @@
 package org.grabpic.grabpic.encyclopedia.db.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.grabpic.grabpic.biologyList.db.entity.BiologyList;
-import org.grabpic.grabpic.user.db.entity.User;
+import lombok.*;
+import org.grabpic.grabpic.biologyList.db.entity.BiologyListEntity;
+import org.grabpic.grabpic.user.db.entity.UserEntity;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Encyclopedia {
+@RequiredArgsConstructor
+public class EncyclopediaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +20,11 @@ public class Encyclopedia {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BIOLOGY_LIST_ID")
-    private BiologyList biologyList;
+    private BiologyListEntity biologyList;
 
     private LocalDate registDate;
     private String content;

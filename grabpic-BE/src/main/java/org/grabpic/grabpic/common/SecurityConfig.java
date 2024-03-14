@@ -1,6 +1,7 @@
 package org.grabpic.grabpic.common;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.config.CustomSuccessHandler;
 import org.grabpic.grabpic.user.config.JWTFilter;
 import org.grabpic.grabpic.user.config.JWTUtil;
@@ -20,9 +21,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
@@ -30,16 +33,9 @@ public class SecurityConfig {
     //JWTUtil 주입
     private final JWTUtil jwtUtil;
 
+    //OAuth 로그인
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler) {
-
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtil = jwtUtil;
-        this.customOAuth2UserService = customOAuth2UserService;
-        this.customSuccessHandler = customSuccessHandler;
-    }
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -66,17 +62,17 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
-                        CorsConfiguration configuration = new CorsConfiguration();
+                        CorsConfiguration config = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("https://j10D104.p.ssafy.io"));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
+                        config.setAllowedOrigins(List.of("https://j10D104.p.ssafy.io", "http://localhost:5173/"));
+                        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                        config.setAllowCredentials(true);
+                        config.setAllowedHeaders(List.of("*"));
+                        config.setMaxAge(3600L);
 
-                        configuration.setExposedHeaders(Collections.singletonList("access"));
+                        config.setExposedHeaders(Collections.singletonList("access"));
 
-                        return configuration;
+                        return config;
                     }
                 })));
 

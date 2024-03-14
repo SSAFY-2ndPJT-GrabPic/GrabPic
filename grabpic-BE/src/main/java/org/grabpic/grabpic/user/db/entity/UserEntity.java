@@ -11,9 +11,8 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
+@RequiredArgsConstructor
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +34,6 @@ public class User {
     //탈퇴 날짜
     private LocalDate validateDate;
     //탈퇴 여부, mysql default는 false(tinyint 0)
-    private boolean deleated;
+    private boolean isDeleted;
 
 }

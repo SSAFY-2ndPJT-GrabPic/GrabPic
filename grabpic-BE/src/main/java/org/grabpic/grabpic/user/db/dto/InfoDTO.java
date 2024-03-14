@@ -10,8 +10,6 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class InfoDTO {
 
     private long user_id;

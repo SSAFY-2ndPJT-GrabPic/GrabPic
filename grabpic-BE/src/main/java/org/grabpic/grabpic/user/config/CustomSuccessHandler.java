@@ -41,6 +41,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         if( role.equals("ROLE_UNKNOWN")) {
             System.out.println("가입되지 않은 회원");
             response.setStatus(HttpStatus.OK.value());
+//            response.sendRedirect("http://localhost:5173/");
             response.sendRedirect("https://j10d104.p.ssafy.io/user/regist");
             return;
         }

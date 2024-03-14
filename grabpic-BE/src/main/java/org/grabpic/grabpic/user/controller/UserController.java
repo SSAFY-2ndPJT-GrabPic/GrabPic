@@ -3,7 +3,7 @@ package org.grabpic.grabpic.user.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.xml.ws.Response;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
@@ -11,30 +11,22 @@ import org.grabpic.grabpic.user.db.dto.JoinDTO;
 import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.grabpic.grabpic.user.service.MailService;
 import org.grabpic.grabpic.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
-@Controller
-@ResponseBody
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
-
     private final MailService mailService;
 
-    public UserController(UserService userService, MailService mailService) {
-
-        this.userService = userService;
-        this.mailService = mailService;
-    }
-
+    // 회원가입 API 수정 필요
     @PostMapping("/join")
     public String joinProcess(@RequestBody JoinDTO joinDTO) {
 
@@ -44,6 +36,7 @@ public class UserController {
         return "ok";
     }
 
+    //소셜 로그인 후 회원가입 시 소셜정보 전달 API
     @GetMapping("/baseinfo")
     public ResponseEntity<?> setSocialInfo() {
         try {
@@ -55,14 +48,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/getinfo")
-    public ResponseEntity<?> getHeader(@RequestHeader("access") String accessToken) {
-        System.out.println("받아온 토큰 : " + accessToken);
-
-        LoginDTO dto = userService.getInfo(accessToken);
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
-    }
-
+    // access Token 재발급 API
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("만료테스트");
@@ -81,6 +67,7 @@ public class UserController {
         }
     }
 
+    // 이메일 인증 요청 -> 메일 전송 API
     @PostMapping("/auth/emails/verification-requests")
     public ResponseEntity<?> sendEmail(@RequestBody EmailAuthDto emailAuthDto) {
         try {
@@ -93,6 +80,7 @@ public class UserController {
         }
     }
 
+    // 이메일 인증 코드 검증 API
     @PostMapping("/auth/emails/verification")
     public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto) {
         try {
@@ -109,6 +97,7 @@ public class UserController {
 
     }
 
+    //닉네임 중복확인 API
     @GetMapping("/look/nickname/{nickname}")
     public ResponseEntity<?> duplicationNicknameCheck(@PathVariable String nickname) {
         try {
@@ -126,6 +115,7 @@ public class UserController {
         }
     }
 
+    // 유저 정보 조회 API
     @GetMapping("/info/{userId}")
     public ResponseEntity<?> userInfo(@PathVariable long userId) {
         try {
@@ -136,4 +126,13 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //테스트용 코드
+    //    @GetMapping("/getinfo")
+//    public ResponseEntity<?> getHeader(@RequestHeader("access") String accessToken) {
+//        System.out.println("받아온 토큰 : " + accessToken);
+//
+//        LoginDTO dto = userService.getInfo(accessToken);
+//        return ResponseEntity.status(HttpStatus.OK).body(dto);
+//    }
 }

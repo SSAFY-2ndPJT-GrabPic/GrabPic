@@ -5,8 +5,6 @@ import lombok.*;
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class InfoPreviewDTO {
 
     private long encyclopediaId;

@@ -6,7 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.grabpic.grabpic.user.db.dto.CustomUserDetails;
-import org.grabpic.grabpic.user.db.entity.User;
+import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +31,21 @@ public class JWTFilter extends OncePerRequestFilter {
         System.out.println(request.getHeader("access"));
         //request에서 access 헤더를 찾음
         String accessToken = request.getHeader("access");
+        String refreshToken = request.getHeader("refresh");
+
+        if(refreshToken != null) {
+            try {
+                jwtUtil.isExpired(refreshToken);
+            } catch (ExpiredJwtException e) {
+                //response body
+                PrintWriter writer = response.getWriter();
+                writer.print("refresh token expired");
+
+                //response status code
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+        }
 
         //access 헤더 검증
         if (accessToken == null ) {
@@ -77,7 +92,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String role = jwtUtil.getRole(accessToken);
 
         //userEntity를 생성하여 값 set
-        User userEntity = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .email(email)
                 .role(role)
                 //.password("temppassword")

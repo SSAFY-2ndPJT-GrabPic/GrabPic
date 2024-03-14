@@ -2,12 +2,12 @@ package org.grabpic.grabpic.user.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
+import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
-import org.grabpic.grabpic.user.db.dto.LoginDTO;
-import org.grabpic.grabpic.user.db.entity.User;
+import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,24 +15,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final JWTUtil jwtUtil;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JWTUtil jwtUtil) {
-
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
-
+    @Override
     public void joinProcess(JoinDTO joinDTO) {
 
         String email = joinDTO.getEmail();
@@ -45,7 +38,7 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
-        User data = User.builder()
+        UserEntity data = UserEntity.builder()
                         .email(email)
                         .password(bCryptPasswordEncoder.encode(joinDTO.getPassword()))
                         .nickname(joinDTO.getNickname())
@@ -57,16 +50,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(data);
     }
-
-    @Override
-    public LoginDTO getInfo(String accessToken) {
-
-        LoginDTO dto = new LoginDTO();
-        dto.setEmail(jwtUtil.getEmail(accessToken));
-
-        return dto;
-    }
-
+    
     @Override
     public JoinDTO setSocialInfo() {
         //OAuth2User
@@ -84,6 +68,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
     public String reissue(Cookie[] cookies) {
 
         //get refresh token
@@ -138,16 +123,38 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public InfoDTO userInfo(long userId) {
 
-        Optional<User> optionalUser = userRepository.findById(userId);
-        InfoDTO infoDTO = userRepository.findInfoDTOById(userId);
-        if(infoDTO != null) {
-            System.out.println(infoDTO.toString());
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+
+        if(optionalUser.isPresent()) {
+            InfoDTO infoDTO = new InfoDTO();
+            UserEntity user = optionalUser.get();
+            infoDTO.setUser_id(user.getUserId());
+            infoDTO.setEmail(user.getEmail());
+            infoDTO.setName(user.getName());
+            infoDTO.setNickname(user.getNickname());
+            infoDTO.setBirth(user.getBirth());
+            infoDTO.setGender(user.getGender());
+            infoDTO.setSubsCount(user.getSubsCount());
+            infoDTO.setProfileImage(user.getProfileImage());
+            System.out.println("정보조회 할때 반환할 것" + infoDTO.toString());
             return infoDTO;
         } else {
             System.out.println("존재하지 않는 사용자");
             return null;
         }
     }
+
+
+    //테스트용 코드
+//    @Override
+//    public LoginDTO getInfo(String accessToken) {
+//
+//        LoginDTO dto = new LoginDTO();
+//        dto.setEmail(jwtUtil.getEmail(accessToken));
+//
+//        return dto;
+//    }
 }
