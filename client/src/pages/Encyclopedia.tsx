@@ -14,7 +14,9 @@ const Encyclopedia: React.FC<EncyclopediaProps> = () => {
   return (
     <>
       <EncyHeader />
-      {encyLocate === 'chart' ? <Chart /> : encyLocate === 'collection' ? <Collection /> : <GuestBook />}
+      <div className="px-4">
+        {encyLocate === 'chart' ? <Chart /> : encyLocate === 'collection' ? <Collection /> : <GuestBook />}
+      </div>
     </>
   );
 };

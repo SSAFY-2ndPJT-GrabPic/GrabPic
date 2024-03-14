@@ -13,7 +13,7 @@ interface MapsProps {
 
 const MapContainer = styled.div`
   width: 100%;
-  height: calc(100% - 112px); /* 화면 높이에서 112px 제외 */
+  height: calc(100% - 112px); /*화면 높이에서 112px 제외*/
 `;
 
 const CustomMap: React.FC<MapsProps> = ({ lat, lng }) => {

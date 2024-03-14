@@ -12,6 +12,7 @@ export const AnotherBtn = styled.button`
     /* width: 50%; */
     color: #50940C;
     font-size: 15px;
+    font-family: 'TmoneyEB';
     font-weight: 900;
 `
 
@@ -38,4 +39,6 @@ export const AnothLogin = styled.button`
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    font-family: 'TmoneyR';
+    font-size: 14px;
 `
