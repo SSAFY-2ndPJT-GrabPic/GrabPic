@@ -31,12 +31,12 @@ export const DetailInfo = styled.div`
 
 export const NickName = styled.div`
   font-family: 'BMJUA';
-  font-size: 24px;
+  font-size: 22px;
 `
 
 export const DetailTypo = styled.div`
   font-family: 'TmoneyR';
-  font-size: 16px;
+  font-size: 15px;
 `
 
 export const BtnsWrap = styled.div`
