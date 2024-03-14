@@ -6,11 +6,11 @@ import NavBar from "./components/NavigationBar/NavigationBar";
 function App() {
   return (
     <>
-      <Header />
       <RouterProvider>
+        <Header />
         <Router />
+        <NavBar />
       </RouterProvider>
-      <NavBar />
     </>
   )
 }

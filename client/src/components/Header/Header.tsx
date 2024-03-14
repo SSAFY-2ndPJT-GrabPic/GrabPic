@@ -1,6 +1,20 @@
-export default function Header () {
-  
+import * as H from './Header.style'
+import React from 'react';
+import { Link } from "react-router-dom";
+
+interface HeaderProps {}
+
+const Header: React.FC<HeaderProps> = () => {
   return (
-    <h1>Header</h1>
-  )
-}
+    <H.Container>
+      <Link to="/">
+        <H.Logo />
+      </Link>
+      <Link to="/chatbot">
+        <H.ChatBot />
+      </Link>
+    </H.Container>
+  );
+};
+
+export default Header;
