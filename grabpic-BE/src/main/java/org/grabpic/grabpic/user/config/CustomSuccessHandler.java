@@ -38,26 +38,25 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        //contaions 이렇게 쓰는게 맞나 ?
         if( role.equals("ROLE_UNKNOWN")) {
             System.out.println("가입되지 않은 회원");
             response.setStatus(HttpStatus.OK.value());
-            response.sendRedirect("http://localhost:5173/user/regist");
+            response.sendRedirect("https://j10d104.p.ssafy.io/user/regist");
             return;
         }
 
         String email = customUserDetails.getEmail();
 
         //토큰 생성
-        //20초
-        String access = jwtUtil.createJwt("access", email, role, 20000L);
-        //60초
-        String refresh = jwtUtil.createJwt("refresh", email, role, 60000L);
+        //5분
+        String access = jwtUtil.createJwt("access", email, role, 300000L);
+        //10분
+        String refresh = jwtUtil.createJwt("refresh", email, role, 600000L);
 
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("http://localhost:5173/");
+        response.sendRedirect("https://j10d104.p.ssafy.io/");
     }
 
     private Cookie createCookie(String key, String value) {
