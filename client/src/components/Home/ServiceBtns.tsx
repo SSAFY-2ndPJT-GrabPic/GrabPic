@@ -30,7 +30,7 @@ const ServiceBtns: React.FC<ServiceBtnsProps> = () => {
             <S.BtnsGap>
               <S.BtnTitle>카메라</S.BtnTitle>
               <S.BtnSub>
-                카메라를 통해 실시간으로 <br/>개체 정보를 확인해보세요!
+                실시간으로 개체 정보를<br/> 확인해보세요!
               </S.BtnSub>
             </S.BtnsGap>
             <S.IconAlign>

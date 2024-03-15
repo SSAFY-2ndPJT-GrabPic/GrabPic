@@ -1,20 +1,20 @@
 import * as U from './UserCard.style'
 import React from 'react';
-import ProfileUrl from '../../assets/Home/Profile.png';
-
-interface UserCardProps {}
 
 const userInfo = {
   nickname: "해진해뜸",
+  profileImgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWgn_TKOeao6JafiNJb9MoJVTfF9zsmNAlRygzSuCbCjeqUjV',
   sub: 529,
   email: "sun@ssafy.com"
 }
+
+interface UserCardProps {}
 
 const UserCard: React.FC<UserCardProps> = () => {
   return (
     <U.Container>
       <U.UserInfoWrap>
-        <U.ProfileImg src={ProfileUrl}/>
+        <U.ProfileImg src={userInfo.profileImgUrl}/>
         
         <U.DetailInfo>
           <div className='flex items-center'>
