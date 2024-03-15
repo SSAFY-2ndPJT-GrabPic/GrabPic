@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import ProfileImgDefault from '../../assets/Home/Profile.png'
 
 export const Container = styled.div`
   margin-top: 28px;
@@ -20,9 +21,13 @@ export const UserInfoWrap = styled.div`
   gap: 22px;
 `
 
-export const ProfileImg = styled.img`
+export const ProfileImg = styled.img.attrs(({ src }) => ({
+  src: src || ProfileImgDefault,
+  alt: "프로필 이미지",
+}))`
   width: 69px;
   height: 69px;
+  border-radius: 50%;
 `
 
 export const DetailInfo = styled.div`
