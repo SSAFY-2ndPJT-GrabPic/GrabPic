@@ -45,12 +45,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         String email = customUserDetails.getEmail();
+        String nickName = customUserDetails.getNickName();
 
         //토큰 생성
         //5분
-        String access = jwtUtil.createJwt("access", email, role, 300000L);
+        String access = jwtUtil.createJwt("access", email, role, nickName, 300000L);
         //10분
-        String refresh = jwtUtil.createJwt("refresh", email, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", email, role, nickName, 600000L);
 
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));

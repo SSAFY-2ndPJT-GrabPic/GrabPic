@@ -13,9 +13,6 @@ public class CustomUserDetails implements UserDetails {
 
     private final UserEntity userEntity;
 
-
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -43,6 +40,11 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
 
         return userEntity.getName();
+    }
+
+    public String getNickName() {
+
+        return userEntity.getNickname();
     }
 
     public String getEmail() {
