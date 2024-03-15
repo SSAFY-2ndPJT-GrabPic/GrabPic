@@ -1,7 +1,7 @@
 {
-    "name": "MyProgressiveWebApp",
-    "short_name": "MyPWA",
-    "start_url": "",
+    "name": "GrabPic",
+    "short_name": "GrabPic",
+    "start_url": "https://j10d104.p.ssafy.io",
     "display": "standalone",
     "background_color": "#F8F7DA",
     "theme_color": "#ffffff",
