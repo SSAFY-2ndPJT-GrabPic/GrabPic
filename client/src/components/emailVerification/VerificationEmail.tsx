@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import * as R from './Reset.style';
+import React, {  useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import * as R from './Verification.style';
 import * as G from '../../styles/globalCSS';
 
 const ResetPwEmail : React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(location);
+  }, []); // 빈 배열을 넣어 초기 렌더링 시에만 실행되도록 설정합니다.
+
 
   // 이메일 입력 상태 관리
   const [email, setEmail] = useState('');
@@ -31,16 +37,16 @@ const ResetPwEmail : React.FC = () => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row mt-10 items-center">
-        <R.ResetTitle>이메일 입력</R.ResetTitle>
-        <R.ResetProgressContainer>
-          <R.ResetProgressNo />
-          <R.ResetProgressNo className="mr-3" />
-          <R.ResetProgressYes className="mr-3" />
-        </R.ResetProgressContainer>
+        <R.VerificationTitle>이메일 입력</R.VerificationTitle>
+        <R.VerificationProgressContainer>
+          <R.VerificationProgressNo />
+          <R.VerificationProgressNo className="mr-3" />
+          <R.VerificationProgressYes className="mr-3" />
+        </R.VerificationProgressContainer>
       </div>
       <div className="flex flex-col mt-3">
-        <R.ResetText>가입한 이메일을 입력해주세요.</R.ResetText>
-        <R.ResetText>본인 인증을 위한 메일을 전송해드립니다.</R.ResetText>
+        <R.VerificationText>가입한 이메일을 입력해주세요.</R.VerificationText>
+        <R.VerificationText>본인 인증을 위한 메일을 전송해드립니다.</R.VerificationText>
       </div>
       <G.InputContainer className="mt-20">
         <span>이메일</span>

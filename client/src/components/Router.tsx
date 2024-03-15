@@ -23,7 +23,7 @@ export default function Router() {
   const location = useLocation();
 
   useEffect(() => {
-    // console.log(location.pathname);
+    console.log(location.pathname);
     if (!isLogin  && (!location.pathname.includes('resetpw') && !location.pathname.includes('join'))) {
       navigate('/login');
     }

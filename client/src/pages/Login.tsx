@@ -18,9 +18,9 @@ const Login: React.FC = () => {
 
   const move = (path:string) => {
     if(path === 'pwSet'){
-      navigate("/resetpw");
+      navigate("/resetpw", { state : {page:"resetpw"}});
     }else if(path === 'join'){
-      navigate("/join")
+      navigate("/join", { state : {page:"join"}});
     }
   }
   

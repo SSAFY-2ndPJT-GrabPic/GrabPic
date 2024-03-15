@@ -1,20 +1,20 @@
 import styled from "styled-components";
 
-export const ResetTitle = styled.span`
+export const VerificationTitle = styled.span`
     font-family: 'Jalnan';
     font-size: xx-large;
 `   
-export const ResetText = styled.span`
+export const VerificationText = styled.span`
     font-family: 'TmoneyR';
     font-size: 12px;
 `   
-export const ResetTextGreen = styled.span`
+export const VerificationTextGreen = styled.span`
     font-family: 'TmoneyR';
     font-size: 12px;
     color: #50940C;
 `
 
-export const ResetProgressContainer = styled.div`
+export const VerificationProgressContainer = styled.div`
     position: absolute;
     right: 5%;
     display: flex;
@@ -22,13 +22,13 @@ export const ResetProgressContainer = styled.div`
     align-items: center;
 `
 
-export const ResetProgressNo = styled.div`
+export const VerificationProgressNo = styled.div`
     width: 12px;
     height: 12px;
     border-radius: 50%;
     background-color: #D9D9D9;
 `
-export const ResetProgressYes = styled.div`
+export const VerificationProgressYes = styled.div`
     width: 17px;
     height: 17px;
     border-radius: 50%;

@@ -1,8 +1,8 @@
 import * as R from './ResetPw.style';
 import { Routes, Route } from 'react-router-dom';
-import ResetPwEmail from '../components/ResetPw/ResetPwEmail';
-import ResetPwCode from '../components/ResetPw/ResetPwCode';
-import ResetPwSet from '../components/ResetPw/ResetPwSet';
+import VerificationEmail from '../components/emailVerification/VerificationEmail';
+import VerificationCode from '../components/emailVerification/VerificationCode';
+import VerificationSet from '../components/emailVerification/VerificationPwSet';
 import closeIcon from '../assets/icon/close.png'
 
 export default function ResetPw() {
@@ -15,9 +15,9 @@ export default function ResetPw() {
         <R.ResetPwText>비밀번호 재설정</R.ResetPwText>
         </div>
         <Routes>
-        <Route index element={<ResetPwEmail />} />
-        <Route path="code" element={<ResetPwCode />} />
-        <Route path="set" element={<ResetPwSet />} />
+        <Route index element={<VerificationEmail />} />
+        <Route path="code" element={<VerificationCode />} />
+        <Route path="set" element={<VerificationSet />} />
         </Routes>
     </div>
     );
