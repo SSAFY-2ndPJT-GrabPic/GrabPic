@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
 import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,8 +59,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
-        //유저 정보
-        String username = authentication.getName();
+        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+
+        String email = customUserDetails.getEmail();
+        String nickName = customUserDetails.getNickName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -68,9 +71,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         //토큰 생성
         // 5분
-        String access = jwtUtil.createJwt("access", username, role, 300000L);
+        String access = jwtUtil.createJwt("access", email, role, nickName, 300000L);
         // 10분
-        String refresh = jwtUtil.createJwt("refresh", username, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", email, role, nickName, 600000L);
 
         //응답 설정
         response.setHeader("access", access);
