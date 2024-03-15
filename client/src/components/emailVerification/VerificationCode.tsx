@@ -1,17 +1,26 @@
 // import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as R from './Verification.style';
 import * as G from '../../styles/globalCSS';
+import { useEffect, useState } from 'react';
 
 export default function ResetPwCode() {
   const navigate = useNavigate();
-  console.log("coide")
+  const { state } = useLocation();
+  const [isJoinPage,setIsJoinPage] = useState(false);
+
+  useEffect(() => {
+    if(state.page == 'join'){
+      setIsJoinPage(true);
+    }
+  }, [state.page]); // 빈 배열을 넣어 초기 렌더링 시에만 실행되도록 설정합니다.
+
   const back = () => {
-    navigate("/resetpw")
+    navigate(`/${state.page}`, {state : state}); 
   };
 
   const handleClick = () => {
-    navigate("/resetpw/set")
+    navigate(`/${state.page}/pwset`, {state : state}); 
   };
 
   return (
@@ -20,8 +29,9 @@ export default function ResetPwCode() {
         <R.VerificationTitle>인증코드 확인</R.VerificationTitle>
         <R.VerificationProgressContainer>
           <R.VerificationProgressNo />
-          <R.VerificationProgressYes className="mr-3" />
-          <R.VerificationProgressNo className="mr-3" />
+          {isJoinPage && <R.VerificationProgressNo className="mr-2" />}
+          <R.VerificationProgressYes className="mr-2" />
+          <R.VerificationProgressNo className="mr-2" />
         </R.VerificationProgressContainer>
       </div>
       <div className="flex flex-col mt-3">

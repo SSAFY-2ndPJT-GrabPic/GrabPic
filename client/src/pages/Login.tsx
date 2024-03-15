@@ -18,9 +18,9 @@ const Login: React.FC = () => {
 
   const move = (path:string) => {
     if(path === 'pwSet'){
-      navigate("/resetpw", { state : {page:"resetpw"}});
+      navigate("/resetpw", { state : {page : 'resetpw'} });
     }else if(path === 'join'){
-      navigate("/join", { state : {page:"join"}});
+      navigate("/join", { state : {page : 'join'} });
     }
   }
   
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col px-6">
+    <div className="flex flex-col px-6 overflow-scroll">
       <L.LoginText>로그인</L.LoginText>
       <G.InputContainer>
         <span>이메일</span>

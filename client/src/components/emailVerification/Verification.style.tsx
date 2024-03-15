@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const VerificationTitle = styled.span`
     font-family: 'Jalnan';
-    font-size: xx-large;
+    font-size: 28px;
 `   
 export const VerificationText = styled.span`
     font-family: 'TmoneyR';

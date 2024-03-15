@@ -17,7 +17,7 @@ export default function ResetPw() {
         <Routes>
         <Route index element={<VerificationEmail />} />
         <Route path="code" element={<VerificationCode />} />
-        <Route path="set" element={<VerificationSet />} />
+        <Route path="pwset" element={<VerificationSet />} />
         </Routes>
     </div>
     );

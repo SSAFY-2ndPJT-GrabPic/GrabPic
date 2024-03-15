@@ -23,7 +23,7 @@ export default function Router() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(location.pathname);
+    // console.log(location.pathname);
     if (!isLogin  && (!location.pathname.includes('resetpw') && !location.pathname.includes('join'))) {
       navigate('/login');
     }
@@ -35,7 +35,7 @@ export default function Router() {
       <Route path="/camera" element={<Camera />} />
       <Route path="/login" element={<Login />} />
       <Route path="/resetpw/*" element={<ResetPw />}/>
-      <Route path="/join" element={<Join />} />
+      <Route path="/join/*" element={<Join />} />
       <Route path="/chatbot" element={<ChatBot />} />
       <Route path="/encyclopedia" element={<Encyclopedia />} />
       <Route path="/map" element={<Map />} />

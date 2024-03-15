@@ -8,6 +8,13 @@ export const InputContainer = styled.div`
     display: flex;
     flex-direction: column;
 `
+export const InputContainerRow = styled.div`
+    width: 100%;
+    font-family: 'TmoneyR';
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`
 export const InputBox = styled.input`
     border-radius: 5px;
     background-color: #F3F3F3;
@@ -48,4 +55,17 @@ export const InputButtonSmall = styled.button`
     font-family: 'BMJUA';
     font-size: x-large;
     font-size: 16px;
+`
+
+export const InputCheckBox = styled.input`
+    appearance: none;
+    border-radius: 50%;
+    border: 2px solid #5C5C5C;
+    width: 20px;
+    height: 20px;
+    margin-left: 10%;
+    margin-right: 5%;
+    &:checked {
+        background-color: #81D42E;
+    }
 `
