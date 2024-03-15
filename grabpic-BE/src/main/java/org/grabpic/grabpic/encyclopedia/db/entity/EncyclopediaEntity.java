@@ -10,7 +10,8 @@ import java.time.LocalDate;
 @Entity( name = "encyclopedia" )
 @Getter
 @Builder
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class EncyclopediaEntity {
 
     @Id
