@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const MapContainer = styled.div`
   position:relative;
   width: 100%;
-  height: calc(100% - 112px); /* 화면 높이에서 112px 제외 */
+  height: 100%; /* 화면 높이에서 112px 제외 */
 `;
 
 export const Zoom_Control = styled.button`
