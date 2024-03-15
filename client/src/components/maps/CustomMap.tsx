@@ -8,22 +8,30 @@ import plusImg from "../../assets/Map/plus.png";
 // zoomout 이미지 불러오기
 import minusImg from "../../assets/Map/minus.png";
 
+
+
 // 위도 경도 프롭처리할 예정.
 interface MapsProps {
-  lat : number;
-  lng : number;
+  lat: number;
+  lng: number;
 }
 
+
 const CustomMap: React.FC<MapsProps> = ({ lat, lng }) => {
+
   // 지도 호출
   useKakaoLoaderOrigin({
     appkey: "52b3371f40d9c77376d831422bbae913",
     libraries: ["clusterer", "drawing", "services"],
   })
+
   // 기본 위치(현재 좌표) 호출 및 스타일 지정
   const [state] = useState({
-    center: {lat: lat, lng: lng},
-    style: {width: "100%", height: "100%", Position: "relative", overflow: "hidden"}
+    center: {
+      lat: lat,
+      lng: lng
+    },
+    style: {width: "100%", height: "100%", Position: "relative", overflow: "hidden"},
   })
   // 맵 레벨 변경을 위한 선언
   const mapRef = useRef<kakao.maps.Map>(null)
