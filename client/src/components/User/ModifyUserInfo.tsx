@@ -15,9 +15,11 @@ export const ModifyUserInfo: React.FC = () => {
   const [birth, setBirth] = useState('');
   const [gender, setGender] = useState('');
 
+  // 이미지 선택
   const inputImgRef = useRef<HTMLInputElement>(null);
   const [profileImg, setProfileImg] = useState<string | null>(null);
 
+  // 성별 체크. 회원정보 수정 페이지에서는 추후 삭제.
   const checkBoxOne = (checkThis: React.ChangeEvent<HTMLInputElement>) => {
     const checkBoxes = document.getElementsByName(
       'checkbox'
@@ -31,6 +33,7 @@ export const ModifyUserInfo: React.FC = () => {
     setGender(checkThis.target.defaultValue);
   };
 
+  // 설정 완료 후 서버 전송용 데이터
   const handleClick = () => {
     const newState = {
       ...state,
@@ -43,6 +46,7 @@ export const ModifyUserInfo: React.FC = () => {
     navigate('/');
   };
 
+  // 이미지 선택 후 이미지 미리보기 변경.
   const imageChange = (e : React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(file){
