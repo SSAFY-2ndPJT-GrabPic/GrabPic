@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
+import org.grabpic.grabpic.user.db.dto.CustomUserDetails;
 import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,7 +60,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
-        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+//        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String email = customUserDetails.getEmail();
         String nickName = customUserDetails.getNickName();

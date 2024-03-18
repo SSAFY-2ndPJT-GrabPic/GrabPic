@@ -99,7 +99,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/oauth2/**", "/", "/join", "/getinfo", "/email/**", "/user/**","*").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .anyRequest().authenticated());
+                        .anyRequest().authenticated()                    );
 
         //JWTFilter 등록
         http
