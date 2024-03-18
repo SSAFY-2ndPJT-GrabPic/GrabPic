@@ -24,6 +24,7 @@ export const InputBox = styled.input`
 
 export const InputError = styled.span`
     color: red;
+    font-size: 12px;
 `
 
 export const InputButtonActive = styled.button`
