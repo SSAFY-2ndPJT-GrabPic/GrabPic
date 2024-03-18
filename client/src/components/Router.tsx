@@ -41,7 +41,7 @@ export default function Router() {
       <Route path="/chatbot" element={<ChatBot />} />
       <Route path="/encyclopedia" element={<Encyclopedia />} />
       <Route path="/map" element={<Map />} />
-      <Route path="/camera" element={<Camera />} />
+      <Route path="/camera/*" element={<Camera />} />
       <Route path="/gallery" element={<Gallery />} />
       <Route path="/setting" element={<SettingPage />} />
       <Route path="/userinfo" element={<UserInfo />} />
