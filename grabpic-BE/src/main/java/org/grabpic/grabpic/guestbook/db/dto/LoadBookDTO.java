@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,5 +15,5 @@ public class LoadBookDTO {
     private long guestBookId;
     private String writerNickName;
     private String content;
-    private LocalDate registDate;
+    private LocalDateTime registDateTime;
 }

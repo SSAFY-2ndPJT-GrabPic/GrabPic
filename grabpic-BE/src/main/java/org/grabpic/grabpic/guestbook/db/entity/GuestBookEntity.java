@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity( name = "guestBook" )
 @Getter
@@ -30,6 +30,6 @@ public class GuestBookEntity {
     private UserEntity writer;
 
     private String content;
-    private LocalDate registDate;
+    private LocalDateTime registDateTime;
 
 }
