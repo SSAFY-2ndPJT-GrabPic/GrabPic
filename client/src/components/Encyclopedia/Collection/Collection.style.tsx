@@ -6,6 +6,8 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: end;
   margin-top: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
 `
 
 export const BtnAlign = styled.div`
