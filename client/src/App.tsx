@@ -25,10 +25,10 @@ function App() {
       <Modal/>
       <RouterProvider>
           <Header />
+          <NavBar />
           <BodyContainer>
             <Router />
           </BodyContainer>
-          <NavBar />
       </RouterProvider>
     </RecoilRoot>
   );
