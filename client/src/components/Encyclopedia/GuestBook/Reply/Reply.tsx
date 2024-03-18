@@ -60,17 +60,19 @@ interface ReplyProps {}
 
 const Reply: React.FC<ReplyProps> = () => {
   return (
-    <R.Container>
-      {replyList.map((replyItem, index) => (
-        <ReplyItem key={index} {...replyItem} />
-      ))}
+    <>
+      <R.Container>
+        {replyList.map((replyItem, index) => (
+          <ReplyItem key={index} {...replyItem} />
+        ))}
+      </R.Container>
       <R.InputContainer>
         <R.InputWrap>
           <R.ReplyInput autoComplete='off' />
           <R.ReplyBtn />
         </R.InputWrap>
       </R.InputContainer>
-    </R.Container>
+    </>
   );
 };
 

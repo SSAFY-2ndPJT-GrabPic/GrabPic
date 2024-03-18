@@ -12,8 +12,8 @@ const EncyBody = styled.div`
   position: fixed;
   top: 100px;
   bottom: 56px;
-  padding-left: 16px;
-  padding-right: 16px;
+  /* padding-left: 16px;
+  padding-right: 16px; */
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;

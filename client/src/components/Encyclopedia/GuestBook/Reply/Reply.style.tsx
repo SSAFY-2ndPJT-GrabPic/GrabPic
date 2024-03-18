@@ -8,6 +8,8 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  padding-left: 16px;
+  padding-right: 16px;
   overflow: scroll;
   ::-webkit-scrollbar{
     display: none;
@@ -22,6 +24,8 @@ export const InputContainer = styled.div`
   background-color: #FFFFFF;
   padding-top: 8px;
   padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
 `
 
 export const InputWrap = styled.div`

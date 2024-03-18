@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col px-6 overflow-scroll">
+    <div className="flex flex-col px-6">
       <L.LoginText>로그인</L.LoginText>
       <G.InputContainer>
         <span>이메일</span>

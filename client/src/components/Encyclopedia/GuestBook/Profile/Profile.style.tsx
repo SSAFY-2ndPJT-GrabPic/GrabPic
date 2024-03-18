@@ -11,6 +11,8 @@ export const Container = styled.div`
   padding-bottom: 21px;
   column-gap: 26px;
   background-color: #FFFFFF;
+  padding-left: 16px;
+  padding-right: 16px;
 `
 
 export const UserContainer = styled.div`
