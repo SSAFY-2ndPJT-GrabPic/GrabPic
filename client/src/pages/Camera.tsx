@@ -1,36 +1,20 @@
-import { useEffect, useRef } from "react";
-import { WebCam } from "../components/camera/WebCam";
-import styled from "styled-components";
+import { Routes,Route } from "react-router-dom";
 
-const Testc = styled.div`
-  position: fixed;
-  display: flex;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: red;
-`
-const Test = styled.video`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`
+import { LivePage } from "../components/camera/LivePage";
+import { CheckPage } from "../components/camera/CheckPage";
+
+import * as C from './Camera.style'
 
 export default function Camera() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const webCam = new WebCam();
-
-  useEffect(() => {
-    webCam.open(videoRef.current);
-    return () => {
-      webCam.close(videoRef.current);
-    };
-  }, [webCam]);
 
   return (
-    <Testc>
-      <Test autoPlay muted ref={videoRef}></Test>
-    </Testc>
+    <C.CameraContainer>
+      <Routes>
+        {/* 실시간 분석페이지 */}
+        <Route index element={<LivePage/>}/>
+        {/* 화면 캡처 페이지 */}
+        <Route path="check" element={<CheckPage/>}/>
+      </Routes>
+    </C.CameraContainer>
   );
 }
