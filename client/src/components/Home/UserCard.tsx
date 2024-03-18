@@ -1,5 +1,7 @@
-import * as U from './UserCard.style'
 import React from 'react';
+import { useRecoilState } from 'recoil';
+import { headerState } from '../../recoil/EncyHeaderState'
+import * as U from './UserCard.style'
 
 const userInfo = {
   nickname: "해진해뜸",
@@ -11,6 +13,9 @@ const userInfo = {
 interface UserCardProps {}
 
 const UserCard: React.FC<UserCardProps> = () => {
+  const [encyLocate, setEncyLocate] = useRecoilState(headerState)
+
+
   return (
     <U.Container>
       <U.UserInfoWrap>
@@ -26,8 +31,8 @@ const UserCard: React.FC<UserCardProps> = () => {
       </U.UserInfoWrap>
 
       <U.BtnsWrap>
-        <U.Btn to='/encyclopedia'>차트</U.Btn>
-        <U.Btn to='/encyclopedia'>컬렉션</U.Btn>
+        <U.Btn to='/encyclopedia' onClick={() => setEncyLocate('chart')}>차트</U.Btn>
+        <U.Btn to='/encyclopedia' onClick={() => setEncyLocate('guestBook')}>방명록</U.Btn>
       </U.BtnsWrap>
     </U.Container>
   );

@@ -8,17 +8,17 @@ interface EncyHeaderProps {}
 const EncyHeader: React.FC<EncyHeaderProps> = () => {
   const [encyLocate, setEncyLocate] = useRecoilState(headerState)
   
-  const routHandler = (lookwhere: string) => {
+  const routHandler = (lookWhere: string) => {
     const beforeBtn = document.getElementById(encyLocate)
     if (beforeBtn) {
       beforeBtn.style.backgroundColor = '#E1E1E1';
       beforeBtn.style.color = '#5C5C5C';
     }
     
-    const goBtn = document.getElementById(lookwhere)
+    const goBtn = document.getElementById(lookWhere)
     
     if (goBtn) {
-      setEncyLocate(lookwhere)
+      setEncyLocate(lookWhere)
       goBtn.style.backgroundColor = '#81D42E';
       goBtn.style.color = '#FFFFFF';
     }

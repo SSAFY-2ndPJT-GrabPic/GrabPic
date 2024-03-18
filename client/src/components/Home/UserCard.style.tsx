@@ -37,11 +37,13 @@ export const DetailInfo = styled.div`
 export const NickName = styled.div`
   font-family: 'BMJUA';
   font-size: 22px;
+  color: #363636;
 `
 
 export const DetailTypo = styled.div`
   font-family: 'TmoneyR';
   font-size: 15px;
+  color: #363636;
 `
 
 export const BtnsWrap = styled.div`
@@ -57,6 +59,7 @@ export const Btn = styled(Link)`
   border-radius: 10px;
   font-family: "BMJUA";
   font-size: 20px;
+  color: #363636;
   display: flex;
   justify-content: center;
   align-items: center;

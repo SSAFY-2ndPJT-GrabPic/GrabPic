@@ -5,11 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 import Home from '../pages/Home';
 import Login from '../pages/Login';
-
 import ResetPw from '../pages/ResetPw';
 import Join from '../pages/Join';
-
 import Encyclopedia from '../pages/Encyclopedia';
+import CollectDetail from '../pages/CollectDetail';
 import ChatBot from '../pages/ChatBot';
 import Map from '../pages/Map';
 import Camera from '../pages/Camera';
@@ -38,6 +37,7 @@ export default function Router() {
       <Route path="/join/*" element={<Join />} />
       <Route path="/chatbot" element={<ChatBot />} />
       <Route path="/encyclopedia" element={<Encyclopedia />} />
+      <Route path="/encyclopedia/:collectName" element={<CollectDetail />} />
       <Route path="/map" element={<Map />} />
       <Route path="/camera" element={<Camera />} />
       <Route path="/gallery" element={<Gallery />} />
