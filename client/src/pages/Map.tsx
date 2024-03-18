@@ -7,7 +7,7 @@ const Map: React.FC = () => {
     return Math.random() * (max - min) + min;
   }
 
-  function calculateNewCoordinates(currentLat: number, currentLng: number, radius: number): { lat: number, lng: number } {
+  function calculateNewCoordinates(currentLat: number, currentLng: number, radius: number): { name:string, lat: number, lng: number } {
     // 0~360도 사이에서 랜덤한 각도 생성
     const randomAngle = generateRandomNumberInRange(0, 360);
     // 0~반경 사이에서 랜덤한 거리 생성
@@ -16,12 +16,12 @@ const Map: React.FC = () => {
     // 새로운 위치의 위도와 경도 계산
     const lat = currentLat + (randomDistance / 111111) * Math.cos(randomAngle);
     const lng = currentLng + (randomDistance / (111111 * Math.cos(lat * Math.PI / 180))) * Math.sin(randomAngle);
-  
-    return { lat, lng };
+    const name = 'testdata'
+    return { name, lat, lng };
   }
   
 
-  const randomCoordinates: { lat: number, lng: number }[] = [];
+  const randomCoordinates: { name:string, lat: number, lng: number }[] = [];
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const Map: React.FC = () => {
   return (
     <>
       {location !== null && randomCoordinates !== null && (
-        <CustomMap position={location} locations={randomCoordinates} />
+          <CustomMap position={location} datas={randomCoordinates} />
       )}
     </>
   )
