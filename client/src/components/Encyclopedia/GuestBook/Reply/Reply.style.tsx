@@ -42,6 +42,7 @@ export const ReplyInput = styled.input`
   font-family: 'TmoneyR';
   font-size: 14px;
   outline: none;
+  color: #363636;
 `
 
 export const ReplyBtn = styled.button`

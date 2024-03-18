@@ -38,13 +38,15 @@ export const NickNDateContainer = styled.div`
 export const NickName = styled.div`
   font-family: 'BMJUA';
   font-size: 12px;
+  color: #363636;
 `
 
 export const SmallTxt = styled.div`
   font-family: 'TmoneyR';
   font-size: 10px;
+  color: #363636;
 `
 
 export const Content = styled(SmallTxt)`
-
+  
 `

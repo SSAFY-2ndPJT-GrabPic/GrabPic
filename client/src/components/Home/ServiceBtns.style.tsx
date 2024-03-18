@@ -10,6 +10,7 @@ export const Container = styled.div`
 export const Title = styled.div`
   font-family: "BMJUA";
   font-size: 24px;
+  color: #363636;
 `
 
 export const BtnsWrap = styled.div`
@@ -38,11 +39,13 @@ export const BtnBgrnd = styled(Link)`
 export const BtnTitle = styled.div`
   font-family: "BMJUA";
   font-size: 20px;
+  color: #363636;
 `
 
 export const BtnSub = styled.div`
   font-family: "TmoneyR";
   font-size: 12px;
+  color: #363636;
 `
 
 export const MapBtn = styled(BtnBgrnd)`

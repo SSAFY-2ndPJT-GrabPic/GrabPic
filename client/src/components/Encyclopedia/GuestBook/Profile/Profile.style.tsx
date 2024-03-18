@@ -34,6 +34,7 @@ export const NickName = styled.div`
   width: 85px;
   font-family: 'BMJUA';
   font-size: 16px;
+  color: #363636;
 `
 
 export const SubContainer = styled.div`
@@ -58,11 +59,13 @@ export const NumTxt = styled.div`
   font-family: 'BMJUA';
   font-size: '20px';
   text-align: center;
+  color: #363636;
 `
 
 export const ExplainTxt = styled.div`
   font-family: 'TmoneyR';
   font-size: 12px;
+  color: #363636;
 `
 
 export const SubBtn = styled.div`

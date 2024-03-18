@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import * as C from './Collection.style';
 import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png'
 
@@ -36,10 +37,12 @@ const Collection: React.FC<CollectionProps> = () => {
 
       <C.CollectContainer>
         {collectList.map((collectItem, index) => (
-          <C.CollectItem key={index}>
-            <C.ItemImg src={collectItem.url} />
-            <C.ItemName>{collectItem.name}</C.ItemName>
-          </C.CollectItem>
+          <Link to={`/encyclopedia/${collectItem.name}`} key={index}>
+            <C.CollectItem>
+              <C.ItemImg src={collectItem.url} />
+              <C.ItemName>{collectItem.name}</C.ItemName>
+            </C.CollectItem>
+          </Link>
         ))}
       </C.CollectContainer>
     </C.Container>
