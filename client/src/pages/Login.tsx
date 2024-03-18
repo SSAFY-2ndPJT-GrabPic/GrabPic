@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { isLoginState } from '../recoil/atoms/UserState'
 import * as L from './Login.style';
 import * as G from '../styles/globalCSS';
@@ -12,7 +12,7 @@ import kakaoIconUrl from '../assets/Login/kakao.png'
 const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  const [isLogin,setIsLogin] = useRecoilState<boolean>(isLoginState)
+  const setIsLogin = useSetRecoilState<boolean>(isLoginState)
   // const [loginData, setLoginData] = useState<{email:string;password:string}>({ email: "", password: "" });
 
 
@@ -25,7 +25,6 @@ const Login: React.FC = () => {
   }
   
   const loginCheck = () =>{
-    console.log(isLogin);
     setIsLogin(true);
     navigate("/");
   }
