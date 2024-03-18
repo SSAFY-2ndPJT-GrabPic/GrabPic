@@ -37,4 +37,14 @@ public class UserEntity {
     //탈퇴 여부, mysql default는 false(tinyint 0)
     private boolean isDeleted;
 
+    //구독자 수 증가 메소드
+    public void increaseSubsCount() {
+        this.subsCount++;
+    }
+
+    //구독자수 감소 메소드
+    public void decreaseSubsCount() {
+        this.subsCount--;
+    }
+
 }
