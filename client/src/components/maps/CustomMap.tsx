@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { MapMarker, Map, useKakaoLoader as useKakaoLoaderOrigin } from "react-kakao-maps-sdk"
 
-import { useTransform, useMotionValue } from "framer-motion"
+import { useMotionValue, useMotionValueEvent } from "framer-motion"
 
 // zoomin 이미지 불러오기
 import plusImg from "../../assets/Map/plus.png";
@@ -29,16 +29,12 @@ interface TestProps {
 
 
 const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
-  const mnHeight = '80px';
-  const mxHeight = '60%';
-  const y = useMotionValue(0);
-  const containerHeight = useTransform(y, [0, 400], [mnHeight, mxHeight]);
   // 지도 호출
   useKakaoLoaderOrigin({
     appkey: "52b3371f40d9c77376d831422bbae913",
     libraries: ["clusterer", "drawing", "services"],
   })
-
+  
   // 기본 위치(현재 좌표) 호출 및 스타일 지정
   const [state] = useState({
     center: {
@@ -49,7 +45,7 @@ const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
   })
 
   // 핀리스트 
-
+  const [isActive, setActive] = useState<boolean>(false);
 
   // 필터 활성화
   const [isClickActive, setClickActive] = useState<boolean[]>([true, false, false]);
@@ -107,18 +103,8 @@ const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
           />
         </M.Zoom_Span>
       </M.Zoom_Control>
-      <M.ListContainer
-        style={{
-          minHeight: mnHeight,
-          maxHeight: mxHeight,
-          overflowY: 'auto', // 내용이 많아질 경우 스크롤 표시
-          y,
-          height: containerHeight
-        }}
-        drag="y" // y축 방향으로만 드래그 가능
-        dragElastic={false} // 드래그 시 튕김 효과 비활성화
-        >
-        <M.DragHandle />
+      <M.ListContainer active={isActive}>
+        <M.DragHandle onClick={() => setActive(!isActive)}/>
         <M.FilterContainer>
             <M.FilterButton clickActive={isClickActive[0]} onClick={() => filterChange(0)}>최신순</M.FilterButton>
             <M.FilterButton clickActive={isClickActive[1]} onClick={() => filterChange(1)}>오래된순</M.FilterButton>

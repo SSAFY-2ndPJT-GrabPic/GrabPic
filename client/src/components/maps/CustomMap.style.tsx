@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion } from 'framer-motion';
+
 // 맵 컨테이너
 export const MapContainer = styled.div`
   position:relative;
@@ -8,17 +8,16 @@ export const MapContainer = styled.div`
 `;
 
 // 리스트 컨테이너
-export const ListContainer = styled(motion.div)`
+export const ListContainer = styled.div<{ active:boolean }>`
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80px;
-
+  height: 60%;
+  transform: ${props => props.active ? 'translateY(0%)' : 'translateY(calc(60% + 80px))'};
+  overflowY: auto;
   background-color: #fefefe; /* 예시 배경색 */
-  overflow: hidden; /* 리스트가 활성화되었을 때 스크롤 가능하도록 설정 */
-  overflow-y: au;
-  z-index: 99;
+  z-index: 100;
   border-top-right-radius: 35px;
   border-top-left-radius: 35px;
   box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.175);
@@ -38,7 +37,7 @@ export const DragHandle = styled.div`
 export const FilterContainer = styled.div`
   top: 40px;
   width: 100%;
-  height: 100%;
+  height: 100px;
   display: flex;
   justify-content: space-evenly;
   position: relative; /* FilterContainer를 기준으로 손잡이를 위치시킬 수 있도록 설정 */
@@ -54,6 +53,11 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
   font-size: x-large;
   font-size: 16px;
   background-color: ${props => props.clickActive ? '#81D42E' : ''};
+`
+
+export const list = styled.div`
+  width:100%
+  height:calc(100%-)
 `
 
 
