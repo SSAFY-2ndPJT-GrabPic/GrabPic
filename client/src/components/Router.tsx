@@ -2,6 +2,7 @@ import { Routes, Route,useLocation  } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { isLoginState } from '../recoil/atoms/UserState';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import Home from '../pages/Home';
 import Login from '../pages/Login';
@@ -15,7 +16,8 @@ import Map from '../pages/Map';
 import Camera from '../pages/Camera';
 import Gallery from '../pages/Gallery';
 import SettingPage from '../pages/SettingPage';
-import { useEffect } from 'react';
+
+import UserInfo from '../pages/UserInfo';
 
 export default function Router() {
   const isLogin = useRecoilValue(isLoginState);
@@ -42,6 +44,7 @@ export default function Router() {
       <Route path="/camera" element={<Camera />} />
       <Route path="/gallery" element={<Gallery />} />
       <Route path="/setting" element={<SettingPage />} />
+      <Route path="/userinfo" element={<UserInfo />} />
     </Routes>
   );
 }

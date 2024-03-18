@@ -1,6 +1,9 @@
-export default function UserInfo () {
-  
+import { ModifyUserInfo } from '../components/User/ModifyUserInfo';
+
+export default function UserInfo() {
   return (
-    <h1>UserInfo</h1>
-  )
+    <div className='px-6'>
+      <ModifyUserInfo />
+    </div>
+  );
 }
