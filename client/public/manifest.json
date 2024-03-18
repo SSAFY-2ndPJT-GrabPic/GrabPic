@@ -1,29 +1,44 @@
 {
     "name": "GrabPic",
     "short_name": "GrabPic",
-    "start_url": "https://j10d104.p.ssafy.io",
+    "start_url": "../index.html",
     "display": "standalone",
     "background_color": "#F8F7DA",
     "theme_color": "#ffffff",
     "description": "PWA with Vite.js, React.js and TypeScript",
     "icons": [
         {
-            "src": "icons/heart128.png",
+            "src": "icons/logo16.png",
+            "sizes": "16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "icons/logo32.png",
+            "sizes": "32x32",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "icons/logo64.png",
+            "sizes": "64x64",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "icons/logo128.png",
             "sizes": "128x128",
             "type": "image/x-icon"
         },
         {
-            "src": "icons/heart256.png",
+            "src": "icons/logo192.png",
+            "sizes": "192x192",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "icons/logo256.png",
             "type": "image/png",
             "sizes": "256x256"
         },
         {
-            "src": "icons/heart512.png",
-            "type": "image/png",
-            "sizes": "512x512"
-        },
-        {
-            "src": "icons/heart512.png",
+            "src": "icons/logo512.png",
             "type": "image/png",
             "sizes": "512x512",
             "purpose": "any maskable"
