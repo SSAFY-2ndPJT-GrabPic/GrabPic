@@ -59,6 +59,11 @@ const CustomMap: React.FC = () => {
     },
   })
 
+  // 맵 레벨 변경을 위한 선언
+  const mapRef = useRef<kakao.maps.Map>(null);
+
+  const [map] = useState()
+
   useEffect(() => {
     function getLocation() {
       if (navigator.geolocation) {
@@ -103,7 +108,7 @@ const CustomMap: React.FC = () => {
   }, [location])
 
   useEffect(() => {
-    if (!randomCoordinates) return
+    if (!map) return
     const addressFinder = new kakao.maps.services.Geocoder();
 
     randomCoordinates.forEach((item, index) => {
@@ -115,8 +120,13 @@ const CustomMap: React.FC = () => {
         }
       });
     });
-  }, [randomCoordinates]);
+  }, [map]);
 
+  useEffect(() => {
+    if (location !== null) {
+      setState({ center: location });
+    }
+  }, [location]);
 
   // 핀리스트 
   const [isActive, setActive] = useState<boolean>(false);
@@ -131,8 +141,7 @@ const CustomMap: React.FC = () => {
     else if (index === 2) setClickActive([false, false, true])
   }
   
-  // 맵 레벨 변경을 위한 선언
-  const mapRef = useRef<kakao.maps.Map>(null)
+
 
   // 줌인 함수
   const zoomIn = () => {
