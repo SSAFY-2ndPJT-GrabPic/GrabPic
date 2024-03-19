@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
@@ -90,10 +91,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     //로그인 실패시 실행하는 메소드
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        //한글 깨짐 방지
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
 
+        //전달 결과 생성
+        PrintWriter writer = response.getWriter();
+        if (failed.getMessage().equals("UserDetailsService returned null, which is an interface contract violation")) {
+            writer.print("아이디가 일치하지 않습니다.");
+        } else if (failed.getMessage().equals("실패원인 자격 증명에 실패하였습니다.")) {
+            writer.print("비밀번호가 올바르지 않습니다.");
+        }
         response.setStatus(401);
-
     }
 
     private Cookie createCookie(String key, String value) {
