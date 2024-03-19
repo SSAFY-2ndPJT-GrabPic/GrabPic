@@ -2,6 +2,7 @@ package org.grabpic.grabpic.user.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
@@ -9,12 +10,15 @@ import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Optional;
 
 @Service
@@ -25,17 +29,20 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
 
+    @Value("${spring.jwt.proerties.smtp.access}")
+    private long accessTime;
+
     @Override
-    public void joinProcess(JoinDTO joinDTO) {
+    public boolean joinProcess(JoinDTO joinDTO) {
 
         String email = joinDTO.getEmail();
 
         Boolean isExist = userRepository.existsByEmail(email);
 
+        // 2차검증
         if (isExist) {
-
             System.out.println("이미 존재하는 휴먼");
-            return;
+            return false;
         }
 
         UserEntity data = UserEntity.builder()
@@ -47,10 +54,34 @@ public class UserServiceImpl implements UserService {
                         .role("ROLE_USER")
                         .build();
 
-
         userRepository.save(data);
+        return true;
     }
-    
+
+    @Override
+    public boolean duplicationEmailCheck(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean changePassword(String password, String token, HttpServletResponse response) throws IOException {
+        try {
+            jwtUtil.isExpired(token);
+        } catch (ExpiredJwtException e) {
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return false;
+        }
+        UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
+        user.setPassword(password);
+        userRepository.save(user);
+        return true;
+    }
+
+
     @Override
     public JoinDTO setSocialInfo() {
         //OAuth2User
@@ -109,8 +140,9 @@ public class UserServiceImpl implements UserService {
         String role = jwtUtil.getRole(refresh);
         String nickName = jwtUtil.getNickName(refresh);
 
-        //make new JWT 5분
-        return jwtUtil.createJwt("access", email, role, nickName, 300000L);
+
+        //make new JWT
+        return jwtUtil.createJwt("access", email, role, nickName, accessTime);
     }
 
     @Override
@@ -132,7 +164,7 @@ public class UserServiceImpl implements UserService {
         if(optionalUser.isPresent()) {
             InfoDTO infoDTO = new InfoDTO();
             UserEntity user = optionalUser.get();
-            infoDTO.setUser_id(user.getUserId());
+            infoDTO.setUserId(user.getUserId());
             infoDTO.setEmail(user.getEmail());
             infoDTO.setName(user.getName());
             infoDTO.setNickname(user.getNickname());

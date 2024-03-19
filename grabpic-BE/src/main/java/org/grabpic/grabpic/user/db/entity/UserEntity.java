@@ -23,6 +23,7 @@ public class UserEntity {
     // 로그인용 이메일 중복X
     private String email;
 
+    @Setter
     private String password;
     private String provider;
     private String nickname;
