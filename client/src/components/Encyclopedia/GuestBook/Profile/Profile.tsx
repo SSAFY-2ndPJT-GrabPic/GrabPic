@@ -3,6 +3,8 @@ import React from 'react';
 import * as P from './Profile.style';
 
 const userInfo = {
+  isMine: false,
+  isSub: false,
   nickname: "해진해뜸",
   profileImgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWgn_TKOeao6JafiNJb9MoJVTfF9zsmNAlRygzSuCbCjeqUjV',
   collect: 417,
@@ -13,6 +15,16 @@ const userInfo = {
 interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = () => {
+  const btnColor = (() => {
+    if (userInfo.isMine) {
+      return { backgroundColor: '#BDBDBD', color: '#FFFFFF'}
+    } else if (userInfo.isSub) {
+      return { backgroundColor: '#50940C', color: '#FFFFFF'}
+    } else {
+      return { backgroundColor: '#B2EB78', color: '#5C5C5C'}
+    }
+  })();
+
   return (
     <P.Container>
       <P.UserContainer>
@@ -30,7 +42,7 @@ const Profile: React.FC<ProfileProps> = () => {
             <P.ExplainTxt>구독자 수</P.ExplainTxt>
           </div>
         </P.TxtContainer>
-        <P.SubBtn>구독</P.SubBtn>
+        <P.SubBtn style={btnColor}>{userInfo.isMine ? '회원 정보 수정' : userInfo.isSub ? '구독 중' : '구독하기'}</P.SubBtn>
       </P.SubContainer>
     </P.Container>
   );
