@@ -1,9 +1,7 @@
 import * as M from "./CustomMap.style"
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { MapMarker, Map, useKakaoLoader as useKakaoLoaderOrigin } from "react-kakao-maps-sdk"
-
-import { useMotionValue, useMotionValueEvent } from "framer-motion"
 
 // zoomin 이미지 불러오기
 import plusImg from "../../assets/Map/plus.png";
@@ -103,6 +101,7 @@ const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
           />
         </M.Zoom_Span>
       </M.Zoom_Control>
+
       <M.ListContainer active={isActive}>
         <M.DragHandle onClick={() => setActive(!isActive)}/>
         <M.FilterContainer>
@@ -110,13 +109,15 @@ const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
             <M.FilterButton clickActive={isClickActive[1]} onClick={() => filterChange(1)}>오래된순</M.FilterButton>
             <M.FilterButton clickActive={isClickActive[2]} onClick={() => filterChange(2)}>희귀도순</M.FilterButton>
         </M.FilterContainer>
-        {datas.map((item, index) => (
-          <div key={index}>
-            <div>Name: {item.name}</div>
-            {/* <div>Latitude: {item.lat}</div>
-            <div>Longitude: {item.lng}</div> */}
-          </div>
-        ))}
+        <M.PinList>
+          {datas.map((item, index) => (
+            <div key={index}>
+              <div>Name: {item.name}</div>
+              {/* <div>Latitude: {item.lat}</div>
+              <div>Longitude: {item.lng}</div> */}
+            </div>
+          ))}
+        </M.PinList>
       </M.ListContainer>
     </M.MapContainer>
   )

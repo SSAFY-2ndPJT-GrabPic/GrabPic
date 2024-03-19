@@ -5,6 +5,7 @@ export const MapContainer = styled.div`
   position:relative;
   width: 100%;
   height: 100%; /* 화면 높이에서 112px 제외 */
+  overflow: hidden;
 `;
 
 // 리스트 컨테이너
@@ -15,7 +16,7 @@ export const ListContainer = styled.div<{ active:boolean }>`
   width: 100%;
   height: 60%;
   transform: ${props => props.active ? 'translateY(0%)' : 'translateY(calc(60% + 80px))'};
-  overflowY: auto;
+  overflow: hidden;
   background-color: #fefefe; /* 예시 배경색 */
   z-index: 100;
   border-top-right-radius: 35px;
@@ -55,9 +56,11 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
   background-color: ${props => props.clickActive ? '#81D42E' : ''};
 `
 
-export const list = styled.div`
-  width:100%
-  height:calc(100%-)
+export const PinList = styled.div`
+  width:100%;
+  height:calc(100%);
+  overflow: hidden;
+  overflow-y: auto;
 `
 
 
