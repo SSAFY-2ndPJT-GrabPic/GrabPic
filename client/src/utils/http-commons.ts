@@ -1,21 +1,21 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 const baseURL = 'https://j10d104.p.ssafy.io/api';
 
 axios.defaults.withCredentials = true;
 
-export const noneApi = axios.create({
+export const noneApi: AxiosInstance = axios.create({
   baseURL: baseURL,
 });
 
-export const publicApi= axios.create({
+export const publicApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-export const privateApi = axios.create({
+export const privateApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     'Access-Control-Allow-Origin': '*',
@@ -32,21 +32,21 @@ privateApi.interceptors.request.use((config) => {
   return config;
 });
 
-export const joinApi = axios.create({
+export const joinApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     'Content-Type': 'multipart/form-data',
   }
 });
 
-export const textApi = axios.create({
+export const textApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     'Content-Type': 'text/plain',
   }
 });
 
-export const authtokenApi = axios.create({
+export const authtokenApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     'AUTH-TOKEN': `${localStorage.getItem('token')}`,
@@ -61,8 +61,7 @@ authtokenApi.interceptors.request.use((config) => {
   return config;
 });
 
-
-export const profileImgApi = axios.create({
+export const profileImgApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     'Content-Type': 'multipart/form-data',
