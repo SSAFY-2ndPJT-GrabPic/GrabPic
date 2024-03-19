@@ -1,12 +1,15 @@
 import * as M from "./CustomMap.style"
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { MapMarker, Map, useKakaoLoader as useKakaoLoaderOrigin } from "react-kakao-maps-sdk"
+import { MapMarker, Map} from "react-kakao-maps-sdk";
+import useKakaoLoader from "./useKakaoLoader";
 
 // zoomin 이미지 불러오기
 import plusImg from "../../assets/Map/plus.png";
 // zoomout 이미지 불러오기
 import minusImg from "../../assets/Map/minus.png";
+// 맵 중심 마커 이미지 불러오기
+import myLocateMarker from "../../assets/Map/myLocateMarker.png";
 
 // 위도 경도 프롭처리할 예정.
 interface MapsProps {
@@ -18,29 +21,102 @@ interface ItemProps {
   name: string;
   lat: number;
   lng: number;
+  address: string;
 }
 
-interface TestProps {
-  position: MapsProps
-  datas: ItemProps[];
-}
-
-
-const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
+const CustomMap: React.FC = () => {
   // 지도 호출
-  useKakaoLoaderOrigin({
-    appkey: "52b3371f40d9c77376d831422bbae913",
-    libraries: ["clusterer", "drawing", "services"],
-  })
+  useKakaoLoader();
+    // 랜덤 위도 생성
+  function generateRandomNumberInRange(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
+  }
+
+  function calculateNewCoordinates(currentLat: number, currentLng: number, radius: number): { name:string, lat: number, lng: number, address: string } {
+    // 0~360도 사이에서 랜덤한 각도 생성
+    const randomAngle = generateRandomNumberInRange(0, 360);
+    // 0~반경 사이에서 랜덤한 거리 생성
+    const randomDistance = generateRandomNumberInRange(0, radius);
   
-  // 기본 위치(현재 좌표) 호출 및 스타일 지정
-  const [state] = useState({
+    // 새로운 위치의 위도와 경도 계산
+    const lat = currentLat + (randomDistance / 111111) * Math.cos(randomAngle);
+    const lng = currentLng + (randomDistance / (111111 * Math.cos(lat * Math.PI / 180))) * Math.sin(randomAngle);
+    const name = 'testdata';
+    const address = '';
+    return { name, lat, lng, address };
+  }
+  
+
+  const randomCoordinates: ItemProps[] = [];
+
+  // 현재 좌표 추적 위한 상태
+  const [location, setLocation] = useState<MapsProps | null>(null);
+  // 실제 지도 데이터 사용
+  const [state, setState ] = useState({
     center: {
-      lat: position.lat,
-      lng: position.lng
+      lat: location?.lat ? location?.lat : 36.106831,
+      lng: location?.lng ? location?.lng : 128.416762
     },
-    style: {width: "100%", height: "100%", Position: "relative", overflow: "hidden"},
   })
+
+  useEffect(() => {
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+      }
+    }
+
+    function success(position: any) {
+      console.log('success')
+      setLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+      setState({
+        center:{
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+      })
+    }
+
+    function error() {
+      console.log('error')
+      setLocation({
+        lat: 37.483034,
+        lng: 126.902435
+      })
+      console.log("위치 받기 실패");
+    }
+
+    if (location === null) {
+      getLocation();
+    }
+
+    if (location !== null) {
+      for (let i = 0; i < 20; i++) {
+        const newCoordinates = calculateNewCoordinates(location.lat, location.lng, 200);
+        randomCoordinates.push(newCoordinates);
+      }
+    }
+
+  }, [location])
+
+  useEffect(() => {
+    if (!randomCoordinates) return
+    const addressFinder = new kakao.maps.services.Geocoder();
+
+    randomCoordinates.forEach((item, index) => {
+      addressFinder.coord2Address(item.lng, item.lat, (result: any, status: any) => {
+        if (status === kakao.maps.services.Status.OK) {
+          const address = result[0].address.address_name;
+          randomCoordinates[index].address = address;
+          console.log(address)
+        }
+      });
+    });
+  }, [randomCoordinates]);
+
 
   // 핀리스트 
   const [isActive, setActive] = useState<boolean>(false);
@@ -77,13 +153,24 @@ const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
       <Map // 지도를 표시할 Container
         id="map"
         center= {state.center}
-        style= {state.style}
+        style= {{width: "100%", height: "100%", position: "relative", overflow: "hidden"}}
         level={3} // 지도의 확대 레벨
         ref={mapRef}
+        onCenterChanged={(map) => {
+          const latlng = map.getCenter()
+          setState({
+            center: {
+              lat: latlng.getLat(),
+              lng: latlng.getLng()
+            },
+          })
+        }}
       >
+        <MapMarker key={state.center.lat-state.center.lng} position={{ lat: state.center.lat, lng: state.center.lng}} image={{src: myLocateMarker, size: { width: 29, height: 42}}}/>
         {/* locations을 반복하여 각 위치에 마커 생성 */}
-          {datas.map((location, index) => (
-          <MapMarker key={index} position={{ lat: location.lat, lng: location.lng }} />
+          {randomCoordinates.map((location, index) => (
+          
+          <MapMarker key={index} position={{ lat: location.lat, lng: location.lng }}/>
         ))}
       </Map>
 
@@ -110,7 +197,7 @@ const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
             <M.FilterButton clickActive={isClickActive[2]} onClick={() => filterChange(2)}>희귀도순</M.FilterButton>
         </M.FilterContainer>
         <M.PinList>
-          {datas.map((item, index) => (
+          {randomCoordinates.map((item, index) => (
             <div key={index}>
               <div>Name: {item.name}</div>
               {/* <div>Latitude: {item.lat}</div>

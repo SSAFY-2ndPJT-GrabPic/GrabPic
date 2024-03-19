@@ -55,12 +55,16 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
   font-size: 16px;
   background-color: ${props => props.clickActive ? '#81D42E' : ''};
 `
-
+// 핀 리스트
 export const PinList = styled.div`
   width:100%;
   height:calc(100%);
   overflow: hidden;
   overflow-y: auto;
+`
+
+export const PinItem = styled.div`
+  
 `
 
 
@@ -94,8 +98,6 @@ export const Zoom_Span = styled.span`
 
 // 줌 버튼 이미지
 export const Zoom_Img = styled.img`
-  width: 22px;
-  height: 22px;
+  width: 18px;
   border:none;
 `;
-
