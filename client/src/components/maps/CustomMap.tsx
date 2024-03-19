@@ -42,12 +42,11 @@ const CustomMap: React.FC = () => {
     const lat = currentLat + (randomDistance / 111111) * Math.cos(randomAngle);
     const lng = currentLng + (randomDistance / (111111 * Math.cos(lat * Math.PI / 180))) * Math.sin(randomAngle);
     const name = 'testdata';
+    // const address = addressFind(lat, lng);
     const address = '';
     return { name, lat, lng, address };
   }
-  
 
-  const randomCoordinates: ItemProps[] = [];
 
   // 현재 좌표 추적 위한 상태
   const [location, setLocation] = useState<MapsProps | null>(null);
@@ -64,6 +63,8 @@ const CustomMap: React.FC = () => {
 
   const [map] = useState()
 
+  const [randomCoordinates, setRandomCoordinates] = useState<ItemProps[]>([]);
+
   useEffect(() => {
     function getLocation() {
       if (navigator.geolocation) {
@@ -72,11 +73,11 @@ const CustomMap: React.FC = () => {
     }
 
     function success(position: any) {
-      console.log('success')
       setLocation({
         lat: position.coords.latitude,
         lng: position.coords.longitude
       });
+
       setState({
         center:{
           lat: position.coords.latitude,
@@ -95,13 +96,16 @@ const CustomMap: React.FC = () => {
     }
 
     if (location === null) {
+      console.log('좌표추적')
       getLocation();
     }
 
     if (location !== null) {
+      const newCoordinates: ItemProps[] = [];
       for (let i = 0; i < 20; i++) {
-        const newCoordinates = calculateNewCoordinates(location.lat, location.lng, 200);
-        randomCoordinates.push(newCoordinates);
+        const newCoordinate = calculateNewCoordinates(location.lat, location.lng, 500);
+        randomCoordinates.push(newCoordinate);
+        setRandomCoordinates(newCoordinates)
       }
     }
 
@@ -109,6 +113,7 @@ const CustomMap: React.FC = () => {
 
   useEffect(() => {
     if (!map) return
+    console.log('주소변환')
     const addressFinder = new kakao.maps.services.Geocoder();
 
     randomCoordinates.forEach((item, index) => {
@@ -122,11 +127,17 @@ const CustomMap: React.FC = () => {
     });
   }, [map]);
 
-  useEffect(() => {
-    if (location !== null) {
-      setState({ center: location });
-    }
-  }, [location]);
+  // function addressFind(lat: number, lng: number): string {
+  //   const addressFinder = new kakao.maps.services.Geocoder();
+  //   addressFinder.coord2Address(lng, lat, (result: any, status: any) => {
+  //     if (status === kakao.maps.services.Status.OK) {
+  //       const address = result[0].address.address_name;
+  //       console.log(address)
+  //       return address
+  //     }
+  //   });
+  //   return ''
+  // }
 
   // 핀리스트 
   const [isActive, setActive] = useState<boolean>(false);
@@ -165,15 +176,6 @@ const CustomMap: React.FC = () => {
         style= {{width: "100%", height: "100%", position: "relative", overflow: "hidden"}}
         level={3} // 지도의 확대 레벨
         ref={mapRef}
-        onCenterChanged={(map) => {
-          const latlng = map.getCenter()
-          setState({
-            center: {
-              lat: latlng.getLat(),
-              lng: latlng.getLng()
-            },
-          })
-        }}
       >
         <MapMarker key={state.center.lat-state.center.lng} position={{ lat: state.center.lat, lng: state.center.lng}} image={{src: myLocateMarker, size: { width: 29, height: 42}}}/>
         {/* locations을 반복하여 각 위치에 마커 생성 */}
