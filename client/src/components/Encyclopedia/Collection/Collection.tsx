@@ -48,7 +48,7 @@ const Collection: React.FC<CollectionProps> = () => {
 
       <C.CollectContainer className='grid gird-cols-3'>
         {collectList.map((collectItem, index) => (
-          <Link to={`/encyclopedia/${collectItem.name}`} key={index}>
+          <Link to={`/detail/${collectItem.name}`} key={index}>
             <C.CollectItem>
               <C.ItemImg src={collectItem.url} />
               <C.ItemName>{collectItem.name}</C.ItemName>

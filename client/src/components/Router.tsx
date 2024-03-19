@@ -17,6 +17,7 @@ import Gallery from '../pages/Gallery';
 import SettingPage from '../pages/SettingPage';
 
 import UserInfo from '../pages/UserInfo';
+import MainLayout from '../MainLayout'
 
 export default function Router() {
   const isLogin = useRecoilValue(isLoginState);
@@ -32,19 +33,23 @@ export default function Router() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/camera" element={<Camera />} />
+      {/* 헤더 & 네브를 넣을 페이지 */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/chatbot" element={<ChatBot />} />
+        <Route path="/encyclopedia/:userName" element={<Encyclopedia />} />
+        <Route path="/detail/:collectName" element={<CollectDetail />} />
+        <Route path="/map" element={<Map />} />
+        <Route path="/camera/*" element={<Camera />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/setting" element={<SettingPage />} />
+        <Route path="/userinfo" element={<UserInfo />} />
+      </Route>
+
+      {/* 헤더 & 네브가 필요 없는 페이지 */}
       <Route path="/login" element={<Login />} />
       <Route path="/resetpw/*" element={<ResetPw />}/>
       <Route path="/join/*" element={<Join />} />
-      <Route path="/chatbot" element={<ChatBot />} />
-      <Route path="/encyclopedia" element={<Encyclopedia />} />
-      <Route path="/encyclopedia/:collectName" element={<CollectDetail />} />
-      <Route path="/map" element={<Map />} />
-      <Route path="/camera/*" element={<Camera />} />
-      <Route path="/gallery" element={<Gallery />} />
-      <Route path="/setting" element={<SettingPage />} />
-      <Route path="/userinfo" element={<UserInfo />} />
     </Routes>
   );
 }
