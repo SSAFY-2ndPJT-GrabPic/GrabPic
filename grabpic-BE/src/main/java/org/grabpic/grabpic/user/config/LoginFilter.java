@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
 import org.grabpic.grabpic.user.db.dto.CustomUserDetails;
 import org.grabpic.grabpic.user.db.dto.LoginDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +31,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     //JWTUtil 주입
     private final JWTUtil jwtUtil;
+
+    @Value("${spring.jwt.proerties.smtp.access}")
+    private long accessTime;
+
+    @Value("${spring.jwt.proerties.smtp.refresh}")
+    private long refreshTime;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -72,10 +79,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        // 5분
-        String access = jwtUtil.createJwt("access", email, role, nickName, 300000L);
-        // 10분
-        String refresh = jwtUtil.createJwt("refresh", email, role, nickName, 600000L);
+        String access = jwtUtil.createJwt("access", email, role, nickName, accessTime);
+        String refresh = jwtUtil.createJwt("refresh", email, role, nickName, refreshTime);
 
         //응답 설정
         response.setHeader("access", access);

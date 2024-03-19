@@ -9,6 +9,7 @@ import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
+
+    @Value("${spring.jwt.proerties.smtp.access}")
+    private long accessTime;
 
     @Override
     public void joinProcess(JoinDTO joinDTO) {
@@ -109,8 +113,9 @@ public class UserServiceImpl implements UserService {
         String role = jwtUtil.getRole(refresh);
         String nickName = jwtUtil.getNickName(refresh);
 
-        //make new JWT 5분
-        return jwtUtil.createJwt("access", email, role, nickName, 300000L);
+
+        //make new JWT
+        return jwtUtil.createJwt("access", email, role, nickName, accessTime);
     }
 
     @Override
@@ -132,7 +137,7 @@ public class UserServiceImpl implements UserService {
         if(optionalUser.isPresent()) {
             InfoDTO infoDTO = new InfoDTO();
             UserEntity user = optionalUser.get();
-            infoDTO.setUser_id(user.getUserId());
+            infoDTO.setUserId(user.getUserId());
             infoDTO.setEmail(user.getEmail());
             infoDTO.setName(user.getName());
             infoDTO.setNickname(user.getNickname());
