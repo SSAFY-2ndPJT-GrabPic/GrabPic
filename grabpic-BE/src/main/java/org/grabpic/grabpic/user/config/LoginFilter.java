@@ -103,7 +103,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         } else if (failed.getMessage().equals("실패원인 자격 증명에 실패하였습니다.")) {
             writer.print("비밀번호가 올바르지 않습니다.");
         }
-        response.setStatus(401);
+        response.setStatus(204);
     }
 
     private Cookie createCookie(String key, String value) {
