@@ -6,14 +6,13 @@ import { isLoginState } from '../../recoil/atoms/UserState';
 
 export const Modal: React.FC = () => {
   const [modalTitle, setModalTitle] = useState('정말 로그아웃하시겠습니까?');
-  const [modalText, setModalText] = useState('회원 정보는 모두 삭제됩니다.');
+  const [modalText, setModalText] = useState('');
 
-  const [isLogin,setIsLogin] = useRecoilState(isLoginState);
+  const [,setIsLogin] = useRecoilState(isLoginState);
   const [isModal, setIsModal] = useRecoilState(R.isModalState);
   const isModalNo = useRecoilValue(R.isModalNo);
 
   useEffect(() => {
-    isModal;
     if (isModalNo === 1) {
       setModalTitle('정말 로그아웃 하시겠습니까?');
     } else if (isModalNo === 2) {
@@ -27,9 +26,9 @@ export const Modal: React.FC = () => {
   };
 
   const modalBtnYesClick = () => {
+    localStorage.removeItem("accessToken");
     setIsModal(false);
     setIsLogin(false);
-    isLogin;
   };
 
   return (
@@ -37,7 +36,7 @@ export const Modal: React.FC = () => {
       <M.modalContainer>
         <M.modalBox>
           <M.modalTitle>{modalTitle}</M.modalTitle>
-          {isModalNo === 2 && <M.modalText>{modalText}</M.modalText>}
+          <M.modalText>{modalText}</M.modalText>
 
           <div className="flex flex-row mt-10">
             <div className="flex flex-row w-1/2 justify-center">

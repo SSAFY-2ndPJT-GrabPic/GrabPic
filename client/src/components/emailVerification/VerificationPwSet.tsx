@@ -14,7 +14,7 @@ export default function ResetPwSet() {
 
   // 입력 값
   const [pw, setPw] = useState('');
-  const [checkPw, setCheckPw] = useState('');
+  const [, setCheckPw] = useState('');
 
   // 오류 메시지
   const [pwMsg, setPwMsg] = useState('');
@@ -37,23 +37,24 @@ export default function ResetPwSet() {
   // 비밀번호 유효성 검사
   const validatePw = (s: string) => {
     setPw(s);
-    setIsPw(pwRegex.test(s));
-    console.log(s)
-    console.log(isPw);
-    if(isPw){
+
+    if(pwRegex.test(s)){
+      setIsPw(true);
       setPwMsg('')
     }else{
+      setIsPw(false);
       setPwMsg('비밀번호 형식이 올바르지 않습니다!')
     }
 
   };
 
+  // 비밀번호 재입력 검사
   const passwordDoubleCheck = (s: string) => {
     setCheckPw(s);
 
-    if(checkPw === pw){
+    if(s === pw){
       setIsCheckPw(true);
-      setCheckMsg('비밀번호가 일치합니다.');
+      setCheckMsg('');
     }else{
       setIsCheckPw(false);
       setCheckMsg('비밀번호가 다릅니다.')
@@ -66,12 +67,20 @@ export default function ResetPwSet() {
   };
 
   const handleClick = () => {
+    
+    // 비밀번호 입력 체크
+    // 추후 에러메시지 강조 효과 주기.
+    if (!isPw || !isCheckPw)      return ;
+    
+    // 회원가입, 비밀번호 재설정 페이지에 따라 이동이 다름.
     if (isJoinPage) {
       const newState = { ...state, pw: pw };
       navigate(`/${state.page}/userinfo`, { state: newState });
     } else {
       navigate('/login');
     }
+
+
   };
 
   return (

@@ -10,16 +10,14 @@ import { useNavigate } from 'react-router-dom'
 
 
 export default function Setting () {
-  const [isModal,setIsModal] = useRecoilState<boolean>(R.isModalState);
-  const [isModalNo,setIsModalNo] = useRecoilState<number>(R.isModalNo);
+  const [,setIsModal] = useRecoilState<boolean>(R.isModalState);
+  const [,setIsModalNo] = useRecoilState<number>(R.isModalNo);
 
   const navigate = useNavigate();
 
   const settingClick = (no:number) => {
     setIsModal(true);
-    setIsModalNo(no)
-    isModalNo;
-    console.log(isModal)
+    setIsModalNo(no);
   }
 
   const moveUserInfo = () => {
