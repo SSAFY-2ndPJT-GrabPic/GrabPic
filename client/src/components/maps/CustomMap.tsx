@@ -54,8 +54,8 @@ const CustomMap: React.FC = () => {
   // 실제 지도 데이터 사용
   const [state, setState ] = useState({
     center: {
-      lat: location?.lat ? location?.lat : 36.106831,
-      lng: location?.lng ? location?.lng : 128.416762
+      lat: 36.106831,
+      lng: 128.416762
     },
   })
 
