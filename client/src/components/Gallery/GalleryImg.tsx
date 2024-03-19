@@ -1,5 +1,5 @@
 import React from 'react';
-// import * as G from './GalleryImg.style'
+import * as G from './GalleryImg.style'
 
 interface GalleryImgProps {
   galleryItem : {
@@ -13,7 +13,10 @@ interface GalleryImgProps {
 
 const GalleryImg: React.FC<GalleryImgProps> = ({ galleryItem }) => {
   return (
-    <h1>GalleryImg</h1>
+    <G.Container>
+      <G.ItemImg src={galleryItem.indivImgUrl} />
+      <G.NameTag>{galleryItem.indivName}</G.NameTag>
+    </G.Container>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { headerState } from '../../recoil/EncyHeaderState'
 import * as U from './UserCard.style'
 
@@ -13,7 +13,8 @@ const userInfo = {
 interface UserCardProps {}
 
 const UserCard: React.FC<UserCardProps> = () => {
-  const [encyLocate, setEncyLocate] = useRecoilState(headerState)
+  // const [encyLocate, setEncyLocate] = useRecoilState(headerState)
+  const setEncyLocate = useSetRecoilState(headerState)
 
 
   return (

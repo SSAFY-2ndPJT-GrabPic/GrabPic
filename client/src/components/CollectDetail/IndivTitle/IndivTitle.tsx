@@ -21,7 +21,7 @@ const IndivTitle: React.FC<IndivTitleProps> = ({ indivInfo }) => {
         <I.EngNameTxt>{indivInfo.indivEngName}</I.EngNameTxt>
         <I.ClassifyTxt>
           {indivInfo.indivClassify.map((item, idx) => (
-            `${indivInfo.indivClassify[idx]} ${idx === (indivInfo.indivClassify.length - 1) ? '' : '/ '}`
+            `${item} ${idx === (indivInfo.indivClassify.length - 1) ? '' : '/ '}`
           ))}
         </I.ClassifyTxt>
       </I.InfoWrap>
