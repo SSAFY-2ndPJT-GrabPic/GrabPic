@@ -23,7 +23,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
           </U.subWrap>
         </U.UserTxtWrap>
       </U.InfoWrap>
-      <U.BackBtn to='/encyclopedia'>뒤로가기</U.BackBtn>
+      <U.BackBtn to={`/encyclopedia/${userInfo.nickName}`}>뒤로가기</U.BackBtn>
     </U.Container> 
   );
 };

@@ -1,4 +1,4 @@
-import { tabState } from "../recoil/IndivDetailTabState";
+import { tabState } from "../recoil/atoms/IndivDetailTabState";
 import { useRecoilValue } from 'recoil';
 import UserInfo from "../components/CollectDetail/UserInfo/UserInfo";
 import IndivTitle from "../components/CollectDetail/IndivTitle/IndivTitle";

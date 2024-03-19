@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as I from './InfoTab.style';
 import { useRecoilState } from 'recoil';
-import { tabState } from '../../../recoil/IndivDetailTabState';
+import { tabState } from '../../../recoil/atoms/IndivDetailTabState';
 
 interface InfoTabProps {}
 

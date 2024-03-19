@@ -1,7 +1,7 @@
 import React from 'react';
 import EncyHeader from '../components/Encyclopedia/EncyHeader/EncyHeader';
 import { useRecoilValue } from 'recoil';
-import { headerState } from '../recoil/EncyHeaderState';
+import { headerState } from '../recoil/atoms/EncyHeaderState';
 import Chart from '../components/Encyclopedia/Chart/Chart';
 import Collection from '../components/Encyclopedia/Collection/Collection';
 import GuestBook from '../components/Encyclopedia/GuestBook/GuestBook';
