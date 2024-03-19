@@ -17,7 +17,7 @@ export const AnotherBtn = styled.button`
 `
 
 export const LoginLine = styled.div`
-    width: 35%;
+    width: 37%;
     height: 1px;
     background-color: #BDBDBD;
 `

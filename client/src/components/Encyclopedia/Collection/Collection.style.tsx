@@ -40,11 +40,28 @@ export const FilterTxt = styled.div`
 `
 
 export const CollectContainer = styled.div`
+  width: 100%;
   margin-top: 18px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-columns: repeat(auto-fit, minmax(33%, auto)); */
+  /* flex-wrap: wrap; */
+  /* justify-content: space-between; */
+  /* justify-content: center; */
   align-items: center;
+  /* gap: 2%; */
+  @media all and (max-width:479px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media all and (min-width:480px) and (max-width:767px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  @media all and (min-width:768px) and (max-width:1023px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  @media all and (min-width:1024px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
 `
 
 export const CollectItem = styled.div`
@@ -54,6 +71,8 @@ export const CollectItem = styled.div`
   margin-left: 8px;
   margin-right: 8px;
   margin-bottom: 16px;
+  justify-content: center;
+  align-items: center;
 `
 
 export const ItemImg = styled.img`

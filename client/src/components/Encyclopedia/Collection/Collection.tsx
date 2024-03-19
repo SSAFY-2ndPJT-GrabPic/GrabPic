@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import * as C from './Collection.style';
 import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png'
-import Img1 from '../../../assets/Encyclopedia/dummy/Ellipse 21.png'
+// import Img1 from '../../../assets/Encyclopedia/dummy/Ellipse 21.png'
 import Img2 from '../../../assets/Encyclopedia/dummy/Ellipse 21-1.png'
 import Img3 from '../../../assets/Encyclopedia/dummy/Ellipse 21-2.png'
 import Img4 from '../../../assets/Encyclopedia/dummy/Ellipse 21-3.png'
@@ -20,7 +20,7 @@ interface CollectItem {
 }
 
 const collectList: CollectItem[] = [
-  {name: '앵무새', url: Img1},
+  // {name: '앵무새', url: Img1},
   {name: '토끼', url: Img2},
   {name: '햄스터', url: Img3},
   {name: '리트리버', url: Img4},
@@ -46,7 +46,7 @@ const Collection: React.FC<CollectionProps> = () => {
         </C.FilterBtn>
       </C.BtnAlign>
 
-      <C.CollectContainer>
+      <C.CollectContainer className='grid gird-cols-3'>
         {collectList.map((collectItem, index) => (
           <Link to={`/encyclopedia/${collectItem.name}`} key={index}>
             <C.CollectItem>

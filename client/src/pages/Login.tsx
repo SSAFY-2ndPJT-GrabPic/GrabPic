@@ -47,7 +47,7 @@ const Login: React.FC = () => {
         <L.AnotherBtn className="mr-5" onClick={() => move('pwSet')}>비밀번호 재설정</L.AnotherBtn>
         <L.AnotherBtn onClick={() => move('join')}>회원가입</L.AnotherBtn>
       </div>
-      <div className="flex flex-row mt-10 items-center mb-3">
+      <div className="flex flex-row mt-10 justify-center items-center mb-3">
         <L.LoginLine></L.LoginLine>
         <L.LoginLineText>또는</L.LoginLineText>
         <L.LoginLine></L.LoginLine>
