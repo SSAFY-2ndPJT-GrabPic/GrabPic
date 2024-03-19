@@ -17,7 +17,6 @@ const BodyContainer = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-  background-color: #000000;
 `;
 
 function App() {
