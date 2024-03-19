@@ -10,9 +10,11 @@ import SettingIconUrl from '../../assets/NavigationBar/settingIcon.png'
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
+  const userNickname = '해진해뜸'
+  
   return (
     <N.Container>
-      <N.NavCol to="/encyclopedia">
+      <N.NavCol to={`/encyclopedia/${userNickname}`}>
         <img src={EncyIconUrl} alt="" />
       </N.NavCol>
 

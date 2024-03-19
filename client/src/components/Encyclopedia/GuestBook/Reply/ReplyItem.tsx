@@ -1,5 +1,5 @@
 import React from 'react';
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as R from './ReplyItem.style'
 
 interface ReplyItemProps {
@@ -12,10 +12,14 @@ interface ReplyItemProps {
 const ReplyItem: React.FC<ReplyItemProps> = ({ nickname, profileImgUrl, createdDate, content}) => {
   return (
     <R.Container>
-      <R.ProfileImg src={profileImgUrl} />
+      <Link to={`/encyclopedia/${nickname}`}>
+        <R.ProfileImg src={profileImgUrl} />
+      </Link>
       <R.ContentContainer>
         <R.NickNDateContainer>
-          <R.NickName>{nickname}</R.NickName>
+          <Link to={`/encyclopedia/${nickname}`}>
+            <R.NickName>{nickname}</R.NickName>
+          </Link>
           <R.SmallTxt>{createdDate}</R.SmallTxt>
         </R.NickNDateContainer>
         <R.Content>{content}</R.Content>

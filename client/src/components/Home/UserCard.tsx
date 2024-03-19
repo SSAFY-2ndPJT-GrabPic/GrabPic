@@ -2,6 +2,7 @@ import React from 'react';
 import { useSetRecoilState } from 'recoil';
 import { headerState } from '../../recoil/EncyHeaderState'
 import * as U from './UserCard.style'
+import { Link } from 'react-router-dom';
 
 const userInfo = {
   nickname: "해진해뜸",
@@ -18,11 +19,15 @@ const UserCard: React.FC<UserCardProps> = () => {
   return (
     <U.Container>
       <U.UserInfoWrap>
-        <U.ProfileImg src={userInfo.profileImgUrl}/>
+        <Link to='/setting'>
+          <U.ProfileImg src={userInfo.profileImgUrl}/>
+        </Link>
         
         <U.DetailInfo>
           <div className='flex items-center'>
-            <U.NickName>{userInfo.nickname}</U.NickName>
+            <Link to='/setting'>
+              <U.NickName>{userInfo.nickname}</U.NickName>
+            </Link>
             <U.DetailTypo>&nbsp; &nbsp;| 구독자 &nbsp;<b>{userInfo.sub}</b> &nbsp;명</U.DetailTypo>
           </div>
           <U.DetailTypo>{userInfo.email}</U.DetailTypo>
@@ -30,8 +35,8 @@ const UserCard: React.FC<UserCardProps> = () => {
       </U.UserInfoWrap>
 
       <U.BtnsWrap>
-        <U.Btn to='/encyclopedia' onClick={() => setEncyLocate('chart')}>차트</U.Btn>
-        <U.Btn to='/encyclopedia' onClick={() => setEncyLocate('guestBook')}>방명록</U.Btn>
+        <U.Btn to={`/encyclopedia/${userInfo.nickname}`} onClick={() => setEncyLocate('chart')}>차트</U.Btn>
+        <U.Btn to={`/encyclopedia/${userInfo.nickname}`} onClick={() => setEncyLocate('guestBook')}>방명록</U.Btn>
       </U.BtnsWrap>
     </U.Container>
   );
