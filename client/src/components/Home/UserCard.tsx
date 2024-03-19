@@ -13,9 +13,7 @@ const userInfo = {
 interface UserCardProps {}
 
 const UserCard: React.FC<UserCardProps> = () => {
-  // const [encyLocate, setEncyLocate] = useRecoilState(headerState)
   const setEncyLocate = useSetRecoilState(headerState)
-
 
   return (
     <U.Container>

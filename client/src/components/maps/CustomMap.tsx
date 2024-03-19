@@ -8,28 +8,31 @@ import plusImg from "../../assets/Map/plus.png";
 // zoomout 이미지 불러오기
 import minusImg from "../../assets/Map/minus.png";
 
-
 // 위도 경도 프롭처리할 예정.
 interface MapsProps {
   lat: number;
   lng: number;
 }
 
+interface ItemProps {
+  name: string;
+  lat: number;
+  lng: number;
+}
+
 interface TestProps {
   position: MapsProps
-  locations: MapsProps[];
+  datas: ItemProps[];
 }
 
 
-const CustomMap: React.FC<TestProps> = ({ position, locations }) => {
-  console.log(position)
-  console.log(locations)
+const CustomMap: React.FC<TestProps> = ({ position, datas }) => {
   // 지도 호출
   useKakaoLoaderOrigin({
     appkey: "52b3371f40d9c77376d831422bbae913",
     libraries: ["clusterer", "drawing", "services"],
   })
-
+  
   // 기본 위치(현재 좌표) 호출 및 스타일 지정
   const [state] = useState({
     center: {
@@ -38,6 +41,20 @@ const CustomMap: React.FC<TestProps> = ({ position, locations }) => {
     },
     style: {width: "100%", height: "100%", Position: "relative", overflow: "hidden"},
   })
+
+  // 핀리스트 
+  const [isActive, setActive] = useState<boolean>(false);
+
+  // 필터 활성화
+  const [isClickActive, setClickActive] = useState<boolean[]>([true, false, false]);
+
+  // 필터를 클릭할 때 호출되는 함수
+  const filterChange = (index : number) => {
+    if (index === 0) setClickActive([true, false, false])
+    else if (index === 1) setClickActive([false, true, false])
+    else if (index === 2) setClickActive([false, false, true])
+  }
+  
   // 맵 레벨 변경을 위한 선언
   const mapRef = useRef<kakao.maps.Map>(null)
 
@@ -65,7 +82,7 @@ const CustomMap: React.FC<TestProps> = ({ position, locations }) => {
         ref={mapRef}
       >
         {/* locations을 반복하여 각 위치에 마커 생성 */}
-          {locations.map((location, index) => (
+          {datas.map((location, index) => (
           <MapMarker key={index} position={{ lat: location.lat, lng: location.lng }} />
         ))}
       </Map>
@@ -84,6 +101,24 @@ const CustomMap: React.FC<TestProps> = ({ position, locations }) => {
           />
         </M.Zoom_Span>
       </M.Zoom_Control>
+
+      <M.ListContainer active={isActive}>
+        <M.DragHandle onClick={() => setActive(!isActive)}/>
+        <M.FilterContainer>
+            <M.FilterButton clickActive={isClickActive[0]} onClick={() => filterChange(0)}>최신순</M.FilterButton>
+            <M.FilterButton clickActive={isClickActive[1]} onClick={() => filterChange(1)}>오래된순</M.FilterButton>
+            <M.FilterButton clickActive={isClickActive[2]} onClick={() => filterChange(2)}>희귀도순</M.FilterButton>
+        </M.FilterContainer>
+        <M.PinList>
+          {datas.map((item, index) => (
+            <div key={index}>
+              <div>Name: {item.name}</div>
+              {/* <div>Latitude: {item.lat}</div>
+              <div>Longitude: {item.lng}</div> */}
+            </div>
+          ))}
+        </M.PinList>
+      </M.ListContainer>
     </M.MapContainer>
   )
 } 
