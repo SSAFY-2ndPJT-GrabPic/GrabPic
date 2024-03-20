@@ -1,5 +1,6 @@
 package org.grabpic.grabpic.user.db.dto;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -13,7 +14,8 @@ public class CustomOAuth2User implements OAuth2User {
 
     private final OAuth2Response oAuth2Response;
     private final String role;
-    private final String nickName;
+    @Getter
+    private final long userId;
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -44,9 +46,6 @@ public class CustomOAuth2User implements OAuth2User {
         return oAuth2Response.getName();
     }
 
-    public String getNickName() {
-        return nickName;
-    }
 
     public String getEmail() {
         return  oAuth2Response.getEmail();

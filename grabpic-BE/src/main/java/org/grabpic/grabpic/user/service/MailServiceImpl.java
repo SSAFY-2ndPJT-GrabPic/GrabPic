@@ -97,7 +97,7 @@ public class MailServiceImpl implements MailService {
             int tmpSaveCode = 4321;
             if (emailAuthDto.getCode() == tmpSaveCode) {
                 //유효 시간 5분으로 설정
-                String tmpToken = jwtUtil.createJwt("access", emailAuthDto.getEmail(), null, null, 300000L);
+                String tmpToken = jwtUtil.createJwt("access", emailAuthDto.getEmail(), null, -2, 300000L);
                 response.setHeader("access", tmpToken);
                 //인증 성공
                 return true;
