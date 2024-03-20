@@ -34,6 +34,6 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 
     @Override
     public void collectionRegist(CollectionRegistDTO collectionRegistDTO, String token) {
-
+        
     }
 }
