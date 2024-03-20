@@ -36,9 +36,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserEntity user = userRepository.findByEmail(email);
             //소셜로그인은 되었지만, 우리 사이트에 회원등록이 안된 상태 전달
             if( user == null) {
-                return new CustomOAuth2User(oAuth2Response, "ROLE_UNKNOWN", null);
+                return new CustomOAuth2User(oAuth2Response, "ROLE_UNKNOWN", -1);
             } else {
-                return new CustomOAuth2User(oAuth2Response, user.getRole(), user.getNickname());
+                return new CustomOAuth2User(oAuth2Response, user.getRole(), user.getUserId());
             }
 
         }

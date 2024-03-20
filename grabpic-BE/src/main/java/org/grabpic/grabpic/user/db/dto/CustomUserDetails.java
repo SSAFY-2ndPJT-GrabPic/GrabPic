@@ -42,9 +42,9 @@ public class CustomUserDetails implements UserDetails {
         return userEntity.getName();
     }
 
-    public String getNickName() {
+    public long getUserId() {
 
-        return userEntity.getNickname();
+        return userEntity.getUserId();
     }
 
     public String getEmail() {
