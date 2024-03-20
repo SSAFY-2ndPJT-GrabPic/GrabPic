@@ -19,7 +19,7 @@ export const userLogin = async (params : {email:string; password:string},
         .catch(Error);
 }
 
-export const userJoin = async (
+export const userJoin = async ( 
     params: {email:string; password:string; nickname:string; 
         name: string; birth: string; gender: string},
     Response : (Response : AxiosResponse<MyResponseData>) => void, 
@@ -53,9 +53,10 @@ export const nickNameCheck = async(params : string,
         .catch(Error)
 }
 
-export const passwordChange = async(params : {password : string},
+export const passwordChange = async(params : string,
     Response : (Response : AxiosResponse<MyResponseData>) => void, 
     Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+        console.log(params)
         await privateApi.post(`/${url}/password/change`,params)
         .then(Response)
         .catch(Error)
