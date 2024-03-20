@@ -194,17 +194,18 @@ const CustomMap: React.FC = () => {
         </M.FilterContainer>
         <M.PinList>
           {randomCoordinates.map((item, index) => (
-            <M.PinItemContainer key={index}>
-              <M.PinImgContainer src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiiWR3G7uCpLQYKesAWQDjueG8KsZ-OICDBw&s" alt="" />
-              <M.PinDataContainer>
-                <M.PinNameSpan>{item.name}</M.PinNameSpan>
-                <M.PinInfoContainer>
-                  <M.PinInfoSpan>수집일 : 2024.02.02</M.PinInfoSpan>
-                  <M.PinInfoSpan>{item.address}</M.PinInfoSpan>
-                </M.PinInfoContainer>
-              </M.PinDataContainer>
-            </M.PinItemContainer>
+             <M.PinItemContainer key={index}>
+             <M.PinImgContainer src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiiWR3G7uCpLQYKesAWQDjueG8KsZ-OICDBw&s" alt="" />
+             <M.PinDataContainer>
+               <M.PinNameSpan>{item.name}</M.PinNameSpan>
+               <M.PinInfoContainer>
+                 <M.PinInfoSpan>수집일 : 2024.02.02</M.PinInfoSpan>
+                 <M.PinInfoSpan>{item.address}</M.PinInfoSpan>
+               </M.PinInfoContainer>
+             </M.PinDataContainer>
+           </M.PinItemContainer>
           ))}
+          
         </M.PinList>
       </M.ListContainer>
     </M.MapContainer>
