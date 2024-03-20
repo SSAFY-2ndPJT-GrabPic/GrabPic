@@ -9,5 +9,6 @@ import java.util.List;
 public interface EncyclopediaRepository extends JpaRepository<EncyclopediaEntity, Long> {
 
     List<EncyclopediaEntity> findByUser_UserId(long id);
+    EncyclopediaEntity findByEncyclopediaId(long id);
 
 }
