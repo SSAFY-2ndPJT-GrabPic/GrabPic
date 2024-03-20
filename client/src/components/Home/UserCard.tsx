@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSetRecoilState } from 'recoil';
-import { headerState } from '../../recoil/EncyHeaderState'
+import { headerState } from '../../recoil/atoms/EncyHeaderState'
 import * as U from './UserCard.style'
 import { Link } from 'react-router-dom';
 

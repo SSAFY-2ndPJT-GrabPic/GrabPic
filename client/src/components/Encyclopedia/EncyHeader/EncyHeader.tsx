@@ -1,7 +1,7 @@
 import * as E from './EncyHeader.style'
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { headerState } from '../../../recoil/EncyHeaderState'
+import { headerState } from '../../../recoil/atoms/EncyHeaderState'
 
 interface EncyHeaderProps {}
 
