@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
 
-    @Value("${spring.jwt.proerties.smtp.access}")
+    @Value("${spring.jwt.access}")
     private long accessTime;
 
     @Override
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
-        user.setPassword(password);
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         userRepository.save(user);
         return true;
     }
