@@ -23,10 +23,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JWTUtil jwtUtil;
 
-    @Value("${spring.jwt.proerties.smtp.access}")
+    @Value("${spring.jwt.access}")
     private long accessTime;
 
-    @Value("${spring.jwt.proerties.smtp.refresh}")
+    @Value("${spring.jwt.refresh}")
     private long refreshTime;
 
     @Override
@@ -51,11 +51,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         String email = customUserDetails.getEmail();
-        String nickName = customUserDetails.getNickName();
+        long userId = customUserDetails.getUserId();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, nickName, accessTime);
-        String refresh = jwtUtil.createJwt("refresh", email, role, nickName, refreshTime);
+        String access = jwtUtil.createJwt("access", email, role, userId, accessTime);
+        String refresh = jwtUtil.createJwt("refresh", email, role, userId, refreshTime);
 
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));
