@@ -63,7 +63,8 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
 `
 // 핀 리스트
 export const PinList = styled.div`
-  padding-top: 20px;
+  margin-top: 5px;
+  padding-top: 10px;
   width:100%;
   height: calc(100% - 70px);
   overflow-y: scroll;
