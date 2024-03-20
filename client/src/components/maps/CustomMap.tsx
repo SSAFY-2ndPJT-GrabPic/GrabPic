@@ -184,8 +184,8 @@ const CustomMap: React.FC = () => {
       </M.Zoom_Control>
 
       <M.ListContainer active={isActive}>
-        <M.HandleContainer>
-          <M.DragHandle onClick={() => setActive(!isActive)}/>
+        <M.HandleContainer onClick={() => setActive(!isActive)}>
+          <M.DragHandle />
         </M.HandleContainer>
         <M.FilterContainer>
             <M.FilterButton clickActive={isClickActive[0]} onClick={() => filterChange(0)}>최신순</M.FilterButton>
