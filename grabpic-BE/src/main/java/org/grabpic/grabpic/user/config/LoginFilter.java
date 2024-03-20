@@ -11,6 +11,7 @@ import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
 import org.grabpic.grabpic.user.db.dto.CustomUserDetails;
 import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
@@ -32,12 +34,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     //JWTUtil 주입
     private final JWTUtil jwtUtil;
-
-    @Value("${spring.jwt.proerties.smtp.access}")
-    private long accessTime;
-
-    @Value("${spring.jwt.proerties.smtp.refresh}")
-    private long refreshTime;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -80,8 +76,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, nickName, accessTime);
-        String refresh = jwtUtil.createJwt("refresh", email, role, nickName, refreshTime);
+        String access = jwtUtil.createJwt("access", email, role, nickName, 1800000L);
+        String refresh = jwtUtil.createJwt("refresh", email, role, nickName, 3600000L);
 
         //응답 설정
         response.setHeader("access", access);
@@ -92,17 +88,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     //로그인 실패시 실행하는 메소드
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
-        //한글 깨짐 방지
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-
-        //전달 결과 생성
-        PrintWriter writer = response.getWriter();
-        if (failed.getMessage().equals("UserDetailsService returned null, which is an interface contract violation")) {
-            writer.print("아이디가 일치하지 않습니다.");
-        } else if (failed.getMessage().equals("실패원인 자격 증명에 실패하였습니다.")) {
-            writer.print("비밀번호가 올바르지 않습니다.");
-        }
         response.setStatus(204);
     }
 

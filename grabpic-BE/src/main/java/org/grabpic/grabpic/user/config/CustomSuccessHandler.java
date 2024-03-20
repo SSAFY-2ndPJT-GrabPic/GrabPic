@@ -23,10 +23,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JWTUtil jwtUtil;
 
-    @Value("${spring.jwt.proerties.smtp.access}")
+    @Value("${spring.jwt.access}")
     private long accessTime;
 
-    @Value("${spring.jwt.proerties.smtp.refresh}")
+    @Value("${spring.jwt.refresh}")
     private long refreshTime;
 
     @Override
