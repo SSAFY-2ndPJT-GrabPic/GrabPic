@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { noneApi } from "../utils/http-commons"
+import { noneApi,privateApi } from "../utils/http-commons"
 
 const url = 'user';
 
@@ -49,6 +49,14 @@ export const nickNameCheck = async(params : string,
     Response : (Response : AxiosResponse<MyResponseData>) => void, 
     Error : (Error : AxiosResponse<MyResponseData>) => void) => {
         await noneApi.get(`/${url}/look/nickname/${params}`)
+        .then(Response)
+        .catch(Error)
+}
+
+export const passwordChange = async(params : {password : string},
+    Response : (Response : AxiosResponse<MyResponseData>) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+        await privateApi.post(`/${url}/password/change`,params)
         .then(Response)
         .catch(Error)
 }

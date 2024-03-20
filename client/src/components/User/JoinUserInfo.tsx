@@ -139,8 +139,7 @@ export const JoinUserInfo: React.FC = () => {
       
       await A.userJoin(
         params,
-        (response) => { 
-          console.log(response);
+        () => { 
           navigate('/') },
         (error) => {console.log(error)}
       )

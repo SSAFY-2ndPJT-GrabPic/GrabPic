@@ -3,6 +3,8 @@ import * as R from './Verification.style';
 import * as G from '../../styles/globalCSS';
 import { useEffect, useState } from 'react';
 
+import { passwordChange } from '../../api/user';
+
 export default function ResetPwSet() {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -66,18 +68,28 @@ export default function ResetPwSet() {
     navigate(`/${state.page}/code`, { state: state });
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     
     // 비밀번호 입력 체크
     // 추후 에러메시지 강조 효과 주기.
-    if (!isPw || !isCheckPw)      return ;
+    if (!isPw || !isCheckPw){
+      // return;
+      
+    }
     
     // 회원가입, 비밀번호 재설정 페이지에 따라 이동이 다름.
     if (isJoinPage) {
       const newState = { ...state, pw: pw };
       navigate(`/${state.page}/userinfo`, { state: newState });
     } else {
-      navigate('/login');
+      const params = {password : pw};
+
+      await passwordChange(
+        params,
+        (response) => { console.log(response) },
+        (error) => { console.log(error) }
+      )
+      // navigate('/login');
     }
 
 

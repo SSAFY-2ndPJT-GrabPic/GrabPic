@@ -13,6 +13,9 @@ export default function ResetPwCode() {
 
   const [code,setCode] = useState<number>(0);
 
+  const [isCode, setIsCode] = useState(false);
+  const [codeMsg, setCodeMsg] = useState('');
+
   useEffect(() => {
     if(state.page == 'join'){
       setIsJoinPage(true);
@@ -32,6 +35,14 @@ export default function ResetPwCode() {
 
   }
 
+  const codeCheck = (s : number) => {
+    if(s !== 0){
+      setIsCode(true);
+      setCode(s);
+      setCodeMsg('');
+    }
+  }
+
   // 뒤로가기
   const back = () => {
     navigate(`/${state.page}`, {state : state}); 
@@ -40,11 +51,19 @@ export default function ResetPwCode() {
   // 코드 서버 전송
   const handleClick = async () => {
 
-    const params = {email : state.email, code : code}
+    if(!isCode){
+      setCodeMsg('인증코드를 입력하시오');
+      return ;
+    }
+
+    const params = {email : state.email, code : code, type : isJoinPage ? 1 : 2}
 
     await emailCodeVerification(
       params,
-      () => {
+      (response) => {
+        if(!isJoinPage){
+          localStorage.setItem("accessToken",response.headers.access)
+        }
         navigate(`/${state.page}/pwset`, {state : state}); 
       },
       (error) => {console.log(error)}
@@ -70,10 +89,10 @@ export default function ResetPwCode() {
       <G.InputContainer className="mt-20">
         <span>인증코드</span>
         <div className="flex flex-row">
-          <G.InputBox type='number' placeholder="인증코드" className='grow' onChange={(e) => setCode(parseInt(e.target.value))}/>
+          <G.InputBox type='number' placeholder="인증코드" className='grow' onChange={(e) => codeCheck(parseInt(e.target.value))}/>
           <G.InputButtonSmall onClick={emailAgain}>재전송</G.InputButtonSmall>
         </div>
-        {/* <G.InputError>test</G.InputError> */}
+        <G.InputError>{codeMsg}</G.InputError>
       </G.InputContainer>
       <G.InputButtonDisabled onClick={back}>이전단계</G.InputButtonDisabled>
       <G.InputButtonActive className='mt-3' onClick={handleClick}>인증코드 전송</G.InputButtonActive>

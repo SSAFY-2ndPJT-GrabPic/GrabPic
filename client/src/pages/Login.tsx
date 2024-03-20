@@ -60,14 +60,29 @@ const Login: React.FC = () => {
   }
 
   const loginCheck =  async () =>{
-    if(!isEmail){
-      setEmailMsg('이메일을 입력하시오');
-    }
-    else if(!isPw){
-      setPwMsg('비밀번호를 입력하시오');
-    }
-    else{
-      const params = {email : email, password : pw};
+    // if(!isEmail){
+    //   setEmailMsg('이메일을 입력하시오');
+    // }
+    // else if(!isPw){
+    //   setPwMsg('비밀번호를 입력하시오');
+    // }
+    // else{
+    //   const params = {email : email, password : pw};
+    //   await userLogin(
+    //     params,
+    //     (response) => {
+    //       if(response.status === 200){
+    //         localStorage.setItem("accessToken",response.headers.access)
+    //         setIsLogin(true);
+    //         navigate("/");
+    //       }
+    //     },
+    //     (error) => {console.log(error)}
+    //   );
+
+    // }
+    isEmail;isPw;
+    const params = {email : email, password : pw};
       await userLogin(
         params,
         (response) => {
@@ -75,12 +90,12 @@ const Login: React.FC = () => {
             localStorage.setItem("accessToken",response.headers.access)
             setIsLogin(true);
             navigate("/");
+          }else if(response.status === 204){
+            // 회원정보 불일치
           }
         },
         (error) => {console.log(error)}
-      );
-
-    }
+      )
   }
 
   return (

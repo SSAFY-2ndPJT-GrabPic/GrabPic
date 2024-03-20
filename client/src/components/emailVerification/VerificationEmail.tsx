@@ -38,6 +38,8 @@ const ResetPwEmail: React.FC = () => {
   // 버튼 클릭 시 이벤트 핸들러
   const handleClick = async () => {
 
+    if(!isEmailValid) return;
+
     // 요청에 필요한 파라미터 설정
     const params = { email: email, type: isJoinPage ? 1 : 2 };
 

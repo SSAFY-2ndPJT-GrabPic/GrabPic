@@ -18,9 +18,9 @@ export const publicApi: AxiosInstance = axios.create({
 export const privateApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
-    'AUTH-TOKEN': `${localStorage.getItem('token')}`,
+    // 'Access-Control-Allow-Origin': '*',
+    // 'Content-Type': 'application/json',
+    'access': `${localStorage.getItem('accessToken')}`,
   },
 });
 
