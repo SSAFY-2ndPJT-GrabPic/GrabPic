@@ -36,9 +36,9 @@ export const DragHandle = styled.div`
 `
 
 export const FilterContainer = styled.div`
-  top: 40px;
+  top: 35px;
   width: 100%;
-  height: 100px;
+  height: 50px;
   display: flex;
   justify-content: space-evenly;
   position: relative; /* FilterContainer를 기준으로 손잡이를 위치시킬 수 있도록 설정 */
@@ -46,7 +46,7 @@ export const FilterContainer = styled.div`
 
 export const FilterButton = styled.button<{ clickActive: boolean }>`
   width: 25%;
-  height: 40px;
+  height: 30px;
   border-radius: 20px;
   border: solid 1px #5C5C5C;
   color: #5C5C5C;
@@ -58,7 +58,7 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
 // 핀 리스트
 export const PinList = styled.div`
   width:100%;
-  height:calc(100%);
+
   overflow: hidden;
   overflow-y: auto;
 `

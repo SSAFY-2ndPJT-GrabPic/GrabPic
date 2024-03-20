@@ -1,7 +1,7 @@
 import * as M from "./CustomMap.style"
 import React, { useEffect, useRef, useState } from 'react';
 
-import { MapMarker, Map} from "react-kakao-maps-sdk";
+import { MapMarker, Map } from "react-kakao-maps-sdk";
 import useKakaoLoader from "./useKakaoLoader";
 
 // zoomin 이미지 불러오기
@@ -25,9 +25,31 @@ interface ItemProps {
 }
 
 const CustomMap: React.FC = () => {
-  // 지도 호출
   useKakaoLoader();
-    // 랜덤 위도 생성
+
+  // 현재 좌표 추적 위한 상태
+  const [location, setLocation] = useState<MapsProps | null>(null);
+  // 실제 지도 데이터 사용
+  const [state, setState ] = useState({
+    center: {
+      lat: 36.106831,
+      lng: 128.416762
+    },
+  })
+
+  // 맵 레벨 변경을 위한 선언
+  const mapRef = useRef<kakao.maps.Map>(null);
+
+  // 마커 리스트
+  const [randomCoordinates, setRandomCoordinates] = useState<ItemProps[]>([]);
+
+  // 핀리스트 
+  const [isActive, setActive] = useState<boolean>(false);
+
+  // 필터 활성화
+  const [isClickActive, setClickActive] = useState<boolean[]>([true, false, false]);
+
+  // 랜덤 위도 생성
   function generateRandomNumberInRange(min: number, max: number): number {
     return Math.random() * (max - min) + min;
   }
@@ -45,24 +67,6 @@ const CustomMap: React.FC = () => {
     const address = '';
     return { name, lat, lng, address };
   }
-  
-
-  const randomCoordinates: ItemProps[] = [];
-
-  // 현재 좌표 추적 위한 상태
-  const [location, setLocation] = useState<MapsProps | null>(null);
-  // 실제 지도 데이터 사용
-  const [state, setState ] = useState({
-    center: {
-      lat: 36.106831,
-      lng: 128.416762
-    },
-  })
-
-  // 맵 레벨 변경을 위한 선언
-  const mapRef = useRef<kakao.maps.Map>(null);
-
-  const [map] = useState()
 
   useEffect(() => {
     function getLocation() {
@@ -72,11 +76,11 @@ const CustomMap: React.FC = () => {
     }
 
     function success(position: any) {
-      console.log('success')
       setLocation({
         lat: position.coords.latitude,
         lng: position.coords.longitude
       });
+
       setState({
         center:{
           lat: position.coords.latitude,
@@ -95,44 +99,37 @@ const CustomMap: React.FC = () => {
     }
 
     if (location === null) {
+      console.log('좌표추적')
       getLocation();
     }
 
     if (location !== null) {
+      const newCoordinates: ItemProps[] = [];
       for (let i = 0; i < 20; i++) {
-        const newCoordinates = calculateNewCoordinates(location.lat, location.lng, 200);
-        randomCoordinates.push(newCoordinates);
+        const newCoordinate = calculateNewCoordinates(location.lat, location.lng, 500);
+        newCoordinates.push(newCoordinate);
       }
+      setRandomCoordinates(newCoordinates);
     }
 
   }, [location])
 
   useEffect(() => {
-    if (!map) return
+    if (!mapRef.current || randomCoordinates.length === 0) return;
+  
+    console.log('주소변환');
     const addressFinder = new kakao.maps.services.Geocoder();
-
-    randomCoordinates.forEach((item, index) => {
+    
+    randomCoordinates.forEach((item) => {
       addressFinder.coord2Address(item.lng, item.lat, (result: any, status: any) => {
         if (status === kakao.maps.services.Status.OK) {
           const address = result[0].address.address_name;
-          randomCoordinates[index].address = address;
-          console.log(address)
+          item.address = address;
         }
       });
     });
-  }, [map]);
+  }, [randomCoordinates]);
 
-  useEffect(() => {
-    if (location !== null) {
-      setState({ center: location });
-    }
-  }, [location]);
-
-  // 핀리스트 
-  const [isActive, setActive] = useState<boolean>(false);
-
-  // 필터 활성화
-  const [isClickActive, setClickActive] = useState<boolean[]>([true, false, false]);
 
   // 필터를 클릭할 때 호출되는 함수
   const filterChange = (index : number) => {
@@ -141,8 +138,6 @@ const CustomMap: React.FC = () => {
     else if (index === 2) setClickActive([false, false, true])
   }
   
-
-
   // 줌인 함수
   const zoomIn = () => {
     const map = mapRef.current
@@ -165,20 +160,10 @@ const CustomMap: React.FC = () => {
         style= {{width: "100%", height: "100%", position: "relative", overflow: "hidden"}}
         level={3} // 지도의 확대 레벨
         ref={mapRef}
-        onCenterChanged={(map) => {
-          const latlng = map.getCenter()
-          setState({
-            center: {
-              lat: latlng.getLat(),
-              lng: latlng.getLng()
-            },
-          })
-        }}
       >
         <MapMarker key={state.center.lat-state.center.lng} position={{ lat: state.center.lat, lng: state.center.lng}} image={{src: myLocateMarker, size: { width: 29, height: 42}}}/>
         {/* locations을 반복하여 각 위치에 마커 생성 */}
           {randomCoordinates.map((location, index) => (
-          
           <MapMarker key={index} position={{ lat: location.lat, lng: location.lng }}/>
         ))}
       </Map>
@@ -209,8 +194,9 @@ const CustomMap: React.FC = () => {
           {randomCoordinates.map((item, index) => (
             <div key={index}>
               <div>Name: {item.name}</div>
-              {/* <div>Latitude: {item.lat}</div>
-              <div>Longitude: {item.lng}</div> */}
+              <div>Latitude: {item.lat}</div>
+              <div>Longitude: {item.lng}</div>
+              <div>address: {item.address}</div>
             </div>
           ))}
         </M.PinList>
@@ -218,6 +204,8 @@ const CustomMap: React.FC = () => {
     </M.MapContainer>
   )
 } 
+
+
 
 export default CustomMap
 
