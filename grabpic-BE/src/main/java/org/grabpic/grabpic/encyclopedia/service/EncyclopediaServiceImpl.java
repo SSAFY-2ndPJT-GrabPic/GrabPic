@@ -1,6 +1,7 @@
 package org.grabpic.grabpic.encyclopedia.service;
 
 import lombok.RequiredArgsConstructor;
+import org.grabpic.grabpic.encyclopedia.db.dto.CollectionRegistDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
 import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
 import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaRepository;
@@ -29,5 +30,10 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         }
 
         return infoPreviewDTOList;
+    }
+
+    @Override
+    public void collectionRegist(CollectionRegistDTO collectionRegistDTO, String token) {
+
     }
 }
