@@ -15,7 +15,7 @@ export const ListContainer = styled.div<{ active:boolean }>`
   left: 0;
   width: 100%;
   height: 60%;
-  transform: ${props => props.active ? 'translateY(0%)' : 'translateY(calc(60% + 80px))'};
+  transform: ${props => props.active ? 'translateY(0%)' : 'translateY(calc(60% + 90px))'};
   overflow: hidden;
   background-color: #fefefe; /* 예시 배경색 */
   z-index: 100;
@@ -27,45 +27,92 @@ export const ListContainer = styled.div<{ active:boolean }>`
 export const DragHandle = styled.div`
   content: '-';
   position: absolute;
-  left: 50%;
-  transform: translate(-50%, 15px);
-  width: 50%; /* 손잡이의 가로 크기 */
+  width: 180px; /* 손잡이의 가로 크기 */
   height: 4px; /* 손잡이의 세로 크기 */
-  background-color: #81D42E; /* 연두색 */
+  background-color: #50940C; /* 연두색 */
   border-radius: 3px; /* 손잡이의 둥근 모양을 위해 반지름 설정 */
+`
+export const HandleContainer = styled.div`
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export const FilterContainer = styled.div`
-  top: 35px;
   width: 100%;
-  height: 50px;
+  height: 40px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
+  align-items: center;
   position: relative; /* FilterContainer를 기준으로 손잡이를 위치시킬 수 있도록 설정 */
+  gap: 20px;
 `
 
 export const FilterButton = styled.button<{ clickActive: boolean }>`
-  width: 25%;
+  width: 88px;
   height: 30px;
   border-radius: 20px;
-  border: solid 1px #5C5C5C;
+  border: ${props => props.clickActive ? 'solid 1px #50940C' : 'solid 1px #5C5C5C'};
   color: #5C5C5C;
   font-family: 'BMJUA';
-  font-size: x-large;
   font-size: 16px;
-  background-color: ${props => props.clickActive ? '#81D42E' : ''};
+  background-color: ${props => props.clickActive ? '#B2EB78' : ''};
+  
 `
 // 핀 리스트
 export const PinList = styled.div`
+  margin-top: 20px;
   width:100%;
-
-  overflow: hidden;
-  overflow-y: auto;
+  height: calc(100% - 70px);
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 10px;
+  gap: 20px;
+`
+// 핀 아이템 컨테이너
+export const PinItemContainer = styled.div`
+  width: 90%;
+  min-height: 80px;
+  max-height: 80px;
+  display: flex;
+  gap: 20px;
 `
 
-export const PinItem = styled.div`
-  
+// 핀 이미지 컨테이너
+export const PinImgContainer = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
 `
+
+// 핀 데이터 컨테이너
+export const PinDataContainer = styled.div`
+  font-family: 'BMJUA';
+  width: calc(100% - 100px);
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0px;
+`
+export const PinNameSpan = styled.span`
+  font-size: 16px;
+  color: #001ba7;
+  margin-bottom: 7px;
+`
+export const PinInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+`
+export const PinInfoSpan = styled.span`
+  font-family: 'TmoneyR';
+  font-size: 12px;
+  color: #363636;
+`
+
 
 
 // 줌 버튼 컨테이너
