@@ -63,7 +63,7 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
 `
 // 핀 리스트
 export const PinList = styled.div`
-  margin-top: 20px;
+  padding-top: 20px;
   width:100%;
   height: calc(100% - 70px);
   overflow-y: scroll;
@@ -71,14 +71,14 @@ export const PinList = styled.div`
   flex-direction: column;
   align-items: center;
   padding-bottom: 10px;
-  gap: 20px;
 `
 // 핀 아이템 컨테이너
 export const PinItemContainer = styled.div`
   width: 90%;
-  min-height: 80px;
-  max-height: 80px;
+  min-height: 100px;
+  max-height: 100px;
   display: flex;
+  padding: 5px 0px;
   gap: 20px;
 `
 
@@ -93,27 +93,30 @@ export const PinImgContainer = styled.img`
 export const PinDataContainer = styled.div`
   font-family: 'BMJUA';
   width: calc(100% - 100px);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 5px 0px;
+  /* padding: 5px 0px; */
+  border-bottom: 1px solid #e0e0e0;
 `
+
 export const PinNameSpan = styled.span`
   font-size: 16px;
   color: #001ba7;
   margin-bottom: 7px;
 `
+
 export const PinInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3px;
 `
+
 export const PinInfoSpan = styled.span`
   font-family: 'TmoneyR';
   font-size: 12px;
   color: #363636;
 `
-
-
 
 // 줌 버튼 컨테이너
 export const Zoom_Control = styled.button`
