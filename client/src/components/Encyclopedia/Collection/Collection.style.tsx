@@ -16,7 +16,7 @@ export const BtnAlign = styled.div`
 `
 
 export const FilterBtn = styled.div`
-  width: 90px;
+  /* width: 90px; */
   height: 30px;
   border: 1px solid #5C5C5C;
   border-radius: 30px;
@@ -27,6 +27,7 @@ export const FilterBtn = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  column-gap: 10px;
 `
 
 export const FilterImg = styled.img`

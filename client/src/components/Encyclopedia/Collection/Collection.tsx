@@ -14,8 +14,10 @@ import Img9 from '../../../assets/Encyclopedia/dummy/Ellipse 23.png'
 import Img10 from '../../../assets/Encyclopedia/dummy/Ellipse 23-1.png'
 import Img11 from '../../../assets/Encyclopedia/dummy/Ellipse 23-2.png'
 import Img12 from '../../../assets/Encyclopedia/dummy/Ellipse 23-3.png'
-import { useSetRecoilState } from 'recoil';
-import { filterState } from '../../../recoil/atoms/CollectFilterState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { filterState, wantState } from '../../../recoil/atoms/CollectFilterState';
+import Filter from './Filter';
+
 interface CollectItem {
   name: string;
   url: string;
@@ -39,28 +41,32 @@ const collectList: CollectItem[] = [
 interface CollectionProps {}
 
 const Collection: React.FC<CollectionProps> = () => {
-  const setIsOpenState = useSetRecoilState(filterState)
+  const [isOpen, setIsOpenState] = useRecoilState(filterState)
+  const want = useRecoilValue(wantState)
 
   return (
-    <C.Container>
-      <C.BtnAlign>
-        <C.FilterBtn onClick={() => setIsOpenState(true)}>
-          <C.FilterImg src={ filterBtnImg } />
-          <C.FilterTxt>전체</C.FilterTxt>
-        </C.FilterBtn>
-      </C.BtnAlign>
+    <>
+      {isOpen && <Filter />}
+      <C.Container>
+        <C.BtnAlign>
+          <C.FilterBtn onClick={() => setIsOpenState(true)}>
+            <C.FilterImg src={ filterBtnImg } />
+            <C.FilterTxt>{want}</C.FilterTxt>
+          </C.FilterBtn>
+        </C.BtnAlign>
 
-      <C.CollectContainer className='grid gird-cols-3'>
-        {collectList.map((collectItem, index) => (
-          <Link to={`/detail/${collectItem.name}`} key={index}>
-            <C.CollectItem>
-              <C.ItemImg src={collectItem.url} />
-              <C.ItemName>{collectItem.name}</C.ItemName>
-            </C.CollectItem>
-          </Link>
-        ))}
-      </C.CollectContainer>
-    </C.Container>
+        <C.CollectContainer className='grid gird-cols-3'>
+          {collectList.map((collectItem, index) => (
+            <Link to={`/detail/${collectItem.name}`} key={index}>
+              <C.CollectItem>
+                <C.ItemImg src={collectItem.url} />
+                <C.ItemName>{collectItem.name}</C.ItemName>
+              </C.CollectItem>
+            </Link>
+          ))}
+        </C.CollectContainer>
+      </C.Container>
+    </>
   );
 };
 

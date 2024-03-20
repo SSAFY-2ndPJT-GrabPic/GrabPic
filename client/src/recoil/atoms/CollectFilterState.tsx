@@ -8,3 +8,9 @@ export const filterState = atom<boolean>({
     default: false,
     effects_UNSTABLE: [persistAtom],
 });
+
+export const wantState = atom<string>({
+    key: 'wantState',
+    default: '전체',
+    // effects_UNSTABLE: [persistAtom],
+});
