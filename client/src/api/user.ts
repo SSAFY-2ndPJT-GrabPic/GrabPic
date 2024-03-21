@@ -1,5 +1,6 @@
-import { AxiosResponse } from 'axios';
-import { noneApi, privateApi } from '../utils/http-commons';
+import { AxiosResponse } from "axios";
+import { noneApi,privateApi } from "../utils/http-commons";
+import { UserInfoType } from "../type/UserType";
 
 const url = 'user';
 
@@ -20,37 +21,12 @@ export const userLogin = async (
 };
 
 export const userInfo = async (
-  Response: (Response: AxiosResponse<MyResponseData>) => void,
-  Error: (Error: AxiosResponse<MyResponseData>) => void
-) => {
-  await privateApi.get(`/${url}/info/my`).then(Response).catch(Error);
-};
-
-export const userJoin = async (
-  params: {
-    email: string;
-    password: string;
-    nickname: string;
-    name: string;
-    birth: string;
-    gender: string;
-  },
-  Response: (Response: AxiosResponse<MyResponseData>) => void,
-  Error: (Error: AxiosResponse<MyResponseData>) => void
-) => {
-  await noneApi.post(`/${url}/join`, params).then(Response).catch(Error);
-};
-
-export const emailVerification = async (
-  params: { email: string; type: number },
-  Response: (Response: AxiosResponse<MyResponseData>) => void,
-  Error: (Error: AxiosResponse<MyResponseData>) => void
-) => {
-  await noneApi
-    .post(`/${url}/auth/emails/verification-requests`, params)
-    .then(Response)
-    .catch(Error);
-};
+    Response : (Response : UserInfoType) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) =>{
+        await privateApi.get(`/${url}/info/my`)
+        .then((e) => {Response(e.data)})
+        .catch(Error);
+}
 
 export const emailCodeVerification = async (
   params: { email: string; code: number },
