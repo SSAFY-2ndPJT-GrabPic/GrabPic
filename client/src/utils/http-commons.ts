@@ -20,6 +20,7 @@ export const privateApi: AxiosInstance = axios.create({
   headers: {
     // 'Access-Control-Allow-Origin': '*',
     // 'Content-Type': 'application/json',
+    // 'Content-Type': 'text/plain',
     'access': `${localStorage.getItem('accessToken')}`,
   },
 });

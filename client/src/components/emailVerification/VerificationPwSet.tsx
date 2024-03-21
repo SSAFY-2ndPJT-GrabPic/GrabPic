@@ -82,10 +82,9 @@ export default function ResetPwSet() {
       const newState = { ...state, pw: pw };
       navigate(`/${state.page}/userinfo`, { state: newState });
     } else {
-      const params = {password : pw};
 
       await passwordChange(
-        params,
+        pw,
         (response) => { console.log(response) },
         (error) => { console.log(error) }
       )
@@ -108,7 +107,7 @@ export default function ResetPwSet() {
         </R.VerificationProgressContainer>
       </div>
       <div className="flex flex-col mt-3">
-        <R.VerificationText>새{pwText}</R.VerificationText>
+        <R.VerificationText>{pwText}</R.VerificationText>
         <R.VerificationText>
           비밀번호는 아래 조건을 만족해야 합니다.
         </R.VerificationText>
