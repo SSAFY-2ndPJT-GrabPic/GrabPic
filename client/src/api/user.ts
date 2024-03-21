@@ -19,6 +19,14 @@ export const userLogin = async (params : {email:string; password:string},
         .catch(Error);
 }
 
+export const userInfo = async (
+    Response : (Response : AxiosResponse<MyResponseData>) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) =>{
+        await privateApi.get(`/${url}/info/my`)
+        .then(Response)
+        .catch(Error);
+}
+
 export const userJoin = async ( 
     params: {email:string; password:string; nickname:string; 
         name: string; birth: string; gender: string},

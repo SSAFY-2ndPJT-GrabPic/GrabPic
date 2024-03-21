@@ -3,6 +3,7 @@ import * as M from './Modal.style';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import * as R from '../../recoil/atoms/SettingState';
 import { isLoginState } from '../../recoil/atoms/UserState';
+import { useNavigate } from 'react-router';
 
 export const Modal: React.FC = () => {
   const [modalTitle, setModalTitle] = useState('정말 로그아웃하시겠습니까?');
@@ -12,12 +13,18 @@ export const Modal: React.FC = () => {
   const [isModal, setIsModal] = useRecoilState(R.isModalState);
   const isModalNo = useRecoilValue(R.isModalNo);
 
+  const navgiate = useNavigate();
+
   useEffect(() => {
     if (isModalNo === 1) {
       setModalTitle('정말 로그아웃 하시겠습니까?');
+      setModalText('');
     } else if (isModalNo === 2) {
       setModalTitle('정말 탈퇴하시겠습니까?');
       setModalText('회원 정보는 모두 삭제됩니다.');
+    } else if (isModalNo === 3){
+      setModalTitle('정말 취소하시겠습니까?');
+      setModalText('');
     }
   }, [isModal, isModalNo]);
 
@@ -26,9 +33,14 @@ export const Modal: React.FC = () => {
   };
 
   const modalBtnYesClick = () => {
-    localStorage.removeItem("accessToken");
     setIsModal(false);
-    setIsLogin(false);
+    if(isModalNo === 1 || isModalNo === 2){
+      localStorage.removeItem("accessToken");
+      setIsLogin(false);
+    }else if(isModalNo === 3){
+      navgiate('/camera')
+    }
+
   };
 
   return (
