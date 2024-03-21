@@ -13,6 +13,7 @@ import CollectDetail from '../pages/CollectDetail';
 import ChatBot from '../pages/ChatBot';
 import Map from '../pages/Map';
 import Camera from '../pages/Camera';
+import { EncyclopediaResgist } from './Encyclopedia/regist/EncyclopediaRegist';
 import Gallery from '../pages/Gallery';
 import SettingPage from '../pages/SettingPage';
 
@@ -41,6 +42,7 @@ export default function Router() {
         <Route path="/detail/:collectName" element={<CollectDetail />} />
         <Route path="/map" element={<Map />} />
         <Route path="/camera/*" element={<Camera />} />
+        <Route path="regist" element={<EncyclopediaResgist/>}/>
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/setting" element={<SettingPage />} />
         <Route path="/userinfo" element={<UserInfo />} />
