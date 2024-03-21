@@ -21,6 +21,7 @@ export const SocailLogin: React.FC = () => {
   return (
     <>
       <L.AnothLogin onClick={() => {loginClick(1)}}>
+        <a href='https://j10d104.p.ssafy.io/api/login/oauth2/authorization/google'></a>
         <img src={googleIconUrl} className="mr-3" />
         구글 로그인
       </L.AnothLogin>

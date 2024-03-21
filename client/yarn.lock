@@ -3423,11 +3423,6 @@ jsonpointer@^5.0.0:
   resolved "https://registry.npmjs.org/jsonpointer/-/jsonpointer-5.0.1.tgz"
   integrity sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==
 
-kakao-sdk@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/kakao-sdk/-/kakao-sdk-3.1.0.tgz#0fd5cf2be39fb0de57254225d187de88266f3e65"
-  integrity sha512-hXKbmZX+QyuGzN+wsoslQqQYRHxehxz3CvcXwCBCePwMQkDNezHgFrn3AQOSYjyOBvhwciqqE88rAk664Ql2rw==
-
 kakao.maps.d.ts@^0.1.39:
   version "0.1.39"
   resolved "https://registry.yarnpkg.com/kakao.maps.d.ts/-/kakao.maps.d.ts-0.1.39.tgz#dc30726531906d9c42b8f15d7404baa169b8255e"
