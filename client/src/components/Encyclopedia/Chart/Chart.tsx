@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as C from './Chart.style'
-import cytoscape, { BaseLayoutOptions, CytoscapeOptions } from 'cytoscape';
+import cytoscape, { CytoscapeOptions } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 cytoscape.use(coseBilkent);
-import { useEffect, useRef } from 'react';
 
 interface ChartProps {}
 
@@ -99,7 +98,7 @@ const Chart: React.FC<ChartProps> = () => {
           fit: true, // whether to fit to viewport
           // gravityRangeCompound: 1.5,
           // tile: true,
-        } as BaseLayoutOptions & {animate: boolean},
+        } as { name: string; animate: boolean; fit: boolean },
       };
       const cy = cytoscape(options);
 
