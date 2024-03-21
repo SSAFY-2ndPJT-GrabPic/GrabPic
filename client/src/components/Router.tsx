@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import Home from '../pages/Home';
-import Login from '../pages/Login';
+import { Login } from '../pages/Login';
 import ResetPw from '../pages/ResetPw';
 import Join from '../pages/Join';
 import Encyclopedia from '../pages/Encyclopedia';

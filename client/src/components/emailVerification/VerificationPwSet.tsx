@@ -82,10 +82,9 @@ export default function ResetPwSet() {
       const newState = { ...state, pw: pw };
       navigate(`/${state.page}/userinfo`, { state: newState });
     } else {
-      const params = {password : pw};
 
       await passwordChange(
-        params,
+        pw,
         (response) => { console.log(response) },
         (error) => { console.log(error) }
       )
