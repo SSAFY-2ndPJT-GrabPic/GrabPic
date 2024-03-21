@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
-import { noneApi,privateApi } from "../utils/http-commons"
+import { noneApi,privateApi } from "../utils/http-commons";
+import { UserInfoType } from "../type/UserType";
 
 const url = 'user';
 
@@ -20,10 +21,10 @@ export const userLogin = async (params : {email:string; password:string},
 }
 
 export const userInfo = async (
-    Response : (Response : AxiosResponse<MyResponseData>) => void, 
+    Response : (Response : UserInfoType) => void, 
     Error : (Error : AxiosResponse<MyResponseData>) => void) =>{
         await privateApi.get(`/${url}/info/my`)
-        .then(Response)
+        .then((e) => {Response(e.data)})
         .catch(Error);
 }
 
