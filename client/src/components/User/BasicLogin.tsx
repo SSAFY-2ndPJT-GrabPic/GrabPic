@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import * as R from '../../recoil/atoms/UserState';
 
-// import { userLogin,userInfo } from '../../api/user';
-import { userLogin } from '../../api/user';
+import { userLogin, userInfo } from '../../api/user';
 
 import * as L from './Login.style';
 import * as G from '../../styles/globalCSS';
 
 import { httpStatusCode } from '../../utils/http-status';
 
+
 export const BasicLogin: React.FC = () => {
   const navigate = useNavigate();
 
   const setIsLogin = useSetRecoilState<boolean>(R.isLoginState);
-  // const setUserInfo = useSetRecoilState(R.userInfo);
+  const setUserInfoState = useSetRecoilState(R.userInfoState);
 
   const emailReg =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
@@ -89,14 +89,14 @@ export const BasicLogin: React.FC = () => {
       async (response) => {
         if (response.status === httpStatusCode.OK) {
           localStorage.setItem('accessToken', response.headers.access);
-          // await userInfo(
-          //   (response) => {
-          //     console.log(response);
-          //   },
-          //   (error) => {
-          //     console.log(error);
-          //   }
-          // )
+          await userInfo(
+            (response) => {
+              setUserInfoState(response);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
           setIsLogin(true);
           navigate('/');
         } else if (response.status === httpStatusCode.fail) {

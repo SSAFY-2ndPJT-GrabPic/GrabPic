@@ -18,17 +18,16 @@ export const publicApi: AxiosInstance = axios.create({
 export const privateApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
-    // 'Access-Control-Allow-Origin': '*',
-    // 'Content-Type': 'application/json',
-    // 'Content-Type': 'text/plain',
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
     'access': `${localStorage.getItem('accessToken')}`,
   },
 });
 
 privateApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (token) {
-    config.headers['AUTH-TOKEN'] = `${token}`;
+    config.headers['access'] = `${token}`;
   }
   return config;
 });
