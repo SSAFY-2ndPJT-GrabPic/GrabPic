@@ -31,14 +31,15 @@ export const DragHandle = styled.div`
   height: 4px; /* 손잡이의 세로 크기 */
   background-color: #50940C; /* 연두색 */
   border-radius: 3px; /* 손잡이의 둥근 모양을 위해 반지름 설정 */
-`
+`;
+
 export const HandleContainer = styled.div`
   width: 100%;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 export const FilterContainer = styled.div`
   width: 100%;
@@ -58,9 +59,9 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
   color: #5C5C5C;
   font-family: 'BMJUA';
   font-size: 16px;
-  background-color: ${props => props.clickActive ? '#B2EB78' : ''};
-  
-`
+  background-color: ${props => props.clickActive ? '#B2EB78' : ''}; 
+`;
+
 // 핀 리스트
 export const PinList = styled.div`
   margin-top: 5px;
@@ -72,7 +73,8 @@ export const PinList = styled.div`
   flex-direction: column;
   align-items: center;
   padding-bottom: 10px;
-`
+`;
+
 // 핀 아이템 컨테이너
 export const PinItemContainer = styled.div`
   width: 90%;
@@ -81,14 +83,14 @@ export const PinItemContainer = styled.div`
   display: flex;
   padding: 5px 0px;
   gap: 20px;
-`
+`;
 
 // 핀 이미지 컨테이너
 export const PinImgContainer = styled.img`
   width: 80px;
   height: 80px;
   border-radius: 20px;
-`
+`;
 
 // 핀 데이터 컨테이너
 export const PinDataContainer = styled.div`
@@ -99,28 +101,65 @@ export const PinDataContainer = styled.div`
   flex-direction: column;
   /* padding: 5px 0px; */
   border-bottom: 1px solid #e0e0e0;
-`
+`;
 
 export const PinNameSpan = styled.span`
   font-size: 16px;
   color: #001ba7;
   margin-bottom: 7px;
-`
+`;
 
 export const PinInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3px;
-`
+`;
 
 export const PinInfoSpan = styled.span`
   font-family: 'TmoneyR';
   font-size: 12px;
   color: #363636;
-`
+`;
+
+export const LocationBtn_Container = styled.div`
+  position:absolute;
+  top:140px;
+  right:10px;
+  width:36px;
+  height:80px;
+  overflow:hidden;
+  z-index:1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+// 줌 버튼
+export const LocationSpan = styled.span`
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  width:36px;
+  height:36px;
+  text-align:center;
+  background-color:#f5f5f5;
+  border:1px solid #50940C;
+  border-radius: 50%;
+`;
+
+export const ReLoadImg = styled.img`
+width: 25px;
+border:none;
+`;
+
+export const SetCenterImg = styled.img`
+width: 32px;
+border:none;
+`;
 
 // 줌 버튼 컨테이너
-export const Zoom_Control = styled.button`
+export const ZoomBtnContainer = styled.div`
   position:absolute;
   top:50px;
   right:10px;
@@ -134,7 +173,7 @@ export const Zoom_Control = styled.button`
 `;
 
 // 줌 버튼
-export const Zoom_Span = styled.span`
+export const ZoomSpan = styled.span`
   display: flex; 
   justify-content: center; 
   align-items: center; 
@@ -148,7 +187,7 @@ export const Zoom_Span = styled.span`
 `;
 
 // 줌 버튼 이미지
-export const Zoom_Img = styled.img`
+export const ZoomImg = styled.img`
   width: 18px;
   border:none;
 `;
