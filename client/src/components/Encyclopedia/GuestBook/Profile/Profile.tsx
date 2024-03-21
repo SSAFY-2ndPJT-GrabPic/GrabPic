@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import { Link } from "react-router-dom";
 import * as P from './Profile.style';
+import { useParams } from 'react-router-dom';
+import { getUserInfo } from '../../../../api/user';
 
 const userInfo = {
   isMine: false,
@@ -15,6 +17,16 @@ const userInfo = {
 interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = () => {
+  const { userId = '' } = useParams<string>();
+
+  useEffect(() => {
+    getUserInfo(userId)
+      .then((res) => {
+        console.log(res);
+      })
+  })
+
+
   const btnColor = (() => {
     if (userInfo.isMine) {
       return { backgroundColor: '#BDBDBD', color: '#FFFFFF'}

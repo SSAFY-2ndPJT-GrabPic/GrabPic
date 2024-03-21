@@ -11,7 +11,7 @@ export const noneApi = axios.create({
 export const publicApi= axios.create({
   baseURL: baseURL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json',                                                                     
   },
 });
 
