@@ -37,8 +37,8 @@ const UserCard: React.FC<UserCardProps> = () => {
       </U.UserInfoWrap>
 
       <U.BtnsWrap>
-        <U.Btn to={`/encyclopedia/${userInformation.nickName}`} onClick={() => setEncyLocate('chart')}>차트</U.Btn>
-        <U.Btn to={`/encyclopedia/${userInformation.nickName}`} onClick={() => setEncyLocate('guestBook')}>방명록</U.Btn>
+        <U.Btn to={`/encyclopedia/${userInformation.userId}`} onClick={() => setEncyLocate('chart')}>차트</U.Btn>
+        <U.Btn to={`/encyclopedia/${userInformation.userId}`} onClick={() => setEncyLocate('guestBook')}>방명록</U.Btn>
       </U.BtnsWrap>
     </U.Container>
   );
