@@ -38,7 +38,7 @@ export default function Router() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/chatbot" element={<ChatBot />} />
-        <Route path="/encyclopedia/:userId" element={<Encyclopedia />} />
+        <Route path="/encyclopedia/:nickname" element={<Encyclopedia />} />
         <Route path="/detail/:collectName" element={<CollectDetail />} />
         <Route path="/map" element={<Map />} />
         <Route path="/camera/*" element={<Camera />} />

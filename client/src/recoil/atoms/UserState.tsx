@@ -1,5 +1,5 @@
-import { atom } from "recoil";
-import { UserInfoType } from "../../type/UserType";
+import { atom } from 'recoil';
+import { UserInfoType } from '../../type/UserType';
 
 export const isLoginState = atom<boolean>({
   key: 'isLogin',
@@ -8,5 +8,14 @@ export const isLoginState = atom<boolean>({
 
 export const userInfoState = atom<UserInfoType>({
   key: 'userInfo',
-  default: {userId: 0, email: '', name: '', nickname: '', birth: '', gender: '', profilePicture: '', subsCount: 0}
+  default: {
+    userId: 0,
+    email: '',
+    name: '',
+    nickname: '',
+    birth: '',
+    gender: '',
+    profilePicture: '',
+    subsCount: 0,
+  },
 });

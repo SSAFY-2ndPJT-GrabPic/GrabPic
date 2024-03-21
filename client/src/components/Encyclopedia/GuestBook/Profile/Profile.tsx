@@ -4,7 +4,7 @@ import * as P from './Profile.style';
 import { useParams } from 'react-router-dom';
 import { getUserInfo } from '../../../../api/user';
 import { useRecoilValue } from 'recoil';
-import { userInfo } from '../../../../recoil/atoms/UserState';
+import { userInfoState } from '../../../../recoil/atoms/UserState';
 import { checkIsSub } from '../../../../api/subscribe';
 
 // const userInfo = {
@@ -29,7 +29,6 @@ interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = () => {
   const { userId } = useParams<{ userId: string }>();
-  console.log(userId)
   const numUserId = userId ? parseInt(userId, 10) : 0 ;
   const [ownerInfo, setOwnerInfo] = useState<OwnerInfo>({
     'userId' : 0,
@@ -41,24 +40,28 @@ const Profile: React.FC<ProfileProps> = () => {
   const [isMine, setIsMine] = useState<boolean>(false)
   const [isSub, setIsSub] = useState<boolean>(false)
 
-  const myInfo = useRecoilValue(userInfo)
+  const myInfo = useRecoilValue(userInfoState)
 
   useEffect(() => {
-    getUserInfo(numUserId)
-      .then((res) => {
-        setOwnerInfo(res)
-        if (res.userId === myInfo.userId) {
-          setIsMine(true)
-        }
-        console.log(res);
-      })
-      .catch((err) => console.error(err))
+    if (numUserId === 0) {
+      setOwnerInfo(myInfo)
+      setIsMine(true)
+    } 
+    
+    else {
 
-    checkIsSub(numUserId)
-      .then((res) => {
-        setIsSub(res)
-      })
-      .catch((err) => console.error(err))
+      getUserInfo(numUserId)
+        .then((res) => {
+          setOwnerInfo(res)
+        })
+        .catch((err) => console.error(err))
+  
+      checkIsSub(numUserId)
+        .then((res) => {
+          setIsSub(res)
+        })
+        .catch((err) => console.error(err))
+    }
   })
 
 
@@ -75,21 +78,21 @@ const Profile: React.FC<ProfileProps> = () => {
   return (
     <P.Container>
       <P.UserContainer>
-        <P.ProfileImg src={ownerInfo.profileImgUrl} />
+        <P.ProfileImg src={ownerInfo.profilePicture} />
         <P.NickName>{ownerInfo.nickname}</P.NickName>
       </P.UserContainer>
       <P.SubContainer>
         <P.TxtContainer>
           <div>
-            <P.NumTxt>{ownerInfo.collect}</P.NumTxt>
+            <P.NumTxt>{ownerInfo.subsCount}수정필요</P.NumTxt>
             <P.ExplainTxt>수집 수</P.ExplainTxt>
           </div>
           <div>
-            <P.NumTxt>{ownerInfo.sub}</P.NumTxt>
+            <P.NumTxt>{ownerInfo.subsCount}</P.NumTxt>
             <P.ExplainTxt>구독자 수</P.ExplainTxt>
           </div>
         </P.TxtContainer>
-        <P.SubBtn style={btnColor}>{ownerInfo.isMine ? '회원 정보 수정' : userInfo.isSub ? '구독 중' : '구독하기'}</P.SubBtn>
+        <P.SubBtn style={btnColor}>{isMine ? '회원 정보 수정' : isSub ? '구독 중' : '구독하기'}</P.SubBtn>
       </P.SubContainer>
     </P.Container>
   );

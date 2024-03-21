@@ -5,18 +5,19 @@ import * as U from './UserCard.style'
 import { Link } from 'react-router-dom';
 import { userInfoState } from '../../recoil/atoms/UserState';
 
-const userInfo = {
-  nickname: "해진해뜸",
-  profileImgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWgn_TKOeao6JafiNJb9MoJVTfF9zsmNAlRygzSuCbCjeqUjV',
-  sub: 529,
-  email: "sun@ssafy.com"
-}
+// const userInfo = {
+//   nickname: "해진해뜸",
+//   profileImgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWgn_TKOeao6JafiNJb9MoJVTfF9zsmNAlRygzSuCbCjeqUjV',
+//   sub: 529,
+//   email: "sun@ssafy.com"
+// }
 
 interface UserCardProps {}
 
 const UserCard: React.FC<UserCardProps> = () => {
   const userInformation = useRecoilValue(userInfoState)
   const setEncyLocate = useSetRecoilState(headerState)
+  console.log(userInformation)
 
   return (
     <U.Container>
