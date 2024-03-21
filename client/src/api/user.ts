@@ -70,3 +70,11 @@ export const passwordChange = async(params : string,
         .then(Response)
         .catch(Error)
 }
+
+export const emailDuplicationCheck = async(params : string,
+    Response : (Response : AxiosResponse<MyResponseData>) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+        await noneApi.get(`/${url}/look/email/${params}`)
+        .then(Response)
+        .catch(Error);
+}

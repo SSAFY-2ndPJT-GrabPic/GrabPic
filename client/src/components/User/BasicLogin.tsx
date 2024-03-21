@@ -10,8 +10,13 @@ import * as G from '../../styles/globalCSS';
 
 import { httpStatusCode } from '../../utils/http-status';
 
+import { useRecoilState } from 'recoil';
+import * as S from '../../recoil/atoms/SettingState'
 
 export const BasicLogin: React.FC = () => {
+  const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
+  const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
+
   const navigate = useNavigate();
 
   const setIsLogin = useSetRecoilState<boolean>(R.isLoginState);
@@ -101,6 +106,8 @@ export const BasicLogin: React.FC = () => {
           navigate('/');
         } else if (response.status === httpStatusCode.fail) {
           // 회원정보 불일치
+          setIsModal(true);
+          setIsModalNo(5);
         }
       },
       (error) => {
