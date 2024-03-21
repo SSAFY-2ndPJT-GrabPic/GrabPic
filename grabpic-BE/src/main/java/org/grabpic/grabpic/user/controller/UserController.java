@@ -160,6 +160,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/info/my")
+    public ResponseEntity<?> myInfo(HttpServletRequest request) {
+        try {
+            InfoDTO infoDTO = userService.myInfo(request.getHeader("access"));
+            return ResponseEntity.status(HttpStatus.OK).body(infoDTO);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     //테스트용 코드
     //    @GetMapping("/getinfo")
 //    public ResponseEntity<?> getHeader(@RequestHeader("access") String accessToken) {
