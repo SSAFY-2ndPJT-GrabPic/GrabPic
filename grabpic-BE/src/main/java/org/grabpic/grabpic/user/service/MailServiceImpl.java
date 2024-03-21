@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.grabpic.grabpic.user.config.BusinessLogicException;
 import org.grabpic.grabpic.user.config.JWTUtil;
+import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
+import org.grabpic.grabpic.user.db.entity.EmailCodeEntity;
+import org.grabpic.grabpic.user.db.repository.EmailCodeRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -19,12 +23,14 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender emailSender;
     private final JWTUtil jwtUtil;
+    private final EmailCodeRepository emailCodeRepository;
     //이메일 전송
     public int sendEmail(String email, int type) {
 
         Random random = new Random();
         int randomInRange = random.nextInt(900) + 100;
         // randomInRange를 DB에 넣는 작업 추가 필요
+        emailCodeRepository.save(new EmailCodeEntity(email, randomInRange));
         String title = "기본값";
         String content = "기본값";
 
@@ -61,18 +67,24 @@ public class MailServiceImpl implements MailService {
         return message;
     }
 
-    public boolean verificationCode(int code) {
+    public int verificationCode(EmailAuthDto dto) {
         /*
          저장된 코드를 불러오는 내용
          */
-        int tmpSaveCode = 4321;
+        int code = dto.getCode();
+        String email = dto.getEmail();
+        System.out.println(emailCodeRepository.existsById(email));
+        if(!emailCodeRepository.existsById(email)){
+            System.out.println("Asdf");
+            return 1;
+        }
+        Optional<EmailCodeEntity> emailCodeEntity = emailCodeRepository.findById(email);
+        int tmpSaveCode = emailCodeEntity.get().getCode();
 
-        if(code == tmpSaveCode) {
-            //인증 성공
-
-            return true;
+        if(dto.getCode() == tmpSaveCode) {
+            return 2;
         } else {
-            return false;
+            return 3;
         }
     }
 }

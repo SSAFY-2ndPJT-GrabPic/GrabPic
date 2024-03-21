@@ -5,17 +5,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.grabpic.grabpic.errors.errorcode.UserError;
+import org.grabpic.grabpic.errors.exception.RestApiException;
 import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
-import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.grabpic.grabpic.user.service.MailService;
 import org.grabpic.grabpic.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -84,9 +83,10 @@ public class UserController {
     @PostMapping("/auth/emails/verification")
     public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto) {
         try {
-            boolean authResult = mailService.verificationCode(emailAuthDto.getCode());
-            if(authResult) {
-                return new ResponseEntity<>(HttpStatus.OK);
+            int authResult = mailService.verificationCode(emailAuthDto);
+            if(authResult == 1) {
+                System.out.println("asdfasdfasdf");
+                throw new RestApiException(UserError.INACTIVE_USER);
             } else  {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
