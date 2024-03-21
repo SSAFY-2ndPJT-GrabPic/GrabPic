@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as R from './Verification.style';
 import * as G from '../../styles/globalCSS';
 
-import { emailVerification } from '../../api/user';
+import { emailVerification, emailDuplicationCheck } from '../../api/user';
 
 const ResetPwEmail: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const ResetPwEmail: React.FC = () => {
   const [email, setEmail] = useState('');
   // 입력된 이메일의 유효성 여부를 나타내는 상태
   const [isEmailValid, setIsEmailValid] = useState(false);
+  const [emailMsg, setEmailMsg] = useState('');
 
   useEffect(() => {
     if (state.page == 'join') {
@@ -27,12 +28,39 @@ const ResetPwEmail: React.FC = () => {
   }, [state.page]); // 빈 배열을 넣어 초기 렌더링 시에만 실행되도록 설정합니다.
 
   // 이메일 유효성 검사 함수
-  const validateEmail = (s: string) => {
+  const validateEmail = async (s: string) => {
     // 이메일 유효성 검사 로직을 여기에 구현합니다.
     // 예를 들어, 정규 표현식을 사용하여 이메일 형식을 검증할 수 있습니다.
     setEmail(s);
-    setIsEmailValid(emailReg.test(s));
-    return setIsEmailValid;
+
+    if(emailReg.test(s)){
+      await emailDuplicationCheck(
+        s,
+        (response) => {
+          if(isJoinPage){
+            if(response.data){
+              setEmailMsg('이메일이 중복되었습니다!')
+              setIsEmailValid(false);
+            }else{
+              setEmailMsg('')
+              setIsEmailValid(true);
+            }
+          }else{
+            if(!response.data){
+              setEmailMsg('이메일이 유효하지 않습니다!')
+              setIsEmailValid(false);
+            }else{
+              setEmailMsg('')
+              setIsEmailValid(true);
+            }
+          }
+        },
+        () => {}
+      )
+    }else{
+      setIsEmailValid(false);
+      setEmailMsg('이메일의 형식이 올바르지 않습니다!');
+    }
   };
 
   // 버튼 클릭 시 이벤트 핸들러
@@ -82,7 +110,7 @@ const ResetPwEmail: React.FC = () => {
           onChange={(e) => validateEmail(e.target.value)}
         />
         {!isEmailValid && (
-          <G.InputError>이메일의 형식이 올바르지 않습니다!</G.InputError>
+          <G.InputError>{emailMsg}</G.InputError>
         )}
       </G.InputContainer>
       <G.InputButtonActive onClick={handleClick}>

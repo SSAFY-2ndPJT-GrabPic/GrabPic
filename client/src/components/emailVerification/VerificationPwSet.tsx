@@ -5,7 +5,13 @@ import { useEffect, useState } from 'react';
 
 import { passwordChange } from '../../api/user';
 
+import { useRecoilState } from 'recoil';
+import * as S from '../../recoil/atoms/SettingState'
+
 export default function ResetPwSet() {
+  const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
+  const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
+
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isJoinPage, setIsJoinPage] = useState(false);
@@ -85,10 +91,15 @@ export default function ResetPwSet() {
 
       await passwordChange(
         pw,
-        (response) => { console.log(response) },
-        (error) => { console.log(error) }
+        () => { 
+          navigate('/login');
+         },
+        (error) => { 
+          console.log(error); 
+          setIsModalNo(4);
+          setIsModal(true);
+        }
       )
-      // navigate('/login');
     }
 
 
