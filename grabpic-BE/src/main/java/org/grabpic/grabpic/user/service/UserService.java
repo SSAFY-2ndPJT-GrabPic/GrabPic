@@ -17,4 +17,5 @@ public interface UserService {
     public String reissue(Cookie[] cookies);
     public int duplicationNicknameCheck(String nickname);
     public InfoDTO userInfo(long userId);
+    public InfoDTO myInfo(String token);
 }
