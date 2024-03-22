@@ -19,16 +19,18 @@ const EncyBody = styled.div`
     display: none;
   }
 `
-interface EncyclopediaProps {}
+interface EncyclopediaProps {
+  userId: number;
+}
 
-const Encyclopedia: React.FC<EncyclopediaProps> = () => {
+const Encyclopedia: React.FC<EncyclopediaProps> = ({ userId }) => {
   const encyLocate = useRecoilValue(headerState)
 
   return (
     <div>
       <EncyHeader />
       <EncyBody>
-        {encyLocate === 'chart' ? <Chart /> : encyLocate === 'collection' ? <Collection /> : <GuestBook />}
+        {encyLocate === 'chart' ? <Chart /> : encyLocate === 'collection' ? <Collection /> : <GuestBook userId={userId} />}
       </EncyBody>
     </div>
   );

@@ -1,6 +1,6 @@
 import { Routes, Route,useLocation  } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { isLoginState } from '../recoil/atoms/UserState';
+import { isLoginState, userInfoState } from '../recoil/atoms/UserState';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -24,6 +24,7 @@ export default function Router() {
   const isLogin = useRecoilValue(isLoginState);
   const navigate = useNavigate();
   const location = useLocation();
+  const userInfo = useRecoilValue(userInfoState)
 
   useEffect(() => {
     // console.log(location.pathname);
@@ -38,7 +39,7 @@ export default function Router() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/chatbot" element={<ChatBot />} />
-        <Route path="/encyclopedia/:nickname" element={<Encyclopedia />} />
+        <Route path="/encyclopedia/:nickname" element={<Encyclopedia userId={userInfo.userId} />} />
         <Route path="/detail/:collectName" element={<CollectDetail />} />
         <Route path="/map" element={<Map />} />
         <Route path="/camera/*" element={<Camera />} />

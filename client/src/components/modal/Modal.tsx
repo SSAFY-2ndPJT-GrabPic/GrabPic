@@ -36,6 +36,7 @@ export const Modal: React.FC = () => {
     setIsModal(false);
     if(isModalNo === 1 || isModalNo === 2){
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("recoil-persist");
       setIsLogin(false);
     }else if(isModalNo === 3){
       navgiate('/camera')
