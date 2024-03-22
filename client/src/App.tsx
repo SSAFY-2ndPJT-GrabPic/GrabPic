@@ -1,18 +1,17 @@
-import { BrowserRouter as RouterProvider } from "react-router-dom";
-import Router from "./components/Router"
-import Header from "./components/Header/Header";
-import NavBar from "./components/NavigationBar/NavigationBar";
+import { BrowserRouter as RouterProvider } from 'react-router-dom';
+import Router from './components/Router';
+import { RecoilRoot } from 'recoil';
+import { Modal } from './components/Modal/Modal';
 
 function App() {
   return (
-    <>
-      <Header />
+    <RecoilRoot>
       <RouterProvider>
+      <Modal/>
         <Router />
       </RouterProvider>
-      <NavBar />
-    </>
-  )
+    </RecoilRoot>
+  );
 }
 
-export default App
+export default App;

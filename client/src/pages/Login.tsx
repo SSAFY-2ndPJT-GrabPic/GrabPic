@@ -1,6 +1,13 @@
-export default function Login () {
-  
+import { BasicLogin } from "../components/User/BasicLogin";
+import { SocailLogin } from "../components/User/SocialLogin";
+
+export const Login: React.FC = () => {
+
   return (
-    <h1>Login</h1>
-  )
-}
+    <div className="flex flex-col px-6">
+      <BasicLogin/>
+      <SocailLogin/>
+    </div>
+  );
+};
+

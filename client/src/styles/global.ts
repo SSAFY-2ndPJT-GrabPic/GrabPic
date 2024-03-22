@@ -29,5 +29,21 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: normal;
   }
 
-  
+  /* 박병조 테스트 코드 추후 적용 공지 및 설명 예정*/
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #root {
+    width: 100%;
+    height: 100%;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;

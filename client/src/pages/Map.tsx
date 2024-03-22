@@ -1,6 +1,9 @@
-export default function Map () {
-  
+import CustomMap from '../components/Map/CustomMap'
+
+const Map: React.FC = () => {
   return (
-    <h1>Map</h1>
+    <CustomMap/>
   )
 }
+
+export default Map
