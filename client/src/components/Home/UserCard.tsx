@@ -1,8 +1,10 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { headerState } from '../../recoil/atoms/EncyHeaderState'
 import * as U from './UserCard.style'
 import { Link } from 'react-router-dom';
+
+import { userInfoState } from '../../recoil/atoms/UserState';
 
 const userInfo = {
   nickname: "해진해뜸",
@@ -15,6 +17,8 @@ interface UserCardProps {}
 
 const UserCard: React.FC<UserCardProps> = () => {
   const setEncyLocate = useSetRecoilState(headerState)
+  const userInfoo = useRecoilValue(userInfoState);
+  userInfoo;
 
   return (
     <U.Container>

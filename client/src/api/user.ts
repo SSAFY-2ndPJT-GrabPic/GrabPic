@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
-import { noneApi,privateApi } from "../utils/http-commons"
+import { noneApi,privateApi } from "../utils/http-commons";
+import { UserInfoType } from "../type/UserType";
 
 const url = 'user';
 
@@ -19,7 +20,15 @@ export const userLogin = async (params : {email:string; password:string},
         .catch(Error);
 }
 
-export const userJoin = async (
+export const userInfo = async (
+    Response : (Response : UserInfoType) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) =>{
+        await privateApi.get(`/${url}/info/my`)
+        .then((e) => {Response(e.data)})
+        .catch(Error);
+}
+
+export const userJoin = async ( 
     params: {email:string; password:string; nickname:string; 
         name: string; birth: string; gender: string},
     Response : (Response : AxiosResponse<MyResponseData>) => void, 
@@ -53,10 +62,27 @@ export const nickNameCheck = async(params : string,
         .catch(Error)
 }
 
-export const passwordChange = async(params : {password : string},
+export const passwordChange = async(params : string,
     Response : (Response : AxiosResponse<MyResponseData>) => void, 
     Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+        console.log(params)
         await privateApi.post(`/${url}/password/change`,params)
         .then(Response)
         .catch(Error)
+}
+
+export const emailDuplicationCheck = async(params : string,
+    Response : (Response : AxiosResponse<MyResponseData>) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+        await noneApi.get(`/${url}/look/email/${params}`)
+        .then(Response)
+        .catch(Error);
+}
+
+export const TokenRefresh = async(
+    Response : (Response : AxiosResponse<MyResponseData>) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+    await noneApi.post(`/${url}/reissue`,{withCredentials: true})
+    .then(Response)
+    .catch(Error)
 }

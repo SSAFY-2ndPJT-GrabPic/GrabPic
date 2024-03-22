@@ -16,7 +16,7 @@ export const CheckPage : React.FC = () => {
 
     // 전송 버튼
     const go = () => {
-        navigate("/")
+        navigate("/regist", { state: {image : image}});
     }
 
     return (

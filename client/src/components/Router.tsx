@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import Home from '../pages/Home';
-import Login from '../pages/Login';
+import { Login } from '../pages/Login';
+import { SocialLoginRedirect } from './User/SocialLoginRedirect';
 import ResetPw from '../pages/ResetPw';
 import Join from '../pages/Join';
 import Encyclopedia from '../pages/Encyclopedia';
@@ -13,6 +14,7 @@ import CollectDetail from '../pages/CollectDetail';
 import ChatBot from '../pages/ChatBot';
 import Map from '../pages/Map';
 import Camera from '../pages/Camera';
+import { EncyclopediaResgist } from './Encyclopedia/regist/EncyclopediaRegist';
 import Gallery from '../pages/Gallery';
 import SettingPage from '../pages/SettingPage';
 
@@ -41,6 +43,7 @@ export default function Router() {
         <Route path="/detail/:collectName" element={<CollectDetail />} />
         <Route path="/map" element={<Map />} />
         <Route path="/camera/*" element={<Camera />} />
+        <Route path="regist" element={<EncyclopediaResgist/>}/>
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/setting" element={<SettingPage />} />
         <Route path="/userinfo" element={<UserInfo />} />
@@ -48,6 +51,7 @@ export default function Router() {
 
       {/* 헤더 & 네브가 필요 없는 페이지 */}
       <Route path="/login" element={<Login />} />
+      <Route path="/social" element={<SocialLoginRedirect />} />
       <Route path="/resetpw/*" element={<ResetPw />}/>
       <Route path="/join/*" element={<Join />} />
     </Routes>
