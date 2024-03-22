@@ -11,12 +11,12 @@ import * as G from '../../styles/globalCSS';
 
 import { httpStatusCode } from '../../utils/http-status';
 
-// import { useRecoilState } from 'recoil';
-// import * as S from '../../recoil/atoms/SettingState'
+import { useRecoilState } from 'recoil';
+import * as S from '../../recoil/atoms/SettingState'
 
 export const BasicLogin: React.FC = () => {
-  // const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
-  // const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
+  const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
+  const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
 
   const navigate = useNavigate();
 
@@ -32,7 +32,6 @@ export const BasicLogin: React.FC = () => {
   const [isPw, setIsPw] = useState(false);
   const [emailMsg, setEmailMsg] = useState('');
   const [pwMsg, setPwMsg] = useState('');
-  const [autoCheck, setAutoCheck] = useState(false);
 
   const move = (path: string) => {
     if (path === 'pwSet') {
@@ -63,8 +62,10 @@ export const BasicLogin: React.FC = () => {
     }
   };
 
-  const autoCheckToggle = () => {
-    setAutoCheck(!autoCheck);
+  const enterKeyEvent = (e : React.KeyboardEvent) => {
+    if(e.key === 'Enter'){
+      loginCheck();
+    }
   }
 
   const loginCheck = async () => {
@@ -73,7 +74,7 @@ export const BasicLogin: React.FC = () => {
     } else if (!isPw) {
       setPwMsg('비밀번호를 입력하시오');
     } else {
-      const params = { email: email, password: pw };
+      const params = { email: email, password: pw};
       await userLogin(
         params,
         async (response) => {
@@ -91,11 +92,13 @@ export const BasicLogin: React.FC = () => {
             navigate('/');
           } else if (response.status === httpStatusCode.fail) {
             // 회원정보 불일치
-            console.log("틀림")
+            setIsModal(true);
+            setIsModalNo(5);
           }
         },
-        (error) => {
-          console.log(error);
+        () => {
+          setIsModal(true);
+          setIsModalNo(0);
         }
       );
     }
@@ -114,12 +117,9 @@ export const BasicLogin: React.FC = () => {
         <G.InputBox
           type="password"
           onChange={(e) => pwCheck(e.target.value)}
+          onKeyDown={enterKeyEvent}
         ></G.InputBox>
         <G.InputError>{pwMsg}</G.InputError>
-        <L.AutoLoginContainer>
-          <L.AutoLoginCheckBox type="checkbox" onChange={autoCheckToggle}/>
-          <L.AutoLoginText>로그인 유지</L.AutoLoginText>
-        </L.AutoLoginContainer>
       </G.InputContainer>
       <G.InputButtonActive className="mt-3" onClick={loginCheck}>
         로그인

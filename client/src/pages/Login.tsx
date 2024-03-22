@@ -1,13 +1,49 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { BasicLogin } from "../components/User/BasicLogin";
 import { SocailLogin } from "../components/User/SocialLogin";
 
-export const Login: React.FC = () => {
-  
-  // 자동 로그인 구현
-  useEffect(() => {
+// import { TokenRefresh,userInfo } from "../api/user";
 
-  })
+// import { httpStatusCode } from "../utils/http-status";
+// import { useNavigate } from "react-router-dom";
+
+// import { useSetRecoilState } from "recoil";
+// import * as R from '../recoil/atoms/UserState';
+
+export const Login: React.FC = () => {
+  // 로그아웃 api 구현전 봉인.
+  // const navigate = useNavigate();
+
+  // const setIsLogin = useSetRecoilState<boolean>(R.isLoginState);
+  // const setUserInfoState = useSetRecoilState(R.userInfoState);
+  
+  // useEffect(() => {
+  //   autoCheck();
+  // })
+
+  // const autoCheck = async () => {
+  //   await TokenRefresh(
+  //     async (response) => {
+  //       if(response.status === httpStatusCode.OK && response.headers.access){
+  //         localStorage.setItem('accessToken', response.headers.access);
+  //         await userInfo(
+  //           (response) => {
+  //             setUserInfoState(response);
+  //           },
+  //           (error) => {
+  //             console.log(error);
+  //           }
+  //         );
+  //         setIsLogin(true);
+  //         navigate('/');
+  //       }
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   )
+  // }
+  
 
   return (
     <div className="flex flex-col px-6">
