@@ -1,21 +1,12 @@
 import { atom } from "recoil";
-
-type UserInfoType = {
-  userId: string;
-  email: string;
-  nickName: string;
-  birth: string;
-  gender: string;
-  profilePicture: string;
-  subsCount: number;
-};
+import { UserInfoType } from "../../type/UserType";
 
 export const isLoginState = atom<boolean>({
   key: 'isLogin',
   default: false,
 });
 
-export const userInfo = atom<UserInfoType>({
+export const userInfoState = atom<UserInfoType>({
   key: 'userInfo',
-  default: {userId: '', email: '', nickName: '', birth: '', gender: '', profilePicture: '', subsCount: 0}
+  default: {userId: 0, email: '', name: '', nickname: '', birth: '', gender: '', profilePicture: '', subsCount: 0}
 });

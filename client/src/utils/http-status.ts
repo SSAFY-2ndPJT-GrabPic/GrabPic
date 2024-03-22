@@ -1,5 +1,6 @@
 export const httpStatusCode = {
 	OK : 200,
+    fail : 204,
 	BADREQUEST : 400,
 	UNAUTHORIZEZD : 401,
 	FOBIDDEN : 403,

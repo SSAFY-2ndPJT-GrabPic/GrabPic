@@ -6,8 +6,8 @@ import { Modal } from './components/Modal/Modal';
 function App() {
   return (
     <RecoilRoot>
-      <Modal/>
       <RouterProvider>
+      <Modal/>
         <Router />
       </RouterProvider>
     </RecoilRoot>

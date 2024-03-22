@@ -5,7 +5,13 @@ import { useEffect, useState } from 'react';
 
 import { passwordChange } from '../../api/user';
 
+import { useRecoilState } from 'recoil';
+import * as S from '../../recoil/atoms/SettingState'
+
 export default function ResetPwSet() {
+  const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
+  const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
+
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isJoinPage, setIsJoinPage] = useState(false);
@@ -82,14 +88,18 @@ export default function ResetPwSet() {
       const newState = { ...state, pw: pw };
       navigate(`/${state.page}/userinfo`, { state: newState });
     } else {
-      const params = {password : pw};
 
       await passwordChange(
-        params,
-        (response) => { console.log(response) },
-        (error) => { console.log(error) }
+        pw,
+        () => { 
+          navigate('/login');
+         },
+        (error) => { 
+          console.log(error); 
+          setIsModalNo(4);
+          setIsModal(true);
+        }
       )
-      // navigate('/login');
     }
 
 
@@ -108,7 +118,7 @@ export default function ResetPwSet() {
         </R.VerificationProgressContainer>
       </div>
       <div className="flex flex-col mt-3">
-        <R.VerificationText>새{pwText}</R.VerificationText>
+        <R.VerificationText>{pwText}</R.VerificationText>
         <R.VerificationText>
           비밀번호는 아래 조건을 만족해야 합니다.
         </R.VerificationText>
