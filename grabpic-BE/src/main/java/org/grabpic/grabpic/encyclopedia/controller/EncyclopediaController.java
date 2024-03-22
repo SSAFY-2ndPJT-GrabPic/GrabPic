@@ -45,6 +45,7 @@ public class EncyclopediaController {
 
     @GetMapping("/detail/{encyclopediaId}")
     public ResponseEntity<?> collectionInfoDetail(@PathVariable long encyclopediaId) {
+        System.out.println("test");
         try {
             InfoDTO infoDTO = encyclopediaService.collectionInfo(encyclopediaId);
             return ResponseEntity.status(HttpStatus.OK).body(infoDTO);

@@ -173,6 +173,8 @@ public class UserServiceImpl implements UserService {
             infoDTO.setGender(user.getGender());
             //구독자 수
             infoDTO.setSubsCount(user.getSubsCount());
+            //수집 개체 수
+            infoDTO.setCollectCount(user.getCollectCount());
             //프로필 사진
             infoDTO.setProfileImage(user.getProfileImage());
             return infoDTO;
@@ -190,6 +192,8 @@ public class UserServiceImpl implements UserService {
         if(optionalUser.isPresent()) {
             UserEntity user = optionalUser.get();
             InfoDTO infoDTO = new InfoDTO();
+            //userPK
+            infoDTO.setUserId(user.getUserId());
             //이메일
             infoDTO.setEmail(user.getEmail());
             //닉네임
@@ -204,6 +208,8 @@ public class UserServiceImpl implements UserService {
             infoDTO.setProfileImage(user.getProfileImage());
             //구독자 수
             infoDTO.setSubsCount(user.getSubsCount());
+            //수집 개체 수
+            infoDTO.setCollectCount(user.getCollectCount());
 
             return infoDTO;
         }
