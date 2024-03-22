@@ -8,6 +8,8 @@ import logoutIconUrl from '../assets/Setting/logout.png'
 import secessionIconUrl from '../assets/Setting/secession.png'
 import { useNavigate } from 'react-router-dom'
 
+import { useCookies } from 'react-cookie'
+import { useEffect } from 'react'
 
 export default function Setting () {
   const [,setIsModal] = useRecoilState<boolean>(R.isModalState);
@@ -23,6 +25,11 @@ export default function Setting () {
   const moveUserInfo = () => {
     navigate("/userinfo")
   }
+  const [cookies] = useCookies(["refresh"])
+
+  useEffect(() => {
+    console.log(cookies.refresh)
+  })
 
   return (
     <div className="flex flex-col">
