@@ -11,15 +11,12 @@ import * as G from '../../styles/globalCSS';
 
 import { httpStatusCode } from '../../utils/http-status';
 
-<<<<<<< HEAD
-import { useRecoilState } from 'recoil';
-import * as S from '../../recoil/atoms/SettingState'
+// import { useRecoilState } from 'recoil';
+// import * as S from '../../recoil/atoms/SettingState'
 
-=======
->>>>>>> feat/FE-login
 export const BasicLogin: React.FC = () => {
-  const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
-  const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
+  // const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
+  // const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
 
   const navigate = useNavigate();
 
@@ -70,31 +67,6 @@ export const BasicLogin: React.FC = () => {
     setAutoCheck(!autoCheck);
   }
 
-<<<<<<< HEAD
-    // }
-    isEmail;
-    isPw;
-    const params = { email: email, password: pw };
-    await userLogin(
-      params,
-      async (response) => {
-        if (response.status === httpStatusCode.OK) {
-          localStorage.setItem('accessToken', response.headers.access);
-          await userInfo(
-            (response) => {
-              setUserInfoState(response);
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-          setIsLogin(true);
-          navigate('/');
-        } else if (response.status === httpStatusCode.fail) {
-          // 회원정보 불일치
-          setIsModal(true);
-          setIsModalNo(5);
-=======
   const loginCheck = async () => {
     if (!isEmail) {
       setEmailMsg('이메일을 입력하시오');
@@ -124,7 +96,6 @@ export const BasicLogin: React.FC = () => {
         },
         (error) => {
           console.log(error);
->>>>>>> feat/FE-login
         }
       );
     }
