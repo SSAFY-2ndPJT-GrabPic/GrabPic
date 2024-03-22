@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 import Home from '../pages/Home';
 import { Login } from '../pages/Login';
+import { SocialLoginRedirect } from './User/SocialLoginRedirect';
 import ResetPw from '../pages/ResetPw';
 import Join from '../pages/Join';
 import Encyclopedia from '../pages/Encyclopedia';
@@ -50,6 +51,7 @@ export default function Router() {
 
       {/* 헤더 & 네브가 필요 없는 페이지 */}
       <Route path="/login" element={<Login />} />
+      <Route path="/social" element={<SocialLoginRedirect />} />
       <Route path="/resetpw/*" element={<ResetPw />}/>
       <Route path="/join/*" element={<Join />} />
     </Routes>

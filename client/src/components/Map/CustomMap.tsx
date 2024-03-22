@@ -1,6 +1,6 @@
 import * as M from "./CustomMap.style"
 import React, { useEffect, useRef, useState } from 'react';
-import { MapMarker, Map } from "react-kakao-maps-sdk";
+import { Loader, MapMarker, Map } from "react-kakao-maps-sdk";
 // import useKakaoLoader from "./UseKakaoLoader";
 
 // 이미지 모음
@@ -10,34 +10,16 @@ import myLocateMarker from "../../assets/Map/myLocateMarker.png";
 import myPositionImg from "../../assets/Map/gps.png";
 import reLoadImg from "../../assets/Map/magnifier.png";
 
-// 위도 경도 프롭처리할 예정.
-interface MapCenter {
-  lat: number;
-  lng: number;
-}
+import { MapCenter, MyCenter, PinData } from "../../types/CustomMap"
 
-interface MyCenter {
-  lat: number;
-  lng: number;
-}
-
-// 핀 데이터
-interface PinData {
-  encyclopedia: string;
-  name: string;
-  registDate: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  rareCount: 0;
-}
+import { dataLoad } from "../../api/map";
 
 const CustomMap: React.FC = () => {
-  // useKakaoLoader();
 
   // 현재 좌표 추적 위한 상태
   const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
 
+  // 내 중심 상태
   const [ myCenter, setMyCenter ] = useState<MyCenter | null>(null);
 
   // 맵 레벨 변경을 위한 선언
@@ -52,30 +34,6 @@ const CustomMap: React.FC = () => {
   // 필터 활성화
   const [isFilterActive, setFilterActive] = useState<boolean[]>([true, false, false]);
 
-  // 더미데이터용 함수
-  /****************************************************/
-  // 랜덤 위도 생성
-  function generateRandomNumberInRange(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-  }
-  // 위도 경도 데이터 반환 (데이터 타입 맞추기)
-  function calculateNewCoordinates(currentLat: number, currentLng: number, radius: number): PinData {
-    // 0~360도 사이에서 랜덤한 각도 생성
-    const randomAngle = generateRandomNumberInRange(0, 360);
-    // 0~반경 사이에서 랜덤한 거리 생성
-    const randomDistance = generateRandomNumberInRange(0, radius);
-  
-    // 새로운 위치의 위도와 경도 계산
-    const encyclopedia = ''
-    const latitude = currentLat + (randomDistance / 111111) * Math.cos(randomAngle);
-    const longitude = currentLng + (randomDistance / (111111 * Math.cos(latitude * Math.PI / 180))) * Math.sin(randomAngle);
-    const name = 'testdata';
-    const address = '';
-    const registDate = new Date().getFullYear() + '-' + ((new Date().getMonth() + 1).toString().padStart(2, '0')) + '-' + new Date().getDate();
-    const rareCount = 0;
-    return { encyclopedia ,name ,registDate ,address ,latitude ,longitude , rareCount };
-  }
-  /*****************************************************/
 
   // 내 위치 찾기
   /****************************************************/
@@ -94,7 +52,10 @@ const CustomMap: React.FC = () => {
       lat: position.coords.latitude,
       lng: position.coords.longitude
     });
-    test(position.coords.latitude, position.coords.longitude);
+    loadPinData({
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    }, 0.2, 1, 1);
   }
 
   function error() {
@@ -104,44 +65,43 @@ const CustomMap: React.FC = () => {
     })
   }
 
-  function test(lat:number, lng:number) : void {
+  const loadPinData = async (position:MapCenter, range:number, page:number, sort:number) => {
     const newPinLists: PinData[] = [];
-    for (let i = 0; i < 20; i++) {
-      const newPin = calculateNewCoordinates(lat, lng, 500);
-      newPinLists.push(newPin);
+    const params = {
+      latitude:  position.lat,
+      longitude:  position.lng,
+      range:  range,
+      page : page,
+      limit : 20,
+      sort : sort
     }
+    await dataLoad(params,
+      (respones) => {
+        console.log(respones)
+      },
+      (error) => {
+        console.log(error)
+      })
+    
+
     setpinLists(newPinLists);
   }
   
+  /****************************************************/
+
+  // 지도 상태 추적
+  const ma = new Loader({
+    appkey: '52b3371f40d9c77376d831422bbae913',
+    libraries: ["clusterer", "drawing", "services"],
+  });
+
+  ma.load();
+
   useEffect(() => {
     if (mapCenter === null) {
       getLocation();
     }
   }, [mapCenter])
-
-  /****************************************************/
-
-
-  // 주소 변환
-  useEffect(() => {
-    console.log(1)
-    const addressFinder = new kakao.maps.services.Geocoder();
-    console.log(addressFinder)
-    pinLists.forEach((pin) => {
-      console.log(2)
-      addressFinder.coord2Address(pin.latitude, pin.longitude, (result: any, status: any) => {
-        console.log(pin.latitude, pin.longitude)
-        console.log(status)
-        if (status === kakao.maps.services.Status.OK) {
-          const address = result[0].address.address_name;
-          pin.address = address;
-          console.log(address)
-        }
-      });
-    });
-
-  }, [pinLists]);
-
 
   // 필터를 클릭할 때 호출되는 함수
   const filterChange = (index : number) => {

@@ -18,7 +18,11 @@ export const Modal: React.FC = () => {
   const [isOneBtn, setOneBtn] = useState(false);
 
   useEffect(() => {
-    if (isModalNo === 1) {
+    if (isModalNo === 0){
+      setModalTitle('오류가 발생하였습니다.');
+      setModalText('잠시후 다시 시도해주세요.');
+      setOneBtn(true);
+    } else if (isModalNo === 1) {
       setModalTitle('정말 로그아웃 하시겠습니까?');
       setModalText('');
       setOneBtn(false);

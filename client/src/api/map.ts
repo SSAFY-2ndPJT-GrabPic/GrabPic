@@ -1,18 +1,11 @@
 import { AxiosResponse } from "axios";
-import { noneApi } from "../utils/http-commons"
+import { privateApi } from "../utils/http-commons"
+import { RequestData, ResponseData } from "../types/CustomMap";
 
-interface MyResponseData {
-    data: string;
-    status: number;
-    statusText: string;
-    headers: Record<string, string>;
-    config: string;
-}
-
-export const userLogin = async (params : {email:string; password:string},
-    Response : (Response : AxiosResponse<MyResponseData>) => void, 
-    Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-        await noneApi.post(`/map/search`,params)
+export const dataLoad = async (params : RequestData,
+    Response : (Response : AxiosResponse<ResponseData>) => void, 
+    Error : (Error : AxiosResponse<ResponseData>) => void) => {
+        await privateApi.post(`/map/search`, params)
         .then(Response)
         .catch(Error);
 }
