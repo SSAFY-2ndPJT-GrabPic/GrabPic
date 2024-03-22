@@ -37,7 +37,9 @@ const CustomMap: React.FC = () => {
 
   // 현재 좌표 추적 위한 상태
   const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
+
   const [ myCenter, setMyCenter ] = useState<MyCenter | null>(null);
+
   // 맵 레벨 변경을 위한 선언
   const mapRef = useRef<kakao.maps.Map>(null);
 
@@ -122,11 +124,14 @@ const CustomMap: React.FC = () => {
 
   // 주소 변환
   useEffect(() => {
-    if (!mapRef.current || pinLists.length === 0) return;
+    console.log(1)
     const addressFinder = new kakao.maps.services.Geocoder();
-    
+    console.log(addressFinder)
     pinLists.forEach((pin) => {
+      console.log(2)
       addressFinder.coord2Address(pin.latitude, pin.longitude, (result: any, status: any) => {
+        console.log(pin.latitude, pin.longitude)
+        console.log(status)
         if (status === kakao.maps.services.Status.OK) {
           const address = result[0].address.address_name;
           pin.address = address;
@@ -185,27 +190,27 @@ const CustomMap: React.FC = () => {
       )}
 
       <M.ZoomBtnContainer>
-        <M.ZoomSpan onClick={zoomIn}>
+        <M.ZoomBtn onClick={zoomIn}>
           <M.ZoomImg
               src={plusImg}
               alt="확대"
           />
-        </M.ZoomSpan>
-        <M.ZoomSpan onClick={zoomOut}>
+        </M.ZoomBtn>
+        <M.ZoomBtn onClick={zoomOut}>
           <M.ZoomImg
               src={minusImg}
               alt="축소"
           />
-        </M.ZoomSpan>
+        </M.ZoomBtn>
       </M.ZoomBtnContainer>
 
       <M.LocationBtn_Container>
-        <M.LocationSpan>
+        <M.LocationBtn onClick={zoomIn}>
           <M.SetCenterImg src={myPositionImg}/>
-        </M.LocationSpan>
-        <M.LocationSpan>
+        </M.LocationBtn>
+        <M.LocationBtn onClick={zoomOut}>
           <M.ReLoadImg src={reLoadImg}/>
-        </M.LocationSpan>
+        </M.LocationBtn>
       </M.LocationBtn_Container>
 
 

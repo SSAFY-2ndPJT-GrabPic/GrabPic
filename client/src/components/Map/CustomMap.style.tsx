@@ -136,7 +136,7 @@ export const LocationBtn_Container = styled.div`
 `;
 
 // 줌 버튼
-export const LocationSpan = styled.span`
+export const LocationBtn = styled.button`
   display: flex; 
   justify-content: center; 
   align-items: center; 
@@ -173,7 +173,7 @@ export const ZoomBtnContainer = styled.div`
 `;
 
 // 줌 버튼
-export const ZoomSpan = styled.span`
+export const ZoomBtn = styled.button`
   display: flex; 
   justify-content: center; 
   align-items: center; 

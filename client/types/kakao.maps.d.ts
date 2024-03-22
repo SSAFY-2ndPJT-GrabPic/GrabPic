@@ -1,1 +1,1 @@
-declare module 'kakao.maps';
+declare module 'kakao.maps.d.ts';
