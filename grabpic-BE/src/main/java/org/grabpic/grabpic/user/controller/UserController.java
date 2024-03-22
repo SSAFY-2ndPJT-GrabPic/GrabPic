@@ -116,11 +116,11 @@ public class UserController {
     @PostMapping("/auth/emails/verification")
     public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto, HttpServletResponse response) {
         try {
+            // 1 성공, 2코드불일치, 3만료
             int authResult = mailService.verificationCode(emailAuthDto);
-            if(authResult == 1) {
-                System.out.println("asdfasdfasdf");
-                throw new RestApiException(UserError.INACTIVE_USER);
-            } else  {
+            if (authResult == 1) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {

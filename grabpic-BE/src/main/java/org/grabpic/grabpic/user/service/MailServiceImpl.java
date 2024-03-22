@@ -86,27 +86,25 @@ public class MailServiceImpl implements MailService {
         return message;
     }
 
+    // 인증 코드 검증
     public int verificationCode(EmailAuthDto dto) {
-        /*
-         저장된 코드를 불러오는 내용
-         */
         int code = dto.getCode();
         String email = dto.getEmail();
-        System.out.println(emailCodeRepository.existsById(email));
-        if(!emailCodeRepository.existsById(email)){
-            System.out.println("Asdf");
-            return 1;
-        }
         Optional<EmailCodeEntity> emailCodeEntity = emailCodeRepository.findById(email);
-        int tmpSaveCode = emailCodeEntity.get().getCode();
-
-        if(dto.getCode() == tmpSaveCode) {
-            return 2;
+        if(emailCodeEntity.isPresent()){
+            // 만료되지 않은 전송 기록이 존재함
+            int tmpSaveCode = emailCodeEntity.get().getCode();
+            if(code == tmpSaveCode) {
+                // 코드 일치
+                return 1;
+            } else {
+                //코드 불일치
+                return 2;
+            }
         } else {
+            //이메일 주소를 잘못썻거나 코드가 만료되어 사라짐
             return 3;
-
         }
-
-        return false;
     }
+
 }
