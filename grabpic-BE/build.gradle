@@ -53,6 +53,9 @@ dependencies {
 
 	//Oauth
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	//AWS S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
