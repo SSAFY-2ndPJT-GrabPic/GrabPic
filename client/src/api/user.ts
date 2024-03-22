@@ -79,8 +79,10 @@ export const emailDuplicationCheck = async(params : string,
         .catch(Error);
 }
 
-export const TokenRefresh = async() => {
+export const TokenRefresh = async(
+    Response : (Response : AxiosResponse<MyResponseData>) => void, 
+    Error : (Error : AxiosResponse<MyResponseData>) => void) => {
     await noneApi.post(`/${url}/reissue`,{withCredentials: true})
-    .then((e) => {console.log(e)})
-    .catch((e) => {console.log(e)})
+    .then(Response)
+    .catch(Error)
 }
