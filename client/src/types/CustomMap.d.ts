@@ -4,18 +4,18 @@ export interface MapCenter {
 }
   
 export interface MyCenter {
-lat: number;
-lng: number;
+    lat: number;
+    lng: number;
 }
 
 export interface PinData {
-encyclopedia: string;
-name: string;
-registDate: string;
-address: string;
-latitude: number;
-longitude: number;
-rareCount: 0;
+    encyclopedia: string;
+    name: string;
+    registDate: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    rareCount: 0;
 }
 
 export interface RequestData {
@@ -27,10 +27,3 @@ export interface RequestData {
     sort : number
 }
 
-export interface ResponseData {
-    data: string;
-    status: number;
-    statusText: string;
-    headers: Record<string, string>;
-    config: string;
-}

@@ -1,7 +1,8 @@
 import * as M from "./CustomMap.style"
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader, MapMarker, Map } from "react-kakao-maps-sdk";
-// import useKakaoLoader from "./UseKakaoLoader";
+import { MapCenter, MyCenter, PinData } from "../../types/CustomMap"
+import { dataLoad } from "../../api/map";
 
 // 이미지 모음
 import plusImg from "../../assets/Map/plus.png";
@@ -10,63 +11,53 @@ import myLocateMarker from "../../assets/Map/myLocateMarker.png";
 import myPositionImg from "../../assets/Map/gps.png";
 import reLoadImg from "../../assets/Map/magnifier.png";
 
-import { MapCenter, MyCenter, PinData } from "../../types/CustomMap"
 
-import { dataLoad } from "../../api/map";
 
 const CustomMap: React.FC = () => {
+  // 지도 생성
+  const ma = new Loader({
+    appkey: '52b3371f40d9c77376d831422bbae913',
+    libraries: ["clusterer", "drawing", "services"],
+  });
+  ma.load();
 
-  // 현재 좌표 추적 위한 상태
+  // 상태
   const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
-
-  // 내 중심 상태
   const [ myCenter, setMyCenter ] = useState<MyCenter | null>(null);
-
-  // 맵 레벨 변경을 위한 선언
-  const mapRef = useRef<kakao.maps.Map>(null);
-
-  // 마커 리스트
   const [pinLists, setpinLists] = useState<PinData[]>([]);
-
-  // 핀리스트 
   const [isPinActive, setPinActive] = useState<boolean>(false);
-
-  // 필터 활성화
   const [isFilterActive, setFilterActive] = useState<boolean[]>([true, false, false]);
+  const mapRef = useRef<kakao.maps.Map>(null);
 
 
   // 내 위치 찾기
-  /****************************************************/
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
+
+    function success(position: any) {
+      setMapCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+      setMyCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+    }
+  
+    function error() {
+      setMapCenter({
+        lat: 37.483034,
+        lng: 126.902435
+      })
+    }
   }
 
-  function success(position: any) {
-    setMapCenter({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    });
-    setMyCenter({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    });
-    loadPinData({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    }, 0.2, 1, 1);
-  }
 
-  function error() {
-    setMapCenter({
-      lat: 37.483034,
-      lng: 126.902435
-    })
-  }
-
+  // API
   const loadPinData = async (position:MapCenter, range:number, page:number, sort:number) => {
-    const newPinLists: PinData[] = [];
     const params = {
       latitude:  position.lat,
       longitude:  position.lng,
@@ -77,33 +68,23 @@ const CustomMap: React.FC = () => {
     }
     await dataLoad(params,
       (respones) => {
-        console.log(respones)
+        setpinLists(respones.data)
       },
       (error) => {
         console.log(error)
       })
-    
-
-    setpinLists(newPinLists);
   }
-  
-  /****************************************************/
 
-  // 지도 상태 추적
-  const ma = new Loader({
-    appkey: '52b3371f40d9c77376d831422bbae913',
-    libraries: ["clusterer", "drawing", "services"],
-  });
 
-  ma.load();
-
+  // 최초 로드시 현재 위치 찾기
   useEffect(() => {
     if (mapCenter === null) {
       getLocation();
     }
   }, [mapCenter])
 
-  // 필터를 클릭할 때 호출되는 함수
+
+  // 기타 함수들
   const filterChange = (index : number) => {
     if (index === 0) setFilterActive([true, false, false])
     else if (index === 1) setFilterActive([false, true, false])
@@ -121,6 +102,11 @@ const CustomMap: React.FC = () => {
     if (!map) return
     map.setLevel(map.getLevel() + 1)
   }
+
+  const centerReset = () => {
+    
+  }
+
 
   return (
     <M.MapContainer>
