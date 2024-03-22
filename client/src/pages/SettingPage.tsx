@@ -8,8 +8,7 @@ import logoutIconUrl from '../assets/Setting/logout.png'
 import secessionIconUrl from '../assets/Setting/secession.png'
 import { useNavigate } from 'react-router-dom'
 
-import { useCookies } from 'react-cookie'
-import { useEffect } from 'react'
+import { TokenRefresh } from '../api/user'
 
 export default function Setting () {
   const [,setIsModal] = useRecoilState<boolean>(R.isModalState);
@@ -25,11 +24,10 @@ export default function Setting () {
   const moveUserInfo = () => {
     navigate("/userinfo")
   }
-  const [cookies] = useCookies(["refresh"])
 
-  useEffect(() => {
-    console.log(cookies.refresh)
-  })
+  const refresh = () => {
+    TokenRefresh();
+  }
 
   return (
     <div className="flex flex-col">
@@ -37,6 +35,7 @@ export default function Setting () {
       <S.SettingBtn onClick={moveUserInfo}><img src={modifyIconUrl} className='mr-8'/>회원정보 수정</S.SettingBtn>
       <S.SettingBtn onClick={() => settingClick(1)}><img src={logoutIconUrl} className='mr-8'/>로그아웃</S.SettingBtn>
       <S.SettingBtn onClick={() => settingClick(2)}><img src={secessionIconUrl} className='mr-8'/>회원탈퇴</S.SettingBtn>
+      <button onClick={refresh}>test</button>
     </div>
   )
 }
