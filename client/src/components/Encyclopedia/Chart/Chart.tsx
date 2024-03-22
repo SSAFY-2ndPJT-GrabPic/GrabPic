@@ -6,31 +6,129 @@ cytoscape.use(coseBilkent);
 
 interface ChartProps {}
 
+interface dummyData {
+  id: number;
+  nodeData: object;
+  edgeData: object;
+}
+
+const dummyData: dummyData = {
+  "id": 1,
+  "nodeData": {
+      "식육목": {
+          "id": "식육목",
+          "label": "식육목"
+      },
+      "고양이": {
+          "id": "고양이",
+          "label": "고양이"
+      },
+      "고양이과": {
+          "id": "고양이과",
+          "label": "고양이과"
+      },
+      "고양이속": {
+          "id": "고양이속",
+          "label": "고양이속"
+      },
+      "개과": {
+          "id": "개과",
+          "label": "개과"
+      },
+      "개속": {
+          "id": "개속",
+          "label": "개속"
+      },
+      "개(회색늑대)": {
+          "id": "개(회색늑대)",
+          "label": "개(회색늑대)"
+      },
+      "족제비과": {
+          "id": "족제비과",
+          "label": "족제비과"
+      },
+      "족제비속": {
+          "id": "족제비속",
+          "label": "족제비속"
+      },
+      "족재비": {
+          "id": "족재비",
+          "label": "족재비"
+      }
+  },
+  "edgeData": {
+      "고양이속간선": {
+          "id": "고양이속간선",
+          "source": "고양이속",
+          "target": "고양이과"
+      },
+      "고양이과간선": {
+          "id": "고양이과간선",
+          "source": "고양이과",
+          "target": "식육목"
+      },
+      "고양이간선": {
+          "id": "고양이간선",
+          "source": "고양이",
+          "target": "고양이속"
+      },
+      "개(회색늑대)간선": {
+          "id": "개(회색늑대)간선",
+          "source": "개(회색늑대)",
+          "target": "개속"
+      },
+      "개속간선": {
+          "id": "개속간선",
+          "source": "개속",
+          "target": "개과"
+      },
+      "개과간선": {
+          "id": "개과간선",
+          "source": "개과",
+          "target": "식육목"
+      },
+      "족재비간선": {
+          "id": "족재비간선",
+          "source": "족재비",
+          "target": "족제비속"
+      },
+      "족제비속간선": {
+          "id": "족제비속간선",
+          "source": "족제비속",
+          "target": "족제비과"
+      },
+      "족제비과간선": {
+          "id": "족제비과간선",
+          "source": "족제비과",
+          "target": "식육목"
+      }
+  }
+}
+
+interface data {
+  data: {
+    id: string;
+    label: string;
+    url?: string; // 옵셔널로 변경할 수 있습니다.
+    source?: string; // 옵셔널로 변경할 수 있습니다.
+    target?: string; // 옵셔널로 변경할 수 있습니다.
+  };
+}
+
 const Chart: React.FC<ChartProps> = () => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
-  const data = [
-    // list of graph elements to start with
-    {
-      data: {
-        id: '0',
-        label: '식물',
-        url: 'https://ko.wikipedia.org/wiki/%EC%8B%9D%EB%AC%BC',
-      },
-    }, // node a
-    { data: { id: '1', label: '빨간 꽃' } }, // node b
-    { data: { id: '2', label: '노란 꽃' } }, // node c
-    { data: { id: '3', label: '흰 꽃' } }, // node e
-    { data: { id: '01', source: '1', target: '0' } }, // edge ab
-    { data: { id: '02', source: '2', target: '0' } }, // edge ac
-    { data: { id: '03', source: '3', target: '0' } }, // edge ac
-    { data: { id: '4', label: '성탄별꽃' } },
-    { data: { id: '5', label: '섬딸기' } },
-    { data: { id: '6', label: '샤스타데이지' } },
-    { data: { id: '34', source: '4', target: '3' } },
-    { data: { id: '35', source: '5', target: '3' } },
-    { data: { id: '36', source: '6', target: '3' } },
-  ];
+  const data: data[] = []
+
+  for (const [key, value] of Object.entries(dummyData.nodeData)) {
+    console.log(key, value)
+    data.push({data: value})
+  }
+  for (const [key, value] of Object.entries(dummyData.edgeData)) {
+    console.log(key, value)
+    data.push({data: value})
+  }
+  console.log(data)
 
   // rank를 활용하기 위해 data만 입력한 cytoscape 객체입니다
   const cy_for_rank = cytoscape({
