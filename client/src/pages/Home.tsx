@@ -1,6 +1,12 @@
+import ServiceBtns from "../components/Home/ServiceBtns";
+import UserCard from "../components/Home/UserCard";
+
 export default function Home () {
   
   return (
-    <h1>Home</h1>
+    <div className='px-4 flex flex-col  gap-16'>
+      <UserCard />
+      <ServiceBtns />
+    </div>
   )
 }
