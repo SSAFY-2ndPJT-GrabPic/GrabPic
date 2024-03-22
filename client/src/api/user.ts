@@ -100,6 +100,22 @@ interface OwnerInfo {
   subsCount: number;
 }
 
+export const emailDuplicationCheck = async(params : string,
+  Response : (Response : AxiosResponse<MyResponseData>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+      await noneApi.get(`/${url}/look/email/${params}`)
+      .then(Response)
+      .catch(Error);
+}
+
+export const TokenRefresh = async(
+  Response : (Response : AxiosResponse<MyResponseData>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await noneApi.post(`/${url}/reissue`,{withCredentials: true})
+  .then(Response)
+  .catch(Error)
+}
+
 export const getUserInfo = async (userId: number) => {
   try {
     const res = await privateApi.get(`/${url}/info/${userId}`);

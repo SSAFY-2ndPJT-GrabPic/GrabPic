@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as R from './Reply.style'
 import ReplyItem from './ReplyItem';
-import { getGuestBookData } from '../../../../api/guestBook';
+import { getGuestBookData, postReply } from '../../../../api/guestBook';
 
 interface replyItem {
   guestBookId: number;
   writerNickName: string;
   content: string;
   registDateTime: string;
+}
+
+interface replyInputData {
+  ownerId: number;
+  content: string;
 }
 
 // const replyList: replyItem[] = [
@@ -63,6 +68,11 @@ interface ReplyProps {
 
 const Reply: React.FC<ReplyProps> = ({ userId }) => {
   const [replyList, setReplyList] = useState<replyItem[]>([])
+  const replyInput = useRef<HTMLInputElement>(null)
+  const [replyData, setReplyData] = useState<replyInputData>({
+    ownerId: userId,
+    content: ''
+  })
 
   useEffect(() => {
     getGuestBookData(userId)
@@ -71,6 +81,32 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
       })
       .catch((err) => console.error(err))
   }, [replyList])
+
+  const handleReplyChange = (e: any) => {
+    setReplyData({ ...replyData, ['content']: e.target.value });
+  };
+  
+	const handlePost = () => {
+    console.log(replyData)
+		if (replyData.content.length < 1) {
+			replyInput.current!.focus();
+			return;
+		}
+    
+		postReply(replyData)
+		.then ((res) => {
+      console.log(res)
+		})
+		.catch ((err) => {
+			console.error(err)
+		})
+	}
+
+  // const handleEnter = (e: any) => {
+  //   if (e.key === "Enter") {
+  //     handlePost(e);
+  //   }
+  // };
 
   return (
     <>
@@ -81,8 +117,17 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
       </R.Container>
       <R.InputContainer>
         <R.InputWrap>
-          <R.ReplyInput autoComplete='off' />
-          <R.ReplyBtn />
+          <R.ReplyInput
+            ref={replyInput}
+            name='reply'
+            type='text'
+            // value={}
+            autoComplete='off'
+            placeholder='방명록을 남겨보세요!'
+            onChange={(e) => handleReplyChange(e)}
+            // onKeyDown={(e) => handleEnter(e)}
+          />
+          <R.ReplyBtn onClick={handlePost} />
         </R.InputWrap>
       </R.InputContainer>
     </>
