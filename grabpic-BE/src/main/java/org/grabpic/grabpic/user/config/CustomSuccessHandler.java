@@ -4,7 +4,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,38 +18,49 @@ import java.util.Collection;
 import java.util.Iterator;
 
 @Component
+@RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
 
-    public CustomSuccessHandler(JWTUtil jwtUtil) {
+    @Value("${spring.jwt.access}")
+    private long accessTime;
 
-        this.jwtUtil = jwtUtil;
-    }
+    @Value("${spring.jwt.refresh}")
+    private long refreshTime;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
+
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
-
+        //ROLE 추출
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
+        if( role.equals("ROLE_UNKNOWN")) {
+            System.out.println("가입되지 않은 회원");
+            response.setStatus(HttpStatus.OK.value());
+//            response.sendRedirect("http://localhost:5173/");
+            response.sendRedirect("https://j10d104.p.ssafy.io/user/regist");
+            return;
+        }
+
+        String email = customUserDetails.getEmail();
+        long userId = customUserDetails.getUserId();
+
         //토큰 생성
-        //20초
-        String access = jwtUtil.createJwt("access", username, role, 20000L);
-        //60초
-        String refresh = jwtUtil.createJwt("refresh", username, role, 60000L);
+        String access = jwtUtil.createJwt("access", email, role, userId, accessTime);
+        String refresh = jwtUtil.createJwt("refresh", email, role, userId, refreshTime);
 
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("http://localhost:5173/");
+        response.sendRedirect("https://j10d104.p.ssafy.io/");
     }
 
     private Cookie createCookie(String key, String value) {

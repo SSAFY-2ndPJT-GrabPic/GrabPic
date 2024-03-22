@@ -4,25 +4,28 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Entity
-@Setter
+@Entity(name = "user")
 @Getter
-public class User {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // PK
-    private long user_id;
+    private long userId;
 
     // 로그인용 이메일 중복X
     private String email;
 
+    @Setter
     private String password;
+    private String provider;
     private String nickname;
     private String name;
     private LocalDate birth;
@@ -33,5 +36,16 @@ public class User {
     //탈퇴 날짜
     private LocalDate validateDate;
     //탈퇴 여부, mysql default는 false(tinyint 0)
-    private boolean deleated;
+    private boolean isDeleted;
+
+    //구독자 수 증가 메소드
+    public void increaseSubsCount() {
+        this.subsCount++;
+    }
+
+    //구독자수 감소 메소드
+    public void decreaseSubsCount() {
+        this.subsCount--;
+    }
+
 }
