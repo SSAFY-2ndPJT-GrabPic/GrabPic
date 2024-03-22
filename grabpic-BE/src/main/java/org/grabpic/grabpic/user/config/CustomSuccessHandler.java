@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +23,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JWTUtil jwtUtil;
 
+    @Value("${spring.jwt.access}")
+    private long accessTime;
+
+    @Value("${spring.jwt.refresh}")
+    private long refreshTime;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -45,12 +51,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         String email = customUserDetails.getEmail();
+        long userId = customUserDetails.getUserId();
 
         //토큰 생성
-        //5분
-        String access = jwtUtil.createJwt("access", email, role, 300000L);
-        //10분
-        String refresh = jwtUtil.createJwt("refresh", email, role, 600000L);
+        String access = jwtUtil.createJwt("access", email, role, userId, accessTime);
+        String refresh = jwtUtil.createJwt("refresh", email, role, userId, refreshTime);
 
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));

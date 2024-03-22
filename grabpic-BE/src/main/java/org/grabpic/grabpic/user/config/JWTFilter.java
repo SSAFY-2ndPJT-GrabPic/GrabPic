@@ -45,7 +45,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         //access 헤더 검증
-        if (accessToken == null ) {
+        if ( accessToken == null ) {
 
             System.out.println("token null");
             filterChain.doFilter(request, response);
@@ -72,7 +72,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(accessToken);
-        System.out.println("확인2");
         if (!category.equals("access")) {
 
             //response body
@@ -83,7 +82,6 @@ public class JWTFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        System.out.println("확인3");
         //토큰에서 email과 role 획득
         String email = jwtUtil.getEmail(accessToken);
         String role = jwtUtil.getRole(accessToken);
@@ -94,7 +92,6 @@ public class JWTFilter extends OncePerRequestFilter {
                 .role(role)
                 //.password("temppassword")
                 .build();
-        System.out.println("확인4");
         //UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 
@@ -102,9 +99,6 @@ public class JWTFilter extends OncePerRequestFilter {
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        System.out.println("확인5");
-
         filterChain.doFilter(request, response);
-        System.out.println("확인6");
     }
 }

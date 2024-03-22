@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @ToString
 public class InfoDTO {
 
-    private long user_id;
+    private long userId;
     // 로그인용 이메일 중복X
     private String email;
     private String nickname;

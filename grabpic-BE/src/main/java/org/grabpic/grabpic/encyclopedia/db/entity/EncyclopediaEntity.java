@@ -31,8 +31,9 @@ public class EncyclopediaEntity {
     private String content;
     private double latitude;
     private double longitude;
-    private String ImageUrl;
+    private String address;
+    private String imageUrl;
     private String thumbnailImageUrl;
-    private String shortVideoUrl;
+    private String shortsVideoUrl;
 
 }

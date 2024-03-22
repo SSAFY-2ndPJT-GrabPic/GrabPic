@@ -21,7 +21,6 @@ public class BiologyListEntity {
     private String genus;
     private String familia;
     private String ordo;
-    private String classis;
     private String name;
     private String content;
     private String imageThumnail;

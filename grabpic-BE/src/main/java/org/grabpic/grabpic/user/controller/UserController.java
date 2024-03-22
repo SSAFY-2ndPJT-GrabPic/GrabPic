@@ -27,12 +27,45 @@ public class UserController {
 
     // 회원가입 API 수정 필요
     @PostMapping("/join")
-    public String joinProcess(@RequestBody JoinDTO joinDTO) {
-
+    public ResponseEntity<?> joinProcess(@RequestBody JoinDTO joinDTO) {
         System.out.println("CONTROLLER : " + joinDTO.toString());
-        userService.joinProcess(joinDTO);
+        try {
+            boolean result = userService.joinProcess(joinDTO);
+            if(result) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else  {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return "ok";
+    }
+
+    //이메일 중복체크
+    @GetMapping("/look/email/{email}")
+    public ResponseEntity<?> duplicationEmailCheck(@PathVariable String email) {
+        try {
+            boolean result = userService.duplicationEmailCheck(email);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            //뭐라써야할까요
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //비밀번호 변경
+    @PostMapping("/password/change")
+    public ResponseEntity<?> changePassword(@RequestBody String password, HttpServletRequest request, HttpServletResponse response) {
+        try{
+            boolean result = userService.changePassword(password, request.getHeader("access"), response);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //소셜 로그인 후 회원가입 시 소셜정보 전달 API
@@ -81,7 +114,7 @@ public class UserController {
 
     // 이메일 인증 코드 검증 API
     @PostMapping("/auth/emails/verification")
-    public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto) {
+    public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto, HttpServletResponse response) {
         try {
             int authResult = mailService.verificationCode(emailAuthDto);
             if(authResult == 1) {
@@ -120,6 +153,17 @@ public class UserController {
     public ResponseEntity<?> userInfo(@PathVariable long userId) {
         try {
             InfoDTO infoDTO = userService.userInfo(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(infoDTO);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/info/my")
+    public ResponseEntity<?> myInfo(HttpServletRequest request) {
+        try {
+            InfoDTO infoDTO = userService.myInfo(request.getHeader("access"));
             return ResponseEntity.status(HttpStatus.OK).body(infoDTO);
         } catch (Exception e) {
             log.error(e.getMessage());

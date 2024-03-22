@@ -23,6 +23,7 @@ public class UserEntity {
     // 로그인용 이메일 중복X
     private String email;
 
+    @Setter
     private String password;
     private String provider;
     private String nickname;
@@ -36,5 +37,15 @@ public class UserEntity {
     private LocalDate validateDate;
     //탈퇴 여부, mysql default는 false(tinyint 0)
     private boolean isDeleted;
+
+    //구독자 수 증가 메소드
+    public void increaseSubsCount() {
+        this.subsCount++;
+    }
+
+    //구독자수 감소 메소드
+    public void decreaseSubsCount() {
+        this.subsCount--;
+    }
 
 }
