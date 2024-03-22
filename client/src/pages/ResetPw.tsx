@@ -1,8 +1,8 @@
 import * as R from './ResetPw.style';
 import { Routes, Route } from 'react-router-dom';
-import VerificationEmail from '../components/emailVerification/VerificationEmail';
-import VerificationCode from '../components/emailVerification/VerificationCode';
-import VerificationSet from '../components/emailVerification/VerificationPwSet';
+import VerificationEmail from '../components/EmailVerification/VerificationEmail';
+import VerificationCode from '../components/EmailVerification/VerificationCode';
+import VerificationSet from '../components/EmailVerification/VerificationPwSet';
 import closeIcon from '../assets/icon/close.png'
 
 export default function ResetPw() {

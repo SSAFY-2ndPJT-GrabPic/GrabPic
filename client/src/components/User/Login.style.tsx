@@ -42,3 +42,18 @@ export const AnothLogin = styled.button`
     font-family: 'TmoneyR';
     font-size: 14px;
 `
+
+export const AutoLoginContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: 7px;
+`
+
+export const AutoLoginCheckBox = styled.input`
+    width: 15px;
+`
+
+export const AutoLoginText = styled.span`
+    font-size: 12px;
+    margin-left: 8px;
+`

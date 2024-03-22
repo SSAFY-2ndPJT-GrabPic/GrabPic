@@ -2,7 +2,9 @@ import { useKakaoLoader as useKakaoLoaderOrigin } from "react-kakao-maps-sdk"
 
 export default function useKakaoLoader() {
   useKakaoLoaderOrigin({
-    appkey: "52b3371f40d9c77376d831422bbae913",
+
+    appkey: import.meta.env.VITE_KAKAO_MAP_API_KEY,
     libraries: ["clusterer", "drawing", "services"],
   })
+
 }

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import * as R from '../emailVerification/Verification.style';
+import * as R from '../EmailVerification/Verification.style';
 import * as G from '../../styles/globalCSS';
 import * as M from './ModifyUserInfo.style';
 
