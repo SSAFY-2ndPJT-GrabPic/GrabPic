@@ -78,3 +78,9 @@ export const emailDuplicationCheck = async(params : string,
         .then(Response)
         .catch(Error);
 }
+
+export const TokenRefresh = async() => {
+    await noneApi.post(`/${url}/reissue`,{withCredentials: true})
+    .then((e) => {console.log(e)})
+    .catch((e) => {console.log(e)})
+}
