@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import * as A from '../../api/user';
 
-import * as R from '../emailVerification/Verification.style';
+import * as R from '../EmailVerification/Verification.style';
 import * as G from '../../styles/globalCSS';
 
 export const JoinUserInfo: React.FC = () => {

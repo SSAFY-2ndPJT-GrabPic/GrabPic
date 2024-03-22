@@ -1,7 +1,7 @@
 import { Routes,Route } from "react-router-dom";
 
-import { LivePage } from "../components/camera/LivePage";
-import { CheckPage } from "../components/camera/CheckPage";
+import { LivePage } from "../components/Camera/LivePage";
+import { CheckPage } from "../components/Camera/CheckPage";
 
 import * as C from './Camera.style'
 

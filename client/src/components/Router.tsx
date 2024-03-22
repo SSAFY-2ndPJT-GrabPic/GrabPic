@@ -25,12 +25,12 @@ export default function Router() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    // console.log(location.pathname);
-    if (!isLogin  && (!location.pathname.includes('resetpw') && !location.pathname.includes('join'))) {
-      navigate('/login');
-    }
-  }, [isLogin, location.pathname, navigate])
+  // useEffect(() => {
+  //   // console.log(location.pathname);
+  //   if (!isLogin  && (!location.pathname.includes('resetpw') && !location.pathname.includes('join'))) {
+  //     navigate('/login');
+  //   }
+  // }, [isLogin, location.pathname, navigate])
 
   return (
     <Routes>

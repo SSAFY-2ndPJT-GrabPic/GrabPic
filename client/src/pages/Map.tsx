@@ -1,4 +1,4 @@
-import CustomMap from '../components/maps/CustomMap'
+import CustomMap from '../components/Map/CustomMap'
 
 const Map: React.FC = () => {
   return (
