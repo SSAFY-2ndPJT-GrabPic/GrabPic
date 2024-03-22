@@ -62,6 +62,11 @@ export const BasicLogin: React.FC = () => {
     }
   };
 
+  const enterKeyEvent = (e : React.KeyboardEvent) => {
+    if(e.key === 'Enter'){
+      loginCheck();
+    }
+  }
 
   const loginCheck = async () => {
     if (!isEmail) {
@@ -112,6 +117,7 @@ export const BasicLogin: React.FC = () => {
         <G.InputBox
           type="password"
           onChange={(e) => pwCheck(e.target.value)}
+          onKeyDown={enterKeyEvent}
         ></G.InputBox>
         <G.InputError>{pwMsg}</G.InputError>
       </G.InputContainer>
