@@ -5,16 +5,19 @@ import MapIconUrl from '../../assets/NavigationBar/mapIcon.png'
 import CameraIconUrl from '../../assets/NavigationBar/cameraIcon.png'
 import GalleryIconUrl from '../../assets/NavigationBar/galleryIcon.png'
 import SettingIconUrl from '../../assets/NavigationBar/settingIcon.png'
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/UserState';
 
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
-  const userNickname = '해진해뜸'
+  // const userNickname = '해진해뜸'
+  const myInfo = useRecoilValue(userInfoState)
   
   return (
     <N.Container>
-      <N.NavCol to={`/encyclopedia/${userNickname}`}>
+      <N.NavCol to={`/encyclopedia/${myInfo.nickname}`}>
         <img src={EncyIconUrl} alt="" />
       </N.NavCol>
 

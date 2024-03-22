@@ -3,24 +3,24 @@ import { Link } from "react-router-dom";
 import * as R from './ReplyItem.style'
 
 interface ReplyItemProps {
-  nickname: string;
-  profileImgUrl: string;
-  createdDate: string;
+  guestBookId: number;
+  writerNickName: string;
   content: string;
+  registDateTime: string;
 }
 
-const ReplyItem: React.FC<ReplyItemProps> = ({ nickname, profileImgUrl, createdDate, content}) => {
+const ReplyItem: React.FC<ReplyItemProps> = ({ writerNickName, content, registDateTime}) => {
   return (
     <R.Container>
-      <Link to={`/encyclopedia/${nickname}`}>
-        <R.ProfileImg src={profileImgUrl} />
+      <Link to={`/encyclopedia/${writerNickName}`}>
+        <R.ProfileImg src={''} />
       </Link>
       <R.ContentContainer>
         <R.NickNDateContainer>
-          <Link to={`/encyclopedia/${nickname}`}>
-            <R.NickName>{nickname}</R.NickName>
+          <Link to={`/encyclopedia/${writerNickName}`}>
+            <R.NickName>{writerNickName}</R.NickName>
           </Link>
-          <R.SmallTxt>{createdDate}</R.SmallTxt>
+          <R.SmallTxt>{registDateTime}</R.SmallTxt>
         </R.NickNDateContainer>
         <R.Content>{content}</R.Content>
       </R.ContentContainer>
