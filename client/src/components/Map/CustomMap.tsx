@@ -1,7 +1,7 @@
 import * as M from "./CustomMap.style"
 import React, { useEffect, useRef, useState } from 'react';
 import { MapMarker, Map } from "react-kakao-maps-sdk";
-import useKakaoLoader from "./UseKakaoLoader";
+// import useKakaoLoader from "./UseKakaoLoader";
 
 // 이미지 모음
 import plusImg from "../../assets/Map/plus.png";
