@@ -33,6 +33,7 @@ public class UserEntity {
     private String profileImage;
     private String role;
     private long subsCount;
+    private long collectCount;
     //탈퇴 날짜
     private LocalDate validateDate;
     //탈퇴 여부, mysql default는 false(tinyint 0)
@@ -46,6 +47,16 @@ public class UserEntity {
     //구독자수 감소 메소드
     public void decreaseSubsCount() {
         this.subsCount--;
+    }
+
+    //구독자 수 증가 메소드
+    public void increaseCollectCount() {
+        this.collectCount++;
+    }
+
+    //구독자수 감소 메소드
+    public void decreaseCollectCount() {
+        this.collectCount--;
     }
 
 }

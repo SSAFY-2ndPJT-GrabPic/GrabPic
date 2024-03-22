@@ -9,6 +9,7 @@ import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
 import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaRepository;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
+import org.grabpic.grabpic.user.db.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 
     private final EncyclopediaRepository encyclopediaRepository;
     private final JWTUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Override
     public List<InfoPreviewDTO> previewInfo(long userId) {
@@ -60,6 +62,10 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 //이미지 Url
                 .imageUrl(collectionRegistDTO.getImageUrl())
                 .build();
+
+        UserEntity user = userRepository.findById(userId).get();
+        user.increaseCollectCount();
+        userRepository.save(user);
 
         encyclopediaRepository.save(encyclopedia);
     }

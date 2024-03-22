@@ -49,6 +49,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(loginDTO.toString());
 
         String email = loginDTO.getEmail();
         String password = loginDTO.getPassword();
