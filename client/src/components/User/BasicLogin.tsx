@@ -32,7 +32,6 @@ export const BasicLogin: React.FC = () => {
   const [isPw, setIsPw] = useState(false);
   const [emailMsg, setEmailMsg] = useState('');
   const [pwMsg, setPwMsg] = useState('');
-  const [autoCheck, setAutoCheck] = useState(false);
 
   const move = (path: string) => {
     if (path === 'pwSet') {
@@ -63,9 +62,6 @@ export const BasicLogin: React.FC = () => {
     }
   };
 
-  const autoCheckToggle = () => {
-    setAutoCheck(!autoCheck);
-  }
 
   const loginCheck = async () => {
     if (!isEmail) {
@@ -73,7 +69,6 @@ export const BasicLogin: React.FC = () => {
     } else if (!isPw) {
       setPwMsg('비밀번호를 입력하시오');
     } else {
-      // const params = { email: email, password: pw, autoLoginInfo: autoCheck};
       const params = { email: email, password: pw};
       await userLogin(
         params,
@@ -96,8 +91,9 @@ export const BasicLogin: React.FC = () => {
             setIsModalNo(5);
           }
         },
-        (error) => {
-          console.log(error);
+        () => {
+          setIsModal(true);
+          setIsModalNo(0);
         }
       );
     }
@@ -118,10 +114,6 @@ export const BasicLogin: React.FC = () => {
           onChange={(e) => pwCheck(e.target.value)}
         ></G.InputBox>
         <G.InputError>{pwMsg}</G.InputError>
-        <L.AutoLoginContainer>
-          <L.AutoLoginCheckBox type="checkbox" onChange={autoCheckToggle}/>
-          <L.AutoLoginText>로그인 유지</L.AutoLoginText>
-        </L.AutoLoginContainer>
       </G.InputContainer>
       <G.InputButtonActive className="mt-3" onClick={loginCheck}>
         로그인
