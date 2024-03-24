@@ -7,16 +7,6 @@ import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
 import { checkIsSub } from '../../../../api/subscribe';
 
-// const userInfo = {
-//   isMine: false,
-//   isSub: false,
-//   nickname: "해진해뜸",
-//   profileImgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWgn_TKOeao6JafiNJb9MoJVTfF9zsmNAlRygzSuCbCjeqUjV',
-//   collect: 417,
-//   sub: 529,
-//   email: "sun@ssafy.com"
-// }
-
 interface OwnerInfo {
   userId: number;
   nickname: string;
@@ -30,9 +20,7 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ userId }) => {
-  // const { userId } = useParams<{ userId: string }>();
-  console.log(userId);
-  // const numUserId = userId ? parseInt(userId, 10) : 0 ;
+  const myInfo = useRecoilValue(userInfoState);
   const [ownerInfo, setOwnerInfo] = useState<OwnerInfo>({
     userId: 0,
     nickname: '',
@@ -40,13 +28,13 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     profilePicture: '',
     subsCount: 0,
   });
+
   const [isMine, setIsMine] = useState<boolean>(false);
   const [isSub, setIsSub] = useState<boolean>(false);
 
-  const myInfo = useRecoilValue(userInfoState);
-
   useEffect(() => {
-    if (userId === 0) {
+    if (userId === myInfo.userId) {
+      console.log(userId, myInfo.userId)
       setOwnerInfo(myInfo);
       setIsMine(true);
     } else {

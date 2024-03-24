@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as R from './Reply.style'
 import ReplyItem from './ReplyItem';
 import { getGuestBookData, postReply } from '../../../../api/guestBook';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../../../recoil/atoms/UserState';
 
 interface replyItem {
   guestBookId: number;
@@ -15,53 +17,6 @@ interface replyInputData {
   content: string;
 }
 
-// const replyList: replyItem[] = [
-//   {
-//     nickname: '성규몬',
-//     profileImgUrl: 'https://s3.peing.net/t/uploads/user/icon/13630736/4ea0868e.jpeg',
-//     createdDate: '2024.02.28',
-//     content: '┏┓┏┓♡━━┓┏━━┓┏━━┓┏┓┏┓\n'+
-//     '┃┗┛┃┃┏┓┃┃┏┓┃★┏┓┃┃┃☆┃\n' +
-//     '┃┏┓┃┃┗┛┃┃┗┛┃┃┗┛┃┃┗┛┃\n' +
-//     '┃♡┃┃┃┏┓┃┃♡━┛┃┏━┛♡┓┏┛\n' +
-//     '┗┛┗┛┗┛┗┛┗┛♡♡┗┛♡♡♡┗┛♡',
-//   },
-//   {
-//     nickname: '손동동',
-//     profileImgUrl: 'https://mblogthumb-phinf.pstatic.net/data18/2007/8/15/228/npe14_bellland.jpg?type=w420',
-//     createdDate: '2024.01.02',
-//     content: '★━━━━━━\n' +
-//     'ㅂㅂ ㅏ ㅅ ㅑ~!!!\n' +
-//     '━━━━━━★',
-//   },
-//   {
-//     nickname: '훈지박',
-//     profileImgUrl: 'https://t1.daumcdn.net/news/202402/19/trend_a_word/20240219095401317wjns.png',
-//     createdDate: '2023.12.30',
-//     content: '┎──────......................................★☆★\n' +
-//     '┃맑고고운 햇살처럼 해맑은 미소 지으시며~\n' +
-//     '┖☆★☆\n',
-//   },
-//   {
-//     nickname: '주니주니',
-//     profileImgUrl: 'https://pbs.twimg.com/media/Dyt7HHwVAAIg2Oy.jpg',
-//     createdDate: '2023.12.19',
-//     content: '┏〓〓┓┏〓〓┓┏〓〓┓┏〓〓┓┏〓〓┓\n' +
-//     '┃♡수┃┃♡집┃┃♡화┃┃♡이┃┃♡팅┃\n' +
-//     '┗〓〓┛┗〓〓┛┗〓〓┛┗〓〓┛┗〓〓┛',
-//   },
-//   {
-//     nickname: '조조',
-//     profileImgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEyOPtKP1Vs9PPLF3ie2qo6t7uLtZgrCd58Q&usqp=CAU',
-//     createdDate: '2023.11.05',
-//     content: '┏▶◀┓선물로\n' +
-//     '┃남극┃보낼께요\n' +
-//     '┃얼음┃더위 ~\n' +
-//     '┗━━┛식히시고\n' +
-//     '시원한 웃음 지어요^^*',
-//   },
-// ]
-
 interface ReplyProps {
   userId: number;
 }
@@ -69,44 +24,66 @@ interface ReplyProps {
 const Reply: React.FC<ReplyProps> = ({ userId }) => {
   const [replyList, setReplyList] = useState<replyItem[]>([])
   const replyInput = useRef<HTMLInputElement>(null)
+  const myId = useRecoilValue(userInfoState)
+
   const [replyData, setReplyData] = useState<replyInputData>({
     ownerId: userId,
     content: ''
   })
 
+  // 방명록 리스트 조회 api
   useEffect(() => {
     getGuestBookData(userId)
       .then((res) => {
+        console.log(res)
         setReplyList(res)
       })
       .catch((err) => console.error(err))
-  }, [replyList])
+  }, [])
 
+  // 방명록 작성 input값 변동될 때마다 replyData 갱신
   const handleReplyChange = (e: any) => {
     setReplyData({ ...replyData, ['content']: e.target.value });
   };
   
+  // 방명록 작성 요청
 	const handlePost = () => {
-    console.log(replyData)
+    // 방명록 작성 input값 1 미만이면 작성 창으로 포커싱
 		if (replyData.content.length < 1) {
 			replyInput.current!.focus();
 			return;
 		}
     
+    // 방명록 작성 api 요청 
 		postReply(replyData)
 		.then ((res) => {
       console.log(res)
+      // 방명록 작성 데이터 새로고침 없이 바로 갱신
+      setReplyList([{
+        'guestBookId': replyData.ownerId,
+        'writerNickName': myId.nickname,
+        'content': replyData.content,
+        'registDateTime': ''
+      }, ...replyList])
 		})
+    .then(() => {
+      // 데이터 초기화
+      setReplyData({
+        ownerId: userId,
+        content: ''
+      })
+    })
 		.catch ((err) => {
 			console.error(err)
 		})
 	}
 
-  // const handleEnter = (e: any) => {
-  //   if (e.key === "Enter") {
-  //     handlePost(e);
-  //   }
-  // };
+  // 엔터 클릭해도 작성 가능하도록
+  const handleEnter = (e: any) => {
+    if (e.key === "Enter") {
+      handlePost();
+    }
+  };
 
   return (
     <>
@@ -121,11 +98,11 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
             ref={replyInput}
             name='reply'
             type='text'
-            // value={}
+            value={replyData.content}    // input창에 보이는 값
             autoComplete='off'
             placeholder='방명록을 남겨보세요!'
             onChange={(e) => handleReplyChange(e)}
-            // onKeyDown={(e) => handleEnter(e)}
+            onKeyDown={(e) => handleEnter(e)}
           />
           <R.ReplyBtn onClick={handlePost} />
         </R.InputWrap>
