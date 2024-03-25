@@ -68,17 +68,20 @@ public class GuestBookServiceImpl implements GuestBookService {
 
     //방명록 등록하기
     @Override
-    public GuestBookEntity registBook(SaveBookDTO saveBookDTO, String token) {
+    public SaveBookDTO registBook(SaveBookDTO saveBookDTO, String token) {
 
+        saveBookDTO.setRegistDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         GuestBookEntity guestBookEntity = GuestBookEntity.builder()
                 .owner(UserEntity.builder().userId(saveBookDTO.getOwnerId()).build())
                 .writer(UserEntity.builder().userId(user.getUserId()).build())
                 .content(saveBookDTO.getContent())
-                .registDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .registDateTime(saveBookDTO.getRegistDateTime())
                 .build();
         guestBookEntity = guestBookRepository.save(guestBookEntity);
-        return guestBookEntity;
+        saveBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
+        saveBookDTO.setWriterId(user.getUserId());
+        return saveBookDTO;
     }
 
     @Override

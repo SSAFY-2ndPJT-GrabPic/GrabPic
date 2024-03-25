@@ -36,8 +36,8 @@ public class GuestBookController {
 
     @PostMapping("/add")
     public ResponseEntity<?> registBook(@RequestBody SaveBookDTO saveBookDTO, HttpServletRequest request) {
-        guestBookService.registBook(saveBookDTO, request.getHeader("access"));
-        return new ResponseEntity<>(HttpStatus.OK);
+        saveBookDTO = guestBookService.registBook(saveBookDTO, request.getHeader("access"));
+        return ResponseEntity.status(HttpStatus.OK).body(saveBookDTO);
     }
 
     //수정과 삭제가 없대요 .............................................................................
