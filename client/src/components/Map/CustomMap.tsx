@@ -1,7 +1,8 @@
 import * as M from "./CustomMap.style"
 import React, { useEffect, useRef, useState } from 'react';
-import { MapMarker, Map } from "react-kakao-maps-sdk";
-// import useKakaoLoader from "./UseKakaoLoader";
+import { Loader, MapMarker, Map } from "react-kakao-maps-sdk";
+import { MapCenter, MyCenter, PinData } from "../../types/CustomMap"
+import { dataLoad } from "../../api/map";
 
 // 이미지 모음
 import plusImg from "../../assets/Map/plus.png";
@@ -10,140 +11,87 @@ import myLocateMarker from "../../assets/Map/myLocateMarker.png";
 import myPositionImg from "../../assets/Map/gps.png";
 import reLoadImg from "../../assets/Map/magnifier.png";
 
-// 위도 경도 프롭처리할 예정.
-interface MapCenter {
-  lat: number;
-  lng: number;
-}
 
-interface MyCenter {
-  lat: number;
-  lng: number;
-}
-
-// 핀 데이터
-interface PinData {
-  encyclopedia: string;
-  name: string;
-  registDate: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  rareCount: 0;
-}
 
 const CustomMap: React.FC = () => {
-  // useKakaoLoader();
-
-  // 현재 좌표 추적 위한 상태
-  const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
-
-  const [ myCenter, setMyCenter ] = useState<MyCenter | null>(null);
-
-  // 맵 레벨 변경을 위한 선언
-  const mapRef = useRef<kakao.maps.Map>(null);
-
-  // 마커 리스트
-  const [pinLists, setpinLists] = useState<PinData[]>([]);
-
-  // 핀리스트 
-  const [isPinActive, setPinActive] = useState<boolean>(false);
-
-  // 필터 활성화
-  const [isFilterActive, setFilterActive] = useState<boolean[]>([true, false, false]);
-
-  // 더미데이터용 함수
-  /****************************************************/
-  // 랜덤 위도 생성
-  function generateRandomNumberInRange(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-  }
-  // 위도 경도 데이터 반환 (데이터 타입 맞추기)
-  function calculateNewCoordinates(currentLat: number, currentLng: number, radius: number): PinData {
-    // 0~360도 사이에서 랜덤한 각도 생성
-    const randomAngle = generateRandomNumberInRange(0, 360);
-    // 0~반경 사이에서 랜덤한 거리 생성
-    const randomDistance = generateRandomNumberInRange(0, radius);
+  // 지도 생성
+  const ma = new Loader({
+    appkey: '52b3371f40d9c77376d831422bbae913',
+    libraries: ["clusterer", "drawing", "services"],
+  });
   
-    // 새로운 위치의 위도와 경도 계산
-    const encyclopedia = ''
-    const latitude = currentLat + (randomDistance / 111111) * Math.cos(randomAngle);
-    const longitude = currentLng + (randomDistance / (111111 * Math.cos(latitude * Math.PI / 180))) * Math.sin(randomAngle);
-    const name = 'testdata';
-    const address = '';
-    const registDate = new Date().getFullYear() + '-' + ((new Date().getMonth() + 1).toString().padStart(2, '0')) + '-' + new Date().getDate();
-    const rareCount = 0;
-    return { encyclopedia ,name ,registDate ,address ,latitude ,longitude , rareCount };
-  }
-  /*****************************************************/
+  ma.load();
 
+  // 상태
+  const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
+  const [ myCenter, setMyCenter ] = useState<MyCenter | null>(null);
+  const [ pinLists, setpinLists ] = useState<PinData[]>([]);
+  const [ isPinActive, setPinActive ] = useState<boolean>(false);
+  const [ isFilterActive, setFilterActive ] = useState<boolean[]>([true, false, false]);
+  // const [ isDoneInitialAPI, setDoneInitailAPI ] = useState<boolean>(false);
+  const mapRef = useRef<kakao.maps.Map>(null);
+  
   // 내 위치 찾기
-  /****************************************************/
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
-  }
 
-  function success(position: any) {
-    setMapCenter({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    });
-    setMyCenter({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    });
-    test(position.coords.latitude, position.coords.longitude);
-  }
-
-  function error() {
-    setMapCenter({
-      lat: 37.483034,
-      lng: 126.902435
-    })
-  }
-
-  function test(lat:number, lng:number) : void {
-    const newPinLists: PinData[] = [];
-    for (let i = 0; i < 20; i++) {
-      const newPin = calculateNewCoordinates(lat, lng, 500);
-      newPinLists.push(newPin);
+    function success(position: any) {
+      setMapCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+      setMyCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
     }
-    setpinLists(newPinLists);
-  }
   
+    function error() {
+      setMapCenter({
+        lat: 37.483034,
+        lng: 126.902435
+      })
+    }
+  }
+
+  // API
+  const loadPinData = async (position:MapCenter | null, range:number, page:number, sort:number) => {
+    if (position === null) { return;}
+    const params = {
+      latitude:  position.lat,
+      longitude:  position.lng,
+      range:  range,
+      page : page,
+      limit : 20,
+      sort : sort
+    }
+    await dataLoad(params,
+      (respones) => {
+        setpinLists(respones.data)
+      },
+      (error) => {
+        console.log(error)
+      })
+  }
+
+
+  useEffect(() => {
+    if(ma.status === 2) {
+      loadPinData(mapCenter, 500, 1, 1);
+    };
+  }, [])
+
   useEffect(() => {
     if (mapCenter === null) {
       getLocation();
     }
-  }, [mapCenter])
 
-  /****************************************************/
-
-
-  // 주소 변환
-  useEffect(() => {
-    console.log(1)
-    const addressFinder = new kakao.maps.services.Geocoder();
-    console.log(addressFinder)
-    pinLists.forEach((pin) => {
-      console.log(2)
-      addressFinder.coord2Address(pin.latitude, pin.longitude, (result: any, status: any) => {
-        console.log(pin.latitude, pin.longitude)
-        console.log(status)
-        if (status === kakao.maps.services.Status.OK) {
-          const address = result[0].address.address_name;
-          pin.address = address;
-          console.log(address)
-        }
-      });
-    });
-
-  }, [pinLists]);
+  }, [mapCenter]);
 
 
-  // 필터를 클릭할 때 호출되는 함수
+  // 기타 함수들
   const filterChange = (index : number) => {
     if (index === 0) setFilterActive([true, false, false])
     else if (index === 1) setFilterActive([false, true, false])
@@ -161,6 +109,11 @@ const CustomMap: React.FC = () => {
     if (!map) return
     map.setLevel(map.getLevel() + 1)
   }
+
+  const centerReset = () => {
+    getLocation()
+  }
+
 
   return (
     <M.MapContainer>
@@ -205,7 +158,7 @@ const CustomMap: React.FC = () => {
       </M.ZoomBtnContainer>
 
       <M.LocationBtn_Container>
-        <M.LocationBtn onClick={zoomIn}>
+        <M.LocationBtn onClick={centerReset}>
           <M.SetCenterImg src={myPositionImg}/>
         </M.LocationBtn>
         <M.LocationBtn onClick={zoomOut}>
@@ -219,9 +172,9 @@ const CustomMap: React.FC = () => {
           <M.DragHandle />
         </M.HandleContainer>
         <M.FilterContainer>
-            <M.FilterButton clickActive={isFilterActive[0]} onClick={() => filterChange(0)}>최신순</M.FilterButton>
-            <M.FilterButton clickActive={isFilterActive[1]} onClick={() => filterChange(1)}>오래된순</M.FilterButton>
-            <M.FilterButton clickActive={isFilterActive[2]} onClick={() => filterChange(2)}>희귀도순</M.FilterButton>
+            <M.FilterButton clickActive={isFilterActive[0]} onClick={() => {filterChange(0); loadPinData(mapCenter, 500, 1, 1)}}>최신순</M.FilterButton>
+            <M.FilterButton clickActive={isFilterActive[1]} onClick={() => {filterChange(1); loadPinData(mapCenter, 500, 1, 2)}}>오래된순</M.FilterButton>
+            <M.FilterButton clickActive={isFilterActive[2]} onClick={() => {filterChange(2); loadPinData(mapCenter, 500, 1, 3)}}>희귀도순</M.FilterButton>
         </M.FilterContainer>
         <M.PinList>
           {pinLists.map((pin, index) => (
