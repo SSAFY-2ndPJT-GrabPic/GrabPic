@@ -7,12 +7,18 @@ import * as M from './ModifyUserInfo.style';
 
 import profileUrl from '../../assets/icon/profile.png';
 
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/UserState';
+
 export const ModifyUserInfo: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [nickName, setNickName] = useState('');
-  const [name, setName] = useState('');
-  const [birth, setBirth] = useState('');
+
+  const userInfo = useRecoilValue(userInfoState);
+
+  const [nickName, setNickName] = useState(userInfo.nickname);
+  const [name, setName] = useState(userInfo.name);
+  const [birth, setBirth] = useState(userInfo.birth);
   const [gender, setGender] = useState('');
 
   // 이미지 선택
