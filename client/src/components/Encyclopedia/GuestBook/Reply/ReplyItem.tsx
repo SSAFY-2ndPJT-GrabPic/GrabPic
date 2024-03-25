@@ -1,6 +1,5 @@
 import React from 'react';
 import * as R from './ReplyItem.style'
-import { Link } from 'react-router-dom';
 
 interface ReplyItemProps {
   guestBookId: number;
