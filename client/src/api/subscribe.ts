@@ -14,10 +14,15 @@ export const checkIsSub = async (ownerId: number) => {
   }
 };
 
+interface subReturn {
+  actionTypeForBackEnd: number;
+  ownerSubCount: number;
+}
+
 export const wantSubscribe = async (ownerId: number) => {
   try {
     const res = await privateApi.get(`/${url}/add/${ownerId}`);
-    const compSub: string = res.data;
+    const compSub: subReturn = res.data;
 
     return compSub;
   } catch (error) {
@@ -29,7 +34,7 @@ export const wantSubscribe = async (ownerId: number) => {
 export const cancelSubscribe = async (ownerId: number) => {
   try {
     const res = await privateApi.get(`/${url}/delete/${ownerId}`);
-    const cancelSub: string = res.data;
+    const cancelSub: subReturn = res.data;
 
     return cancelSub;
   } catch (error) {

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as P from './Profile.style';
 import { getUserInfo } from '../../../../api/user';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
 import { cancelSubscribe, checkIsSub, wantSubscribe } from '../../../../api/subscribe';
 import { OwnerInfoType } from '../../../../type/UserType';
 import { useNavigate } from 'react-router-dom';
+import SubListModal from './SubListModal';
+import { guestBookModalState } from '../../../../recoil/atoms/GuestBookModalState';
 
 interface ProfileProps {
   userId: number;
@@ -48,7 +50,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
         .catch((err) => console.error(err));
     }
     console.log(isMine)
-  }, [userId, ownerInfo.subsCount]);
+  }, [userId]);
 
   // 내 도감 O : 회원정보 수정 버튼 컬러
   // 내 도감 X & 구독 O : 구독 중 버튼 컬러
@@ -75,11 +77,11 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     else if (isSub) {
       cancelSubscribe(ownerInfo.userId)
       .then((res) => {
-        console.log(res)
         setIsSub(false)
-        // setOwnerInfo({...ownerInfo,
-        //   'subsCount': ownerInfo.subsCount - 1
-        // })
+        setOwnerInfo({
+          ...ownerInfo,
+          subsCount: res.ownerSubCount
+        })
       })
       .catch((err) => alert(err))
 
@@ -89,21 +91,23 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     else {
       wantSubscribe(ownerInfo.userId)
       .then((res) => {
-        console.log(res)
         setIsSub(true)
-        // setOwnerInfo({...ownerInfo,
-        //   'subsCount': ownerInfo.subsCount + 1
-        // })
+        setOwnerInfo({
+          ...ownerInfo,
+          subsCount: res.ownerSubCount
+        })
       })
       .catch((err) => alert(err))
 
       return
-    }
-
+    }  
   })
+
+  const [isOpen, setIsOpen] = useRecoilState(guestBookModalState)
 
   return (
     <P.Container>
+      {isOpen && <SubListModal/>}
       <P.UserContainer>
         <P.ProfileImg src={ownerInfo.profileImage} />
         <P.NickName>{ownerInfo.nickname}</P.NickName>
@@ -114,7 +118,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
             <P.NumTxt>{ownerInfo.collectCount}</P.NumTxt>
             <P.ExplainTxt>수집 수</P.ExplainTxt>
           </div>
-          <div>
+          <div onClick={() => setIsOpen(true)}>
             <P.NumTxt>{ownerInfo.subsCount}</P.NumTxt>
             <P.ExplainTxt>구독자 수</P.ExplainTxt>
           </div>
