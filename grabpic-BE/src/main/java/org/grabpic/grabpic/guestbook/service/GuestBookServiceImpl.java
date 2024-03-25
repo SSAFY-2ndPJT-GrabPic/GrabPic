@@ -75,7 +75,7 @@ public class GuestBookServiceImpl implements GuestBookService {
                 .owner(UserEntity.builder().userId(saveBookDTO.getOwnerId()).build())
                 .writer(UserEntity.builder().userId(user.getUserId()).build())
                 .content(saveBookDTO.getContent())
-                .registDateTime(LocalDateTime.now(ZoneId.of("Asia.Seoul")))
+                .registDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
         guestBookEntity = guestBookRepository.save(guestBookEntity);
         return guestBookEntity;
