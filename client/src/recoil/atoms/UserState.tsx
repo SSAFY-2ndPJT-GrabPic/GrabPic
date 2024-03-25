@@ -21,6 +21,7 @@ export const userInfoState = atom<UserInfoType>({
     gender: '',
     profilePicture: '',
     subsCount: 0,
+    collectCount: 0
   },
   effects_UNSTABLE: [persistAtom],
 });

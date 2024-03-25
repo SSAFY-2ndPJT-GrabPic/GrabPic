@@ -1,50 +1,43 @@
 import React, { useEffect, useState } from 'react';
-// import { Link } from "react-router-dom";
 import * as P from './Profile.style';
-// import { useParams } from 'react-router-dom';
 import { getUserInfo } from '../../../../api/user';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
 import { checkIsSub } from '../../../../api/subscribe';
-
-interface OwnerInfo {
-  userId: number;
-  nickname: string;
-  gender: string;
-  profilePicture: string;
-  subsCount: number;
-}
+import { OwnerInfoType } from '../../../../type/UserType';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileProps {
   userId: number;
 }
 
 const Profile: React.FC<ProfileProps> = ({ userId }) => {
-  const myInfo = useRecoilValue(userInfoState);
-  const [ownerInfo, setOwnerInfo] = useState<OwnerInfo>({
+  const myInfo = useRecoilValue(userInfoState);     // 내 정보
+  // 지금 보고 있는 도감 주인에 대한 사용자 정보
+  const [ownerInfo, setOwnerInfo] = useState<OwnerInfoType>({ 
     userId: 0,
     nickname: '',
     gender: '',
     profilePicture: '',
     subsCount: 0,
+    collectCount: 0,
   });
 
-  const [isMine, setIsMine] = useState<boolean>(false);
-  const [isSub, setIsSub] = useState<boolean>(false);
+  const [isMine, setIsMine] = useState<boolean>(false);  // 내 도감인지 판별
+  const [isSub, setIsSub] = useState<boolean>(false);    // 구독한 사용자인지 판별
 
   useEffect(() => {
-    if (userId === myInfo.userId) {
-      console.log(userId, myInfo.userId)
+    if (userId === myInfo.userId) {   // 내 도감 O -> user정보 갱신 + 내 도감임을 표시
       setOwnerInfo(myInfo);
       setIsMine(true);
     } else {
-      getUserInfo(userId)
-        .then((res: OwnerInfo) => {
+      getUserInfo(userId)             // 내 도감 X -> 타 유저 정보 조회 및 갱신
+        .then((res: OwnerInfoType) => {
           setOwnerInfo(res);
         })
         .catch((err) => console.error(err));
 
-      checkIsSub(userId)
+      checkIsSub(userId)              // 해당 사용자를 구독했는지 판별 및 갱신
         .then((res) => {
           setIsSub(res);
         })
@@ -52,6 +45,9 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     }
   }, [userId, myInfo]);
 
+  // 내 도감 O : 회원정보 수정 버튼 컬러
+  // 내 도감 X & 구독 O : 구독 중 버튼 컬러
+  // 내 도감 X & 구독 X : 구독하기 버튼 컬러
   const btnColor = (() => {
     if (isMine) {
       return { backgroundColor: '#BDBDBD', color: '#FFFFFF' };
@@ -62,6 +58,23 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     }
   })();
 
+  const navigate = useNavigate();
+
+  // 내 도감인지, 구독한 사용자인지 여부에 따라 <P.SubBtn> 발생 이벤트 변경
+  const subBtnHandler = (() => {
+    if (isMine) {
+      navigate('/userinfo')
+      return 
+    } else if (isSub) {
+      
+      return
+    } else {
+
+      return
+    }
+
+  })
+
   return (
     <P.Container>
       <P.UserContainer>
@@ -71,7 +84,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
       <P.SubContainer>
         <P.TxtContainer>
           <div>
-            <P.NumTxt>{ownerInfo.subsCount}수정필요</P.NumTxt>
+            <P.NumTxt>{ownerInfo.collectCount}</P.NumTxt>
             <P.ExplainTxt>수집 수</P.ExplainTxt>
           </div>
           <div>
@@ -79,7 +92,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
             <P.ExplainTxt>구독자 수</P.ExplainTxt>
           </div>
         </P.TxtContainer>
-        <P.SubBtn style={btnColor}>
+        <P.SubBtn style={btnColor} onClick={() => subBtnHandler()}>
           {isMine ? '회원 정보 수정' : isSub ? '구독 중' : '구독하기'}
         </P.SubBtn>
       </P.SubContainer>

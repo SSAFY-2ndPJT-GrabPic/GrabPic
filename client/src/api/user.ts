@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { noneApi, privateApi } from '../utils/http-commons';
-import { UserInfoType } from '../type/UserType';
+import { UserInfoType, OwnerInfoType } from '../type/UserType';
 
 const url = 'user';
 
@@ -92,14 +92,6 @@ export const passwordChange = async (
     .catch(Error);
 };
 
-interface OwnerInfo {
-  userId: number;
-  nickname: string;
-  gender: string;
-  profilePicture: string;
-  subsCount: number;
-}
-
 export const emailDuplicationCheck = async(params : string,
   Response : (Response : AxiosResponse<MyResponseData>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
@@ -121,7 +113,7 @@ export const getUserInfo = async (userId: number) => {
     const res = await privateApi.get(`/${url}/info/${userId}`);
     console.log(res.data);
 
-    const userDetails: OwnerInfo = res.data;
+    const userDetails: OwnerInfoType = res.data;
 
     return userDetails;
   } catch (error) {
