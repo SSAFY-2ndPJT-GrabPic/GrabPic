@@ -46,9 +46,6 @@ const Collection: React.FC<CollectionProps> = () => {
 
   const [title, setTitle] = useState('필터 선택')
   const [list, setList] = useState<any>(filterList)
-
-  // setList(filterList)
-
   const [depth, setDepth] = useState(0)
 
   const filterHandler = (item: any) => {

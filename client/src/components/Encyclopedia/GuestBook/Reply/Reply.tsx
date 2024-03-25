@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as R from './Reply.style'
 import ReplyItem from './ReplyItem';
 import { getGuestBookData, postReply } from '../../../../api/guestBook';
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../../../../recoil/atoms/UserState';
 
 interface replyItem {
   guestBookId: number;
+  writerId: number;
   writerNickName: string;
   content: string;
   registDateTime: string;
@@ -24,7 +23,6 @@ interface ReplyProps {
 const Reply: React.FC<ReplyProps> = ({ userId }) => {
   const [replyList, setReplyList] = useState<replyItem[]>([])
   const replyInput = useRef<HTMLInputElement>(null)
-  const myId = useRecoilValue(userInfoState)
 
   const [replyData, setReplyData] = useState<replyInputData>({
     ownerId: userId,
@@ -39,7 +37,7 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
         setReplyList(res)
       })
       .catch((err) => console.error(err))
-  }, [])
+  }, [userId])
 
   // 방명록 작성 input값 변동될 때마다 replyData 갱신
   const handleReplyChange = (e: any) => {
@@ -60,10 +58,11 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
       console.log(res)
       // 방명록 작성 데이터 새로고침 없이 바로 갱신
       setReplyList([{
-        'guestBookId': replyData.ownerId,
-        'writerNickName': myId.nickname,
-        'content': replyData.content,
-        'registDateTime': ''
+        'guestBookId': res.guestBookId,
+        'writerId': res.writerId,
+        'writerNickName': res.writerNickName,
+        'content': res.content,
+        'registDateTime': res.registDateTime
       }, ...replyList])
 		})
     .then(() => {

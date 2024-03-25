@@ -53,8 +53,8 @@ export const TxtContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 15%;
-  padding-right: 15%;
+  padding-left: 10%;
+  padding-right: 10%;
 `
 
 export const NumTxt = styled.div`

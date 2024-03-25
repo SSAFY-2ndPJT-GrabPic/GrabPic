@@ -1,14 +1,16 @@
 import React from 'react';
 import * as R from './ReplyItem.style'
+import { Link } from 'react-router-dom';
 
 interface ReplyItemProps {
   guestBookId: number;
+  writerId: number;
   writerNickName: string;
   content: string;
   registDateTime: string;
 }
 
-const ReplyItem: React.FC<ReplyItemProps> = ({ writerNickName, content, registDateTime}) => {
+const ReplyItem: React.FC<ReplyItemProps> = ({ writerNickName, writerId, content, registDateTime}) => {
   const timeTransHandler = (registDateTime: string) => {
     const commentDateTime = new Date(registDateTime);  // 댓글 작성 시간
     const currentTime = new Date();                    // 현재 시간
@@ -38,14 +40,13 @@ const ReplyItem: React.FC<ReplyItemProps> = ({ writerNickName, content, registDa
   
   return (
     <R.Container>
-      <R.ImgContainer to={`/encyclopedia/${writerNickName}`}>
+      <R.ImgContainer to={`/encyclopedia/${writerNickName}`} state={{ userId: writerId }}>
         <R.ProfileImg src={''} />
       </R.ImgContainer>
       <R.ContentContainer>
         <R.NickNDateContainer>
-          <R.NickName to={`/encyclopedia/${writerNickName}`}>{writerNickName}</R.NickName>
+          <R.NickName to={`/encyclopedia/${writerNickName}`} state={{ userId: writerId }}>{writerNickName}</R.NickName>
           <R.SmallTxt>{timeTransHandler(registDateTime)}</R.SmallTxt>
-          {/* <R.SmallTxt>{timeTransHandler("2024-03-17T12:12:48")}</R.SmallTxt> */}
         </R.NickNDateContainer>
         <R.Content>{content}</R.Content>
       </R.ContentContainer>
