@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class LoadBookDTO {
 
     private long guestBookId;
+    private long writerId;
     private String writerNickName;
     private String content;
     private LocalDateTime registDateTime;
