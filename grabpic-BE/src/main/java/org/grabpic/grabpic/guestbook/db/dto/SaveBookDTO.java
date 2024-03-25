@@ -15,6 +15,7 @@ public class SaveBookDTO {
     private long guestBookId;
     private long ownerId;
     private long writerId;
+    private String writerNickName;
     private String content;
     private LocalDateTime registDateTime;
 }
