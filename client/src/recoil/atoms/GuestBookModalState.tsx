@@ -1,6 +1,14 @@
 import { atom } from 'recoil';
 
-export const guestBookModalState = atom<boolean>({
+interface modalState {
+    what: string;
+    userId: number;
+}
+
+export const guestBookModalState = atom<modalState>({
     key: 'guestBookModalState',
-    default: false,
+    default: {
+        what: '',
+        userId: 0
+    },
 });

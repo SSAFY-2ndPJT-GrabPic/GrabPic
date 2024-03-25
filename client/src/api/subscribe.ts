@@ -1,4 +1,5 @@
 import { privateApi } from '../utils/http-commons';
+import { subItem } from '../type/SubListType';
 
 const url = 'subscribe';
 
@@ -35,10 +36,35 @@ export const cancelSubscribe = async (ownerId: number) => {
   try {
     const res = await privateApi.get(`/${url}/delete/${ownerId}`);
     const cancelSub: subReturn = res.data;
-
+    
     return cancelSub;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
+
+export const getSubUsers = async (ownerId: number) => {
+  try {
+    const res = await privateApi.get(`/${url}/relationer/${ownerId}`);
+    const subUserList: subItem[] = res.data;
+
+    return subUserList;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getSubEncys = async (ownerId: number) => {
+  try {
+    const res = await privateApi.get(`/${url}/relationing/${ownerId}`);
+    const subEncyList: subItem[] = res.data;
+
+    return subEncyList;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+

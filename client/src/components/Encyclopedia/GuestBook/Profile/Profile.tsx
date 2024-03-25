@@ -107,7 +107,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
 
   return (
     <P.Container>
-      {isOpen && <SubListModal/>}
+      {isOpen.what && <SubListModal/>}
       <P.UserContainer>
         <P.ProfileImg src={ownerInfo.profileImage} />
         <P.NickName>{ownerInfo.nickname}</P.NickName>
@@ -118,9 +118,13 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
             <P.NumTxt>{ownerInfo.collectCount}</P.NumTxt>
             <P.ExplainTxt>수집 수</P.ExplainTxt>
           </div>
-          <div onClick={() => setIsOpen(true)}>
+          <div onClick={() => setIsOpen({ what: 'ency', userId: ownerInfo.userId})}>
             <P.NumTxt>{ownerInfo.subsCount}</P.NumTxt>
-            <P.ExplainTxt>구독자 수</P.ExplainTxt>
+            <P.ExplainTxt>구독 도감</P.ExplainTxt>
+          </div>
+          <div onClick={() => setIsOpen({ what: 'user', userId: ownerInfo.userId})}>
+            <P.NumTxt>{ownerInfo.subsCount}</P.NumTxt>
+            <P.ExplainTxt>구독자</P.ExplainTxt>
           </div>
         </P.TxtContainer>
         <P.SubBtn style={btnColor} onClick={() => subBtnHandler()}>
