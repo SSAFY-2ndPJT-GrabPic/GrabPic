@@ -10,7 +10,7 @@ public interface GuestBookService {
 
     public List<LoadBookDTO> loadBookList(long ownerId, int page, int limit);
     public long countBookList(long ownerId);
-    public GuestBookEntity registBook(SaveBookDTO saveBookDTO, String token);
+    public SaveBookDTO registBook(SaveBookDTO saveBookDTO, String token);
     public void modifyBook(SaveBookDTO saveBookDTO, String token);
     public int deleteBook(long guestBookId, String token);
 }
