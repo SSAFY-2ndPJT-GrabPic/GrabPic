@@ -11,6 +11,7 @@ export const getGuestBookData = async (ownerId: number) => {
   try {
     const res = await privateApi.get(`/${url}/${ownerId}`, {params:{'page': 1, 'limit': 200}});
     const guestBookList = res.data;
+    console.log(guestBookList)
 
     return guestBookList;
   } catch (error) {

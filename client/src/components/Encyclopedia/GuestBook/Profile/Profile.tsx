@@ -3,7 +3,7 @@ import * as P from './Profile.style';
 import { getUserInfo } from '../../../../api/user';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
-import { checkIsSub } from '../../../../api/subscribe';
+import { cancelSubscribe, checkIsSub, wantSubscribe } from '../../../../api/subscribe';
 import { OwnerInfoType } from '../../../../type/UserType';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     userId: 0,
     nickname: '',
     gender: '',
-    profilePicture: '',
+    profileImage: '',
     subsCount: 0,
     collectCount: 0,
   });
@@ -28,10 +28,14 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
 
   useEffect(() => {
     if (userId === myInfo.userId) {   // 내 도감 O -> user정보 갱신 + 내 도감임을 표시
-      setOwnerInfo(myInfo);
       setIsMine(true);
-    } else {
-      getUserInfo(userId)             // 내 도감 X -> 타 유저 정보 조회 및 갱신
+      setOwnerInfo(myInfo);
+    } 
+    
+    else {
+      setIsMine(false);               // 내 도감 X -> 타 유저 정보 조회 및 갱신
+
+      getUserInfo(userId)             
         .then((res: OwnerInfoType) => {
           setOwnerInfo(res);
         })
@@ -43,7 +47,8 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
         })
         .catch((err) => console.error(err));
     }
-  }, [userId, myInfo]);
+    console.log(isMine)
+  }, [userId, ownerInfo.subsCount]);
 
   // 내 도감 O : 회원정보 수정 버튼 컬러
   // 내 도감 X & 구독 O : 구독 중 버튼 컬러
@@ -65,10 +70,32 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     if (isMine) {
       navigate('/userinfo')
       return 
-    } else if (isSub) {
-      
+    } 
+    
+    else if (isSub) {
+      cancelSubscribe(ownerInfo.userId)
+      .then((res) => {
+        console.log(res)
+        setIsSub(false)
+        // setOwnerInfo({...ownerInfo,
+        //   'subsCount': ownerInfo.subsCount - 1
+        // })
+      })
+      .catch((err) => alert(err))
+
       return
-    } else {
+    } 
+    
+    else {
+      wantSubscribe(ownerInfo.userId)
+      .then((res) => {
+        console.log(res)
+        setIsSub(true)
+        // setOwnerInfo({...ownerInfo,
+        //   'subsCount': ownerInfo.subsCount + 1
+        // })
+      })
+      .catch((err) => alert(err))
 
       return
     }
@@ -78,7 +105,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
   return (
     <P.Container>
       <P.UserContainer>
-        <P.ProfileImg src={ownerInfo.profilePicture} />
+        <P.ProfileImg src={ownerInfo.profileImage} />
         <P.NickName>{ownerInfo.nickname}</P.NickName>
       </P.UserContainer>
       <P.SubContainer>

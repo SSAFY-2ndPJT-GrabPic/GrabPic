@@ -19,7 +19,7 @@ export const userInfoState = atom<UserInfoType>({
     nickname: '',
     birth: '',
     gender: '',
-    profilePicture: '',
+    profileImage: '',
     subsCount: 0,
     collectCount: 0
   },

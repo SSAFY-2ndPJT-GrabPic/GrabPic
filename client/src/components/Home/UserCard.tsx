@@ -15,7 +15,7 @@ const UserCard: React.FC<UserCardProps> = () => {
     <U.Container>
       <U.UserInfoWrap>
         <Link to="/setting">
-          <U.ProfileImg src={userInformation.profilePicture} />
+          <U.ProfileImg src={userInformation.profileImage} />
         </Link>
 
         <U.DetailInfo>

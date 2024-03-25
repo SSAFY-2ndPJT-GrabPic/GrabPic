@@ -13,3 +13,27 @@ export const checkIsSub = async (ownerId: number) => {
     throw error;
   }
 };
+
+export const wantSubscribe = async (ownerId: number) => {
+  try {
+    const res = await privateApi.get(`/${url}/add/${ownerId}`);
+    const compSub: string = res.data;
+
+    return compSub;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const cancelSubscribe = async (ownerId: number) => {
+  try {
+    const res = await privateApi.get(`/${url}/delete/${ownerId}`);
+    const cancelSub: string = res.data;
+
+    return cancelSub;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
