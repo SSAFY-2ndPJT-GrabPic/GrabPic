@@ -37,7 +37,7 @@ const Encyclopedia: React.FC<EncyclopediaProps> = ({ userId }) => {
     <div>
       <EncyHeader />
       <EncyBody>
-        {encyLocate === 'chart' ? <Chart /> : encyLocate === 'collection' ? <Collection /> : <GuestBook userId={userIdData} />}
+        {encyLocate === 'chart' ? <Chart /> : encyLocate === 'collection' ? <Collection userId={userIdData} /> : <GuestBook userId={userIdData} />}
       </EncyBody>
     </div>
   );

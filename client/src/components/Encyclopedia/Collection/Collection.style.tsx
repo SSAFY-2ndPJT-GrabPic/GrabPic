@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import defaultImg from '../../../assets/Encyclopedia/defaultCollectImg.png'
 
 export const Container = styled.div`
   width: 100%;
@@ -76,8 +77,16 @@ export const CollectItem = styled.div`
   align-items: center;
 `
 
-export const ItemImg = styled.img`
+export const ItemImg = styled.img.attrs(({ src }) => ({
+  src: src || defaultImg, alt: 'collectItemImg'
+}))`
   width: 90px;
+  border-radius: 50%;
+
+  /* defaultImg인 경우에만 추가할 CSS */
+  ${({ src }) => src === defaultImg && `
+    border: 1px solid #BDBDBD;
+  `}
 `
 
 export const ItemName = styled.div`
