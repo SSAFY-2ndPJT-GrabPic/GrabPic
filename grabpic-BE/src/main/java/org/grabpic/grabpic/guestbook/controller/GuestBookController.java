@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.grabpic.grabpic.guestbook.db.dto.LoadBookDTO;
 import org.grabpic.grabpic.guestbook.db.dto.SaveBookDTO;
+import org.grabpic.grabpic.guestbook.db.entity.GuestBookEntity;
 import org.grabpic.grabpic.guestbook.service.GuestBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +37,8 @@ public class GuestBookController {
 
     @PostMapping("/add")
     public ResponseEntity<?> registBook(@RequestBody SaveBookDTO saveBookDTO, HttpServletRequest request) {
-        guestBookService.registBook(saveBookDTO, request.getHeader("access"));
-        return new ResponseEntity<>(HttpStatus.OK);
+        saveBookDTO = guestBookService.registBook(saveBookDTO, request.getHeader("access"));
+        return ResponseEntity.status(HttpStatus.OK).body(saveBookDTO);
     }
 
     //수정과 삭제가 없대요 .............................................................................

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,16 +68,19 @@ public class GuestBookServiceImpl implements GuestBookService {
 
     //방명록 등록하기
     @Override
-    public void registBook(SaveBookDTO saveBookDTO, String token) {
-
+    public SaveBookDTO registBook(SaveBookDTO saveBookDTO, String token) {
+        saveBookDTO.setRegistDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         GuestBookEntity guestBookEntity = GuestBookEntity.builder()
                 .owner(UserEntity.builder().userId(saveBookDTO.getOwnerId()).build())
                 .writer(UserEntity.builder().userId(user.getUserId()).build())
                 .content(saveBookDTO.getContent())
-                .registDateTime(LocalDateTime.now())
+                .registDateTime(saveBookDTO.getRegistDateTime())
                 .build();
-        guestBookRepository.save(guestBookEntity);
+        guestBookEntity = guestBookRepository.save(guestBookEntity);
+        saveBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
+        saveBookDTO.setWriterId(user.getUserId());
+        return saveBookDTO;
     }
 
     @Override

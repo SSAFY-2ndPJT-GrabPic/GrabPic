@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -156,6 +157,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    //사용자 정보를 가져옴, 이때는 이메일, 이름, 생일을 전달하지 않음
     @Override
     public InfoDTO userInfo(long userId) {
 
@@ -165,19 +167,53 @@ public class UserServiceImpl implements UserService {
             InfoDTO infoDTO = new InfoDTO();
             UserEntity user = optionalUser.get();
             infoDTO.setUserId(user.getUserId());
-            infoDTO.setEmail(user.getEmail());
-            infoDTO.setName(user.getName());
+            //닉네임
             infoDTO.setNickname(user.getNickname());
-            infoDTO.setBirth(user.getBirth());
+            //성별
             infoDTO.setGender(user.getGender());
+            //구독자 수
             infoDTO.setSubsCount(user.getSubsCount());
+            //수집 개체 수
+            infoDTO.setCollectCount(user.getCollectCount());
+            //프로필 사진
             infoDTO.setProfileImage(user.getProfileImage());
-            System.out.println("정보조회 할때 반환할 것" + infoDTO.toString());
             return infoDTO;
         } else {
             System.out.println("존재하지 않는 사용자");
             return null;
         }
+    }
+
+    //내 정보를 조회, 토큰 기반이므로 유저 key값을 전달하지 않음
+    @Override
+    public InfoDTO myInfo(String token) {
+        long userId = jwtUtil.getUserId(token);
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            UserEntity user = optionalUser.get();
+            InfoDTO infoDTO = new InfoDTO();
+            //userPK
+            infoDTO.setUserId(user.getUserId());
+            //이메일
+            infoDTO.setEmail(user.getEmail());
+            //닉네임
+            infoDTO.setNickname(user.getNickname());
+            //이름
+            infoDTO.setName(user.getName());
+            //생일
+            infoDTO.setBirth(user.getBirth());
+            //성별
+            infoDTO.setGender(user.getGender());
+            //프로필 사진
+            infoDTO.setProfileImage(user.getProfileImage());
+            //구독자 수
+            infoDTO.setSubsCount(user.getSubsCount());
+            //수집 개체 수
+            infoDTO.setCollectCount(user.getCollectCount());
+
+            return infoDTO;
+        }
+        return null;
     }
 
 

@@ -6,11 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.grabpic.grabpic.user.config.BusinessLogicException;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
+import org.grabpic.grabpic.user.db.entity.EmailCodeEntity;
+import org.grabpic.grabpic.user.db.repository.EmailCodeRepository;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -21,12 +25,14 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender emailSender;
     private final JWTUtil jwtUtil;
+    private final EmailCodeRepository emailCodeRepository;
     //이메일 전송
     public int sendEmail(String email, int type) {
 
         Random random = new Random();
         int randomInRange = random.nextInt(900) + 100;
         // randomInRange를 DB에 넣는 작업 추가 필요
+        emailCodeRepository.save(new EmailCodeEntity(email, randomInRange));
         String title = "기본값";
         String content = "기본값";
 
@@ -80,32 +86,25 @@ public class MailServiceImpl implements MailService {
         return message;
     }
 
-    public boolean verificationCode(EmailAuthDto emailAuthDto, HttpServletResponse response) {
-        /*
-         저장된 코드를 불러오는 내용
-         */
-
-        if(emailAuthDto.getType() == 1) {
-            int tmpSaveCode = 4321;
-            if (emailAuthDto.getCode() == tmpSaveCode) {
-                //인증 성공
-                return true;
+    // 인증 코드 검증
+    public int verificationCode(EmailAuthDto dto) {
+        int code = dto.getCode();
+        String email = dto.getEmail();
+        Optional<EmailCodeEntity> emailCodeEntity = emailCodeRepository.findById(email);
+        if(emailCodeEntity.isPresent()){
+            // 만료되지 않은 전송 기록이 존재함
+            int tmpSaveCode = emailCodeEntity.get().getCode();
+            if(code == tmpSaveCode) {
+                // 코드 일치
+                return 1;
             } else {
-                return false;
+                //코드 불일치
+                return 2;
             }
-        } else if (emailAuthDto.getType() == 2) {
-            int tmpSaveCode = 4321;
-            if (emailAuthDto.getCode() == tmpSaveCode) {
-                //유효 시간 5분으로 설정
-                String tmpToken = jwtUtil.createJwt("access", emailAuthDto.getEmail(), null, -2, 300000L);
-                response.setHeader("access", tmpToken);
-                //인증 성공
-                return true;
-            } else {
-                return false;
-            }
+        } else {
+            //이메일 주소를 잘못썻거나 코드가 만료되어 사라짐
+            return 3;
         }
-
-        return false;
     }
+
 }
