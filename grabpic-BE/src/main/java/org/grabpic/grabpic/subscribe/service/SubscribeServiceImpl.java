@@ -26,6 +26,7 @@ public class SubscribeServiceImpl implements SubscribeService{
 
     //구독하기
     public SubscribeInOutDTO subscribeAdd(long userId, String token) {
+        //userId => 구독 대상자, token => 구독 하려는 사람
 
         String email = jwtUtil.getEmail(token);
         UserEntity user = userRepository.findByEmail(email);
@@ -51,10 +52,14 @@ public class SubscribeServiceImpl implements SubscribeService{
                 .build();
         subscribeRepository.save(subscribe);
 
-        //구독자 수 증가
+        //구독 대상자의 구독자 수 증가
         UserEntity owner = userRepository.findById(userId).get();
         owner.increaseSubsCount();
         userRepository.save(owner);
+
+        //내가 구독한 구독자 수 증가
+        user.increaseMySubsCount();
+        userRepository.save(user);
 
         subscribeInOutDTO.setOwnerSubCount(owner.getSubsCount());
         subscribeInOutDTO.setActionTypeForBackEnd(1);
@@ -82,8 +87,14 @@ public class SubscribeServiceImpl implements SubscribeService{
         Optional<UserEntity> optionalOwner = userRepository.findById(userId);
         if(optionalOwner.isPresent()) {
             UserEntity owner = optionalOwner.get();
+            //구독 대상자의 구독자 수 감소
             owner.decreaseSubsCount();
             userRepository.save(owner);
+
+            //내가 구독한 구독자 수 감소
+            user.decreaseMySubsCount();
+            userRepository.save(user);
+
             subscribeInOutDTO.setOwnerSubCount(owner.getSubsCount());
             subscribeInOutDTO.setActionTypeForBackEnd(1);
             return subscribeInOutDTO;

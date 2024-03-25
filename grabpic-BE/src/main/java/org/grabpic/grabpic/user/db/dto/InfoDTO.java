@@ -21,6 +21,7 @@ public class InfoDTO {
     private String gender;
     private String profileImage;
     private long subsCount;
+    private long mySubsCount;
     private long collectCount;
 
 }
