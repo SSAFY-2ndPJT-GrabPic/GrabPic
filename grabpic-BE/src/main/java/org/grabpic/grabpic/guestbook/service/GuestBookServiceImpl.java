@@ -8,6 +8,8 @@ import org.grabpic.grabpic.guestbook.db.repository.GuestBookRepository;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -29,34 +31,19 @@ public class GuestBookServiceImpl implements GuestBookService {
     @Override
     public List<LoadBookDTO> loadBookList(long ownerId, int page, int limit) {
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "registDateTime");
-        List<GuestBookEntity> guestBookEntityList = guestBookRepository.findByOwner_UserId(ownerId, sort);
+        Pageable pageable = PageRequest.of(page-1, limit, Sort.by(Sort.Direction.DESC, "registDateTime"));
+        List<GuestBookEntity> guestBookEntityList = guestBookRepository.findByOwner_UserId(ownerId, pageable);
         List<LoadBookDTO> loadBookDTOList = new ArrayList<>();
 
-        // 마지막 페이지 호출시
-        if( guestBookEntityList.size() < limit*page ) {
-            for (int i = 0; i < guestBookEntityList.size()%limit; i++) {
-                LoadBookDTO loadBookDTO = new LoadBookDTO();
-                GuestBookEntity guestBookEntity =guestBookEntityList.get((page - 1) * limit + i);
+        for (GuestBookEntity guestBookEntity : guestBookEntityList) {
+            LoadBookDTO loadBookDTO = new LoadBookDTO();
+            loadBookDTO.setWriterId(guestBookEntity.getWriter().getUserId());
+            loadBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
+            loadBookDTO.setWriterNickName(guestBookEntity.getWriter().getNickname());
+            loadBookDTO.setContent(guestBookEntity.getContent());
+            loadBookDTO.setRegistDateTime(guestBookEntity.getRegistDateTime());
 
-                loadBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
-                loadBookDTO.setWriterNickName(guestBookEntity.getWriter().getNickname());
-                loadBookDTO.setContent(guestBookEntity.getContent());
-                loadBookDTO.setRegistDateTime(guestBookEntity.getRegistDateTime());
-
-                loadBookDTOList.add(loadBookDTO);
-            }
-        } else {
-            for (int i = 0; i < limit; i++) {
-                GuestBookEntity guestBookEntity =guestBookEntityList.get((page - 1) * limit + i);
-                LoadBookDTO loadBookDTO = new LoadBookDTO();
-                loadBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
-                loadBookDTO.setWriterNickName(guestBookEntity.getWriter().getNickname());
-                loadBookDTO.setContent(guestBookEntity.getContent());
-                loadBookDTO.setRegistDateTime(guestBookEntity.getRegistDateTime());
-
-                loadBookDTOList.add(loadBookDTO);
-            }
+            loadBookDTOList.add(loadBookDTO);
         }
         return loadBookDTOList;
     }
