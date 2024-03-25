@@ -20,7 +20,6 @@ const SubListModal: React.FC<SubListModalProps> = () => {
       .catch((err) => console.error(err))
 
     } else if (isOpenState.what === 'user') {
-      console.log(isOpenState.userId)
       getSubUsers(isOpenState.userId)
       .then((res) => {
         setSubList(res)
