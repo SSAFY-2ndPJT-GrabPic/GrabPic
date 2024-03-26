@@ -46,8 +46,10 @@ export const cancelSubscribe = async (ownerId: number) => {
 
 export const getSubUsers = async (ownerId: number) => {
   try {
-    const res = await privateApi.get(`/${url}/relationer/${ownerId}`);
+    const res = await privateApi.get(`/${url}/relationer/list/${ownerId}`);
     const subUserList: subItem[] = res.data;
+    console.log(subUserList)
+
 
     return subUserList;
   } catch (error) {
@@ -58,8 +60,9 @@ export const getSubUsers = async (ownerId: number) => {
 
 export const getSubEncys = async (ownerId: number) => {
   try {
-    const res = await privateApi.get(`/${url}/relationing/${ownerId}`);
+    const res = await privateApi.get(`/${url}/relationing/list/${ownerId}`);
     const subEncyList: subItem[] = res.data;
+    console.log(subEncyList)
 
     return subEncyList;
   } catch (error) {
