@@ -3,6 +3,7 @@ package org.grabpic.grabpic.encyclopedia.db.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -24,7 +25,7 @@ public class InfoDTO {
 
 
     //수집정보
-    private LocalDate registDate;
+    private LocalDateTime registDateTime;
     private String memo;
     private double latitude;
     private double longitude;
