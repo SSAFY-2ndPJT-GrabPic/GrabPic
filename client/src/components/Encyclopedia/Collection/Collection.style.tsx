@@ -79,6 +79,8 @@ export const ItemImg = styled.img.attrs(({ src }) => ({
   src: src || defaultImg, alt: 'collectItemImg'
 }))`
   width: 90px;
+  height: 90px;
+  object-fit: cover;
   border-radius: 50%;
 
   /* defaultImg인 경우에만 추가할 CSS */
