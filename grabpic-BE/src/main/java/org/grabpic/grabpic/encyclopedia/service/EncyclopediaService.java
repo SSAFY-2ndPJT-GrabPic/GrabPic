@@ -12,5 +12,5 @@ public interface EncyclopediaService {
     public List<InfoPreviewDTO> previewInfo(long userId);
     public void collectionRegist(CollectionRegistDTO collectionRegistDTO, String token);
     public InfoDTO collectionInfo(long encyclopediaId);
-//    public List<GalleryPostDTO> galleryList(String token);
+//    public List<GalleryPostDTO> galleryList(String token, int page, int limit);
 }

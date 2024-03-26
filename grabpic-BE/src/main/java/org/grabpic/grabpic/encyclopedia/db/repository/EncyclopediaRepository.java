@@ -24,5 +24,7 @@ public interface EncyclopediaRepository extends JpaRepository<EncyclopediaEntity
 
 //    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id ORDER BY e.registDateTime DESC")
 //    List<GalleryPostDTO> findEncyclopediaDetailsBySubscriberId(@Param("thatId") Long id, Pageable pageable);
-
+//
+//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id ORDER BY e.registDateTime DESC")
+//    List<GalleryPostDTO> findEncyclopediaDetailsOthers(@Param("thatId") Long id, Pageable pageable);
 }
