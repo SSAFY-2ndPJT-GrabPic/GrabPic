@@ -173,6 +173,8 @@ public class UserServiceImpl implements UserService {
             infoDTO.setGender(user.getGender());
             //구독자 수
             infoDTO.setSubsCount(user.getSubsCount());
+            //구독한 수
+            infoDTO.setMySubsCount(user.getMySubsCount());
             //수집 개체 수
             infoDTO.setCollectCount(user.getCollectCount());
             //프로필 사진
@@ -184,7 +186,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //내 정보를 조회, 토큰 기반이므로 유저 key값을 전달하지 않음
+    //내 정보를 조회
     @Override
     public InfoDTO myInfo(String token) {
         long userId = jwtUtil.getUserId(token);
@@ -208,6 +210,8 @@ public class UserServiceImpl implements UserService {
             infoDTO.setProfileImage(user.getProfileImage());
             //구독자 수
             infoDTO.setSubsCount(user.getSubsCount());
+            //구독한 수
+            infoDTO.setMySubsCount(user.getMySubsCount());
             //수집 개체 수
             infoDTO.setCollectCount(user.getCollectCount());
 

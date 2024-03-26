@@ -44,6 +44,7 @@ public class MapServiceImpl implements MapService{
             aroundInfoDTO.setName(encyclopedia.getBiologyList().getName());
             aroundInfoDTO.setRegistDate(encyclopedia.getRegistDate());
             aroundInfoDTO.setAddress(encyclopedia.getAddress());
+            aroundInfoDTO.setThumnailImage(encyclopedia.getThumbnailImageUrl());
             aroundInfoDTO.setLatitude(encyclopedia.getLatitude());
             aroundInfoDTO.setLongitude(encyclopedia.getLongitude());
 
