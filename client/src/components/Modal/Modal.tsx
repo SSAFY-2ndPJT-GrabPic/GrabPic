@@ -53,6 +53,7 @@ export const Modal: React.FC = () => {
     setIsModal(false);
     if (isModalNo === 1 || isModalNo === 2) {
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('recoil-persist');
       setIsLogin(false);
       navgiate('/login');
     } else if (isModalNo === 3) {
