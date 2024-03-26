@@ -33,6 +33,7 @@ public class UserEntity {
     private String profileImage;
     private String role;
     private long subsCount;
+    private long mySubsCount;
     private long collectCount;
     //탈퇴 날짜
     private LocalDate validateDate;
@@ -49,12 +50,22 @@ public class UserEntity {
         this.subsCount--;
     }
 
-    //구독자 수 증가 메소드
+    //내가 구독한 수 증가 메소드
+    public void increaseMySubsCount() {
+        this.mySubsCount++;
+    }
+
+    //내가 구독한 감소 메소드
+    public void decreaseMySubsCount() {
+        this.mySubsCount--;
+    }
+
+    //수집 수 증가 메소드
     public void increaseCollectCount() {
         this.collectCount++;
     }
 
-    //구독자수 감소 메소드
+    //수집 감소 메소드
     public void decreaseCollectCount() {
         this.collectCount--;
     }

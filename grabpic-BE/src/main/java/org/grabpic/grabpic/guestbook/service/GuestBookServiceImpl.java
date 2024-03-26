@@ -68,26 +68,34 @@ public class GuestBookServiceImpl implements GuestBookService {
         guestBookEntity = guestBookRepository.save(guestBookEntity);
         saveBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
         saveBookDTO.setWriterId(user.getUserId());
+        saveBookDTO.setWriterNickName(user.getNickname());
         return saveBookDTO;
     }
 
     @Override
-    public void modifyBook(SaveBookDTO saveBookDTO, String token) {
+    public SaveBookDTO modifyBook(SaveBookDTO saveBookDTO, String token) {
 
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         if( user.getUserId() != saveBookDTO.getWriterId() ) {
             //작성자와 로그인유저가 불일치한 상황
-            return;
+            return null;
         }
+        saveBookDTO.setRegistDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        // 수정이기 때문에 존재하는 id임이 보장되어있음
+        GuestBookEntity guestBookEntity = guestBookRepository.findById(saveBookDTO.getGuestBookId()).get();
 
-        GuestBookEntity guestBookEntity = GuestBookEntity.builder()
-                .guestBookId(saveBookDTO.getGuestBookId())
+        GuestBookEntity modifyResult = GuestBookEntity.builder()
+                .guestBookId(guestBookEntity.getGuestBookId())
                 .owner(UserEntity.builder().userId(saveBookDTO.getOwnerId()).build())
                 .writer(UserEntity.builder().userId(saveBookDTO.getWriterId()).build())
                 .content(saveBookDTO.getContent())
-                .registDateTime(LocalDateTime.now())
+                .registDateTime(saveBookDTO.getRegistDateTime())
                 .build();
-        guestBookRepository.save(guestBookEntity);
+        guestBookRepository.save(modifyResult);
+        saveBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
+        saveBookDTO.setWriterId(user.getUserId());
+        saveBookDTO.setWriterNickName(user.getNickname());
+        return saveBookDTO;
     }
 
     @Override

@@ -17,5 +17,6 @@ public class AroundInfoDTO {
     private String address;
     private double latitude;
     private double longitude;
+    private String thumnailImage;
     private int rareCount;
 }
