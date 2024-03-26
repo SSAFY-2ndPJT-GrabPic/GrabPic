@@ -1,5 +1,5 @@
 import * as M from "./CustomMap.style"
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Loader, MapMarker, Map } from "react-kakao-maps-sdk";
 import { MapCenter, MyCenter, PinData } from "../../types/CustomMap"
 import { dataLoad } from "../../api/map";
