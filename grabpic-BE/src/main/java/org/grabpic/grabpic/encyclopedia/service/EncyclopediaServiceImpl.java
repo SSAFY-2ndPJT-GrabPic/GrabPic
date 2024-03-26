@@ -115,8 +115,10 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 //    @Override
 //    public List<GalleryPostDTO> galleryList(String token, int page, int limit) {
 //        long userId = jwtUtil.getUserId(token);
-//        Pageable pageable = PageRequest.of(page, limit);
-//        List<GalleryPostDTO> galleryPostDTOList = encyclopediaRepository.findEncyclopediaDetailsBySubscriberId(userId, );
+//        Pageable pageable = PageRequest.of(page-1, limit);
+//        List<GalleryPostDTO> galleryPostDTOList = encyclopediaRepository.findEncyclopediaDetailsBySubscriberId(userId, pageable);
+//
+//
 //
 //
 //        return null;
