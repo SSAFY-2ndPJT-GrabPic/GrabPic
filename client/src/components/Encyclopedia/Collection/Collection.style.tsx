@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import defaultImg from '../../../assets/Encyclopedia/defaultCollectImg.png'
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   width: 100%;
@@ -46,12 +47,9 @@ export const CollectContainer = styled.div`
   margin-top: 18px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  /* grid-template-columns: repeat(auto-fit, minmax(33%, auto)); */
-  /* flex-wrap: wrap; */
-  /* justify-content: space-between; */
-  /* justify-content: center; */
   align-items: center;
-  /* gap: 2%; */
+
+  /* 반응형 디자인 */
   @media all and (max-width:479px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -66,7 +64,7 @@ export const CollectContainer = styled.div`
   }
 `
 
-export const CollectItem = styled.div`
+export const CollectItem = styled(Link)`
   display: flex;
   flex-direction: column;
   gap: 10px;

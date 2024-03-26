@@ -28,7 +28,6 @@ export default function Router() {
   const userInfo = useRecoilValue(userInfoState)
 
   useEffect(() => {
-    // console.log(location.pathname);
     if (!isLogin  && (!location.pathname.includes('resetpw') && !location.pathname.includes('join'))) {
       navigate('/login');
     }

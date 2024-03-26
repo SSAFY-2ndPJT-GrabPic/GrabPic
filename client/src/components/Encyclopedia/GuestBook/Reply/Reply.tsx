@@ -23,17 +23,12 @@ interface ReplyProps {
 const Reply: React.FC<ReplyProps> = ({ userId }) => {
   const [replyList, setReplyList] = useState<replyItem[]>([])
   const replyInput = useRef<HTMLInputElement>(null)
-
-  const [replyData, setReplyData] = useState<replyInputData>({
-    ownerId: userId,
-    content: ''
-  })
+  const [replyData, setReplyData] = useState<replyInputData>({} as replyInputData)
 
   // 방명록 리스트 조회 api
   useEffect(() => {
     getGuestBookData(userId)
       .then((res) => {
-        console.log(res)
         setReplyList(res)
       })
       .catch((err) => console.error(err))
