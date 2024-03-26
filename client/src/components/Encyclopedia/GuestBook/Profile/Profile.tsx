@@ -3,7 +3,7 @@ import * as P from './Profile.style';
 import { getUserInfo } from '../../../../api/user';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
-import { cancelSubscribe, checkIsSub, wantSubscribe } from '../../../../api/subscribe';
+import { cancelSubscribe, checkIsSub, getSubEncys, wantSubscribe } from '../../../../api/subscribe';
 import { OwnerInfoType } from '../../../../type/UserType';
 import { useNavigate } from 'react-router-dom';
 import SubListModal from './SubListModal';
@@ -27,6 +27,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
 
   const [isMine, setIsMine] = useState<boolean>(false);  // 내 도감인지 판별
   const [isSub, setIsSub] = useState<boolean>(false);    // 구독한 사용자인지 판별
+  const [subEncyCount, setSubEncyCount] = useState<number>(0);
 
   useEffect(() => {
     if (userId === myInfo.userId) {   // 내 도감 O -> user정보 갱신 + 내 도감임을 표시
@@ -42,15 +43,23 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
           setOwnerInfo(res);
         })
         .catch((err) => console.error(err));
-
+      
+        
       checkIsSub(userId)              // 해당 사용자를 구독했는지 판별 및 갱신
         .then((res) => {
           setIsSub(res);
         })
         .catch((err) => console.error(err));
     }
-  }, [userId]);
 
+    getSubEncys(userId)
+      .then((res: any) => {
+        setSubEncyCount(res.length)
+      })
+      .catch((err) => console.error(err))
+
+    }, [userId]);
+    
   // 내 도감 O : 회원정보 수정 버튼 컬러
   // 내 도감 X & 구독 O : 구독 중 버튼 컬러
   // 내 도감 X & 구독 X : 구독하기 버튼 컬러
@@ -115,19 +124,19 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
         <P.TxtContainer>
           <div>
             <P.NumTxt>{ownerInfo.collectCount}</P.NumTxt>
-            <P.ExplainTxt>수집 수</P.ExplainTxt>
+            <P.ExplainTxt>Collect</P.ExplainTxt>
           </div>
           <div onClick={() => setIsOpen({ what: 'ency', userId: ownerInfo.userId})}>
-            <P.NumTxt>{ownerInfo.subsCount}</P.NumTxt>
-            <P.ExplainTxt>구독 도감</P.ExplainTxt>
+            <P.NumTxt>{subEncyCount}</P.NumTxt>
+            <P.ExplainTxt>Subing</P.ExplainTxt>
           </div>
           <div onClick={() => setIsOpen({ what: 'user', userId: ownerInfo.userId})}>
             <P.NumTxt>{ownerInfo.subsCount}</P.NumTxt>
-            <P.ExplainTxt>구독자</P.ExplainTxt>
+            <P.ExplainTxt>Suber</P.ExplainTxt>
           </div>
         </P.TxtContainer>
         <P.SubBtn style={btnColor} onClick={() => subBtnHandler()}>
-          {isMine ? '회원 정보 수정' : isSub ? '구독 중' : '구독하기'}
+          {isMine ? '회원 정보 수정' : isSub ? '구독 중' : '구독 하기'}
         </P.SubBtn>
       </P.SubContainer>
     </P.Container>
