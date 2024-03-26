@@ -23,18 +23,17 @@ const CustomMap: React.FC = () => {
   const [ pinLists, setpinLists ] = useState<PinData[]>([]);
   const [ isPinActive, setPinActive ] = useState<boolean>(false);
   const [ isFilterActive, setFilterActive ] = useState<boolean[]>([true, false, false]);
-  const [ isDoneInitialAPI, setDoneInitailAPI ] = useState<boolean>(false);
+  const [ isSetUp, setSetUp ] = useState<boolean>(false)
   const mapRef = useRef<kakao.maps.Map>(null);
   
   // 내 위치 찾기
   function getLocation() {
-    console.log('1-1')
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
 
     function success(position: any) {
-      console.log('1-2')
       setMapCenter({
         lat: position.coords.latitude,
         lng: position.coords.longitude
@@ -74,30 +73,25 @@ const CustomMap: React.FC = () => {
       })
   }
 
+  // API 호출
+  useEffect(() => {
+    if (mapCenter !== null && !isSetUp) {
+      loadPinData(mapCenter, 500, 1, 1)
+      setSetUp(true)
+    }
+  }, [mapCenter]);
+
+  // 지도 로드
   useEffect(() => {
     const ma = new Loader({
       appkey: '52b3371f40d9c77376d831422bbae913',
       libraries: ["clusterer", "drawing", "services"],
     });
-    
+
     ma.load().then(() => {
-
-      getLocation()
-      console.log(2)
-      setDoneInitailAPI(true)
-      console.log(3)
-      loadPinData(mapCenter,500,1,1)
-    });
-
-  }, [])
-
-  useEffect(() => {
-    if (mapCenter === null) {
       getLocation();
-    }
-
-  }, [mapCenter]);
-
+    });
+  }, []);
 
   // 기타 함수들
   const filterChange = (index : number) => {
