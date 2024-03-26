@@ -1,5 +1,5 @@
 import * as M from "./CustomMap.style"
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Loader, MapMarker, Map } from "react-kakao-maps-sdk";
 import { MapCenter, MyCenter, PinData } from "../../types/CustomMap"
 import { dataLoad } from "../../api/map";
@@ -15,12 +15,7 @@ import reLoadImg from "../../assets/Map/magnifier.png";
 
 const CustomMap: React.FC = () => {
   // 지도 생성
-  const ma = new Loader({
-    appkey: '52b3371f40d9c77376d831422bbae913',
-    libraries: ["clusterer", "drawing", "services"],
-  });
-  
-  ma.load();
+
 
   // 상태
   const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
@@ -28,11 +23,12 @@ const CustomMap: React.FC = () => {
   const [ pinLists, setpinLists ] = useState<PinData[]>([]);
   const [ isPinActive, setPinActive ] = useState<boolean>(false);
   const [ isFilterActive, setFilterActive ] = useState<boolean[]>([true, false, false]);
-  // const [ isDoneInitialAPI, setDoneInitailAPI ] = useState<boolean>(false);
+  const [ isSetUp, setSetUp ] = useState<boolean>(false)
   const mapRef = useRef<kakao.maps.Map>(null);
   
   // 내 위치 찾기
   function getLocation() {
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
@@ -58,6 +54,7 @@ const CustomMap: React.FC = () => {
 
   // API
   const loadPinData = async (position:MapCenter | null, range:number, page:number, sort:number) => {
+    console.log(position)
     if (position === null) { return;}
     const params = {
       latitude:  position.lat,
@@ -76,20 +73,25 @@ const CustomMap: React.FC = () => {
       })
   }
 
-
+  // API 호출
   useEffect(() => {
-    if(ma.status === 2) {
-      loadPinData(mapCenter, 500, 1, 1);
-    };
-  }, [])
-
-  useEffect(() => {
-    if (mapCenter === null) {
-      getLocation();
+    if (mapCenter !== null && !isSetUp) {
+      loadPinData(mapCenter, 500, 1, 1)
+      setSetUp(true)
     }
-
   }, [mapCenter]);
 
+  // 지도 로드
+  useEffect(() => {
+    const ma = new Loader({
+      appkey: '52b3371f40d9c77376d831422bbae913',
+      libraries: ["clusterer", "drawing", "services"],
+    });
+
+    ma.load().then(() => {
+      getLocation();
+    });
+  }, []);
 
   // 기타 함수들
   const filterChange = (index : number) => {
@@ -165,7 +167,6 @@ const CustomMap: React.FC = () => {
           <M.ReLoadImg src={reLoadImg}/>
         </M.LocationBtn>
       </M.LocationBtn_Container>
-
 
       <M.ListContainer active={isPinActive}>
         <M.HandleContainer onClick={() => setPinActive(!isPinActive)}>
