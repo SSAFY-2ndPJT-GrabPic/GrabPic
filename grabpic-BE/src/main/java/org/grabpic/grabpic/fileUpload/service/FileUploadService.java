@@ -1,5 +1,7 @@
 package org.grabpic.grabpic.fileUpload.service;
 
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.util.List;
 public interface FileUploadService {
 
     public List<String> uploadObjectToS3Many(List<MultipartFile> files) throws IOException;
+    public void makeframe(String nickname, MultipartFile[] files);
 
 
     //파일삭제
