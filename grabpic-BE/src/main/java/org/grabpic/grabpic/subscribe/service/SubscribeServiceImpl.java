@@ -149,7 +149,7 @@ public class SubscribeServiceImpl implements SubscribeService{
             //구독한 사람 ID
             relationshipListDTO.setUserId(subscribeEntity.getOwner().getUserId());
             //구독한 사람 닉네임
-            relationshipListDTO.setNickname(subscribeEntity.getSubscribeUser().getNickname());
+            relationshipListDTO.setNickname(subscribeEntity.getOwner().getNickname());
             //구독한 사람 프로필 사진
             relationshipListDTO.setProfileImage(subscribeEntity.getSubscribeUser().getProfileImage());
             relationshipListDTOList.add(relationshipListDTO);
