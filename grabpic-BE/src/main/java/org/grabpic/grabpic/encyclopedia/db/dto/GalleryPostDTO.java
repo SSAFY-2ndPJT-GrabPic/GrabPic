@@ -10,13 +10,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class CollectionRegistDTO {
-
-    private long biologyId;
+public class GalleryPostDTO {
+    private long encyclopediaId;
+    private String writerNickName;
     private LocalDateTime registDateTime;
-    private double latitude;
-    private double longitude;
-    private String address;
-    private String content;
-    private String imageUrl;
+    private String thumnailImageUrl;
+    private String name;
 }

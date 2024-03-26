@@ -3,6 +3,7 @@ package org.grabpic.grabpic.encyclopedia.service;
 import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.biologyList.db.entity.BiologyListEntity;
 import org.grabpic.grabpic.encyclopedia.db.dto.CollectionRegistDTO;
+import org.grabpic.grabpic.encyclopedia.db.dto.GalleryPostDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
 import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
@@ -10,6 +11,8 @@ import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaRepository;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,7 +53,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 //보내준 데이터에서 id 추출
                 .biologyList(BiologyListEntity.builder().BiologyListId(collectionRegistDTO.getBiologyId()).build())
                 //등록 날짜
-                .registDate(collectionRegistDTO.getRegistDate())
+                .registDateTime(collectionRegistDTO.getRegistDateTime())
                 //위도
                 .latitude(collectionRegistDTO.getLatitude())
                 //경도
@@ -90,7 +93,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         infoDTO.setContent(encyclopedia.getBiologyList().getContent());
 
         //개체 등록일자
-        infoDTO.setRegistDate(encyclopedia.getRegistDate());
+        infoDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
 
         //개체 등록시 적은 메모
         infoDTO.setMemo(encyclopedia.getContent());
@@ -108,4 +111,14 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 
         return infoDTO;
     }
+
+//    @Override
+//    public List<GalleryPostDTO> galleryList(String token, int page, int limit) {
+//        long userId = jwtUtil.getUserId(token);
+//        Pageable pageable = PageRequest.of(page, limit);
+//        List<GalleryPostDTO> galleryPostDTOList = encyclopediaRepository.findEncyclopediaDetailsBySubscriberId(userId, );
+//
+//
+//        return null;
+//    }
 }
