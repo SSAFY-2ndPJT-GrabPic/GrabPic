@@ -40,6 +40,12 @@ public class FileController {
 
     }
 
+    @PostMapping("/makeframe/{nickname}")
+    public ResponseEntity<?> makeframe(@PathVariable String nickname, @RequestBody MultipartFile[] files) {
+        fileUploadService.makeframe(nickname, files);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     //나중에 쓸 파일 삭제용 메소드
 //    @PostMapping("/deletes")

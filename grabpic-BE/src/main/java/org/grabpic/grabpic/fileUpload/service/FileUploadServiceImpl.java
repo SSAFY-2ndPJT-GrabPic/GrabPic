@@ -5,9 +5,17 @@ import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -72,6 +80,60 @@ public class FileUploadServiceImpl implements FileUploadService{
         }
 
         return Urls;
+    }
+
+    @Override
+    public void makeframe(String nickname, MultipartFile[] files) {
+        //기본 경로
+        String uploadDir = "/home/ubuntu/dir-BE/frame/" + nickname + "/";
+
+        //폴더가 없으면 생성
+        File directory = new File(uploadDir);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        // 모든 파일을 반복하여 저장
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            try {
+                // 지정된 디렉토리에 파일 저장
+                file.transferTo(new File(uploadDir + "/" + fileName));
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+        // AI 서버에 보낼 그릇 생성
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        //그릇에 파일 넣음
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            File image = new File(uploadDir + "/" + fileName);
+            body.add("file", new FileSystemResource(image));
+            //boolean result = test.delete();
+        }
+        //닉네임 전달 내용 포함
+        body.add("username", nickname);
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        // 요청 엔터티 생성
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        // RestTemplate을 사용하여 POST 요청 전송
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://180.64.174.78:5001/uploader"; // 업로드할 URL
+        String response = restTemplate.postForObject(url, requestEntity, String.class);
+
+        //사용한 파일 지우기
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            File image = new File(uploadDir + "/" + fileName);
+            boolean result = image.delete();
+        }
+        //사용한 디렉토리 지우기
+        File dir = new File(uploadDir);
+        boolean dirDel = dir.delete();
     }
 
     // 추후 사용을 위한 파일 삭제 코드
