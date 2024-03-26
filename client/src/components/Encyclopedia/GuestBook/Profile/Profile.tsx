@@ -49,7 +49,6 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
         })
         .catch((err) => console.error(err));
     }
-    console.log(isMine)
   }, [userId]);
 
   // 내 도감 O : 회원정보 수정 버튼 컬러
