@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import * as G from '../DetailInfo.style';
 import { MapMarker, Map, useKakaoLoader as useKakaoLoaderOrigin } from 'react-kakao-maps-sdk';
 import { CollectDetailType } from '../../../type/CollectDetailType';

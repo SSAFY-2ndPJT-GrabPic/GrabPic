@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
 import * as C from './Collection.style';
 import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png'
 import { useRecoilState, useRecoilValue } from 'recoil';
