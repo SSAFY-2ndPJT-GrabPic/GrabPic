@@ -1,8 +1,8 @@
 import * as M from "./CustomMap.style"
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader, MapMarker, Map } from "react-kakao-maps-sdk";
-import { MapCenter, MyCenter, PinData } from "../../types/CustomMap"
 import { dataLoad } from "../../api/map";
+import * as T from "../../types/CustomMap.d";
 
 // 이미지 모음
 import plusImg from "../../assets/Map/plus.png";
@@ -11,19 +11,17 @@ import myLocateMarker from "../../assets/Map/myLocateMarker.png";
 import myPositionImg from "../../assets/Map/gps.png";
 import reLoadImg from "../../assets/Map/magnifier.png";
 
-
-
 const CustomMap: React.FC = () => {
-  // 지도 생성
-
-
   // 상태
-  const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
-  const [ myCenter, setMyCenter ] = useState<MyCenter | null>(null);
-  const [ pinLists, setpinLists ] = useState<PinData[]>([]);
+  const [ mapCenter, setMapCenter ] = useState<T.MapCenter | null>(null);
+  const [ myCenter, setMyCenter ] = useState<T.MyCenter | null>(null);
+  const [ pinLists, setpinLists ] = useState<T.PinData[]>([]);
   const [ isPinActive, setPinActive ] = useState<boolean>(false);
-  const [ isFilterActive, setFilterActive ] = useState<boolean[]>([true, false, false]);
-  const [ isSetUp, setSetUp ] = useState<boolean>(false)
+  const [ isFilterActive, setFilterActive ] = useState<[number, boolean[]]>([1, [true, false, false]]);
+  const [ isSetUp, setSetUp ] = useState<boolean>(false);
+  const [ mapLevel, setMapLevel] = useState<number>(3);
+  const [ loadDist, setLoadDist ] = useState<number>(0.15);
+  const [ loadPage ] = useState<number>(1);
   const mapRef = useRef<kakao.maps.Map>(null);
   
   // 내 위치 찾기
@@ -53,8 +51,7 @@ const CustomMap: React.FC = () => {
   }
 
   // API
-  const loadPinData = async (position:MapCenter | null, range:number, page:number, sort:number) => {
-    console.log(position)
+  const loadPinData = async (position:T.MapCenter | null, range:number, page:number, sort:number) => {
     if (position === null) { return;}
     const params = {
       latitude:  position.lat,
@@ -76,7 +73,7 @@ const CustomMap: React.FC = () => {
   // API 호출
   useEffect(() => {
     if (mapCenter !== null && !isSetUp) {
-      loadPinData(mapCenter, 500, 1, 1)
+      loadPinData(mapCenter, loadDist, loadPage, isFilterActive[0])
       setSetUp(true)
     }
   }, [mapCenter]);
@@ -95,10 +92,21 @@ const CustomMap: React.FC = () => {
 
   // 기타 함수들
   const filterChange = (index : number) => {
-    if (index === 0) setFilterActive([true, false, false])
-    else if (index === 1) setFilterActive([false, true, false])
-    else if (index === 2) setFilterActive([false, false, true])
+    const map = mapRef.current
+    if (!map) return
+
+    if (index === 0) {
+      setFilterActive([1, [true, false, false]]);
+    }
+    else if (index === 1) {
+      setFilterActive([2, [false, true, false]]);
+    }
+    else if (index === 2) {
+      setFilterActive([3, [false, false, true]]);
+    }
+    loadPinData(mapCenter, loadDist, loadPage, isFilterActive[0])
   }
+
   
   const zoomIn = () => {
     const map = mapRef.current
@@ -115,7 +123,10 @@ const CustomMap: React.FC = () => {
   const centerReset = () => {
     getLocation()
   }
-
+  
+  const reLoad = () => {
+    loadPinData(mapCenter, loadDist, loadPage, isFilterActive[0])
+  }
 
   return (
     <M.MapContainer>
@@ -124,8 +135,15 @@ const CustomMap: React.FC = () => {
         id="map"
         center= {mapCenter}
         style= {{width: "100%", height: "100%", position: "relative", overflow: "hidden"}}
-        level={3} // 지도의 확대 레벨
+        level={mapLevel} // 지도의 확대 레벨
         ref={mapRef}
+        onZoomChanged={(map) => {
+          const level = map.getLevel();
+          const en = `level${level}` as T.ScaleDistanceKey
+          const dist = T.ScaleDistance[en]
+          setMapLevel(level)
+          setLoadDist(dist)
+        }}
         onCenterChanged={(map) => {
           const newData = map.getCenter()
           setMapCenter({
@@ -163,7 +181,7 @@ const CustomMap: React.FC = () => {
         <M.LocationBtn onClick={centerReset}>
           <M.SetCenterImg src={myPositionImg}/>
         </M.LocationBtn>
-        <M.LocationBtn onClick={zoomOut}>
+        <M.LocationBtn onClick={reLoad}>
           <M.ReLoadImg src={reLoadImg}/>
         </M.LocationBtn>
       </M.LocationBtn_Container>
@@ -173,9 +191,9 @@ const CustomMap: React.FC = () => {
           <M.DragHandle />
         </M.HandleContainer>
         <M.FilterContainer>
-            <M.FilterButton clickActive={isFilterActive[0]} onClick={() => {filterChange(0); loadPinData(mapCenter, 500, 1, 1)}}>최신순</M.FilterButton>
-            <M.FilterButton clickActive={isFilterActive[1]} onClick={() => {filterChange(1); loadPinData(mapCenter, 500, 1, 2)}}>오래된순</M.FilterButton>
-            <M.FilterButton clickActive={isFilterActive[2]} onClick={() => {filterChange(2); loadPinData(mapCenter, 500, 1, 3)}}>희귀도순</M.FilterButton>
+            <M.FilterButton clickActive={isFilterActive[1][0]} onClick={() => {filterChange(0);}}>최신순</M.FilterButton>
+            <M.FilterButton clickActive={isFilterActive[1][1]} onClick={() => {filterChange(1);}}>오래된순</M.FilterButton>
+            <M.FilterButton clickActive={isFilterActive[1][2]} onClick={() => {filterChange(2);}}>희귀도순</M.FilterButton>
         </M.FilterContainer>
         <M.PinList>
           {pinLists.map((pin, index) => (
@@ -196,7 +214,6 @@ const CustomMap: React.FC = () => {
     </M.MapContainer>
   )
 } 
-
 
 export default CustomMap
 
