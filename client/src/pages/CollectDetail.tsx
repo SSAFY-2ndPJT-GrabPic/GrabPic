@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { OwnerInfoType } from "../type/UserType";
 import { getUserInfo } from "../api/user";
 import { getCollectDetail } from "../api/encyclopedia";
-import { CollectDetailType } from "../type/CollectDetailType";
+import { CollectDetailType } from "../type/CollectType";
 
 interface CollectDetailProps {}
 
@@ -24,17 +24,21 @@ const CollectDetail: React.FC<CollectDetailProps> = () => {
   const [encyDetailInfo, setEncyDetailInfo] = useState<CollectDetailType>({} as CollectDetailType)
 
   useEffect(() => {
-    getUserInfo(ownerId)
-    .then((res) => {
-      setOwnerInfo(res)
-    })
-    .catch((err) => console.error(err))
+    getUserInfo(
+      ownerId,
+      (res) => {
+        setOwnerInfo(res.data)
+      },
+      (err) => console.error(err)
+    )
 
-    getCollectDetail(encyclopediaId)
-    .then((res) => {
-      setEncyDetailInfo(res)
-    })
-    .catch((err) => console.error(err))
+    getCollectDetail(
+      encyclopediaId,
+      (res) => {
+        setEncyDetailInfo(res.data)
+      },
+      (err) => {console.error(err)}
+    )
   }, [])
 
   return (

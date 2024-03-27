@@ -35,11 +35,13 @@ export const EncyclopediaResgist: React.FC = () => {
     const setEncyLocate = useSetRecoilState(headerState)
 
     const registClick = () => {
-      registEncy(dummyData)
-      .then(() => {
-        setEncyLocate('collection')
-        navigate(`/encyclopedia/${userInfo.nickname}`, { state: { userId: userInfo.userId} })
-      })
+      registEncy(dummyData,      
+        () => {
+          setEncyLocate('collection')
+          navigate(`/encyclopedia/${userInfo.nickname}`, { state: { userId: userInfo.userId} })
+        },
+        (err) => { console.error(err) }
+      )
     }
 
   return (

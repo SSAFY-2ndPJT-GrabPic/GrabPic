@@ -2,19 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as R from './Reply.style'
 import ReplyItem from './ReplyItem';
 import { getGuestBookData, postReply } from '../../../../api/guestBook';
+import { replyInputData, replyItem } from '../../../../type/GuestBookType';
 
-interface replyItem {
-  guestBookId: number;
-  writerId: number;
-  writerNickName: string;
-  content: string;
-  registDateTime: string;
-}
-
-interface replyInputData {
-  ownerId: number;
-  content: string;
-}
 
 interface ReplyProps {
   userId: number;
@@ -23,15 +12,20 @@ interface ReplyProps {
 const Reply: React.FC<ReplyProps> = ({ userId }) => {
   const [replyList, setReplyList] = useState<replyItem[]>([])
   const replyInput = useRef<HTMLInputElement>(null)
-  const [replyData, setReplyData] = useState<replyInputData>({} as replyInputData)
+  const [replyData, setReplyData] = useState<replyInputData>({
+    ownerId: userId,
+    content: ''
+  })
 
   // 방명록 리스트 조회 api
   useEffect(() => {
-    getGuestBookData(userId)
-      .then((res) => {
-        setReplyList(res)
-      })
-      .catch((err) => console.error(err))
+    getGuestBookData(
+      userId,
+      (res) => {
+        setReplyList(res.data)
+      },
+      (err) => { console.error(err) }
+    )
   }, [userId])
 
   // 방명록 작성 input값 변동될 때마다 replyData 갱신
@@ -48,28 +42,29 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
 		}
     
     // 방명록 작성 api 요청 
-		postReply(replyData)
-		.then ((res) => {
-      console.log(res)
-      // 방명록 작성 데이터 새로고침 없이 바로 갱신
-      setReplyList([{
-        'guestBookId': res.guestBookId,
-        'writerId': res.writerId,
-        'writerNickName': res.writerNickName,
-        'content': res.content,
-        'registDateTime': res.registDateTime
-      }, ...replyList])
-		})
-    .then(() => {
-      // 데이터 초기화
-      setReplyData({
-        ownerId: userId,
-        content: ''
-      })
-    })
-		.catch ((err) => {
-			console.error(err)
-		})
+		postReply(
+      replyData,
+      
+      (res) => {
+        console.log(res.data)
+        // 방명록 작성 데이터 새로고침 없이 바로 갱신
+        setReplyList([{
+          'guestBookId': res.data.guestBookId,
+          'writerId': res.data.writerId,
+          'writerNickName': res.data.writerNickName,
+          'content': res.data.content,
+          'registDateTime': res.data.registDateTime
+        }, ...replyList])
+        
+        setReplyData({
+          ownerId: userId,
+          content: ''
+        })
+      },
+      (err) => {
+        console.error(err)
+      }
+    )
 	}
 
   // 엔터 클릭해도 작성 가능하도록

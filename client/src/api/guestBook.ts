@@ -1,32 +1,31 @@
+import { AxiosResponse } from 'axios';
 import { privateApi } from '../utils/http-commons';
+import { MyResponseData } from '../type/ApiResponseType';
+import { replyInputData, replyItem } from '../type/GuestBookType';
 
 const url = 'guestbook';
 
-interface replyInputData {
-  ownerId: number;
-  content: string;
-}
-
-export const getGuestBookData = async (ownerId: number) => {
-  try {
-    const res = await privateApi.get(`/${url}/${ownerId}`, {params:{'page': 1, 'limit': 200}});
-    const guestBookList = res.data;
-
-    return guestBookList;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+export const getGuestBookData = async (
+  ownerId: number,
+  Response: (Response: AxiosResponse<replyItem[]>) => void,
+  Error: (Error: AxiosResponse<MyResponseData>) => void
+) => {
+  await privateApi
+  .get(
+    `/${url}/${ownerId}`, 
+    {params:{'page': 1, 'limit': 200}}
+  )
+  .then(Response)
+  .catch(Error);
 };
 
-export const postReply = async (replyData: replyInputData) => {
-  try {
-    const res = await privateApi.post(`/${url}/add`, replyData);
-    const isThen = res.data;
-
-    return isThen;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+export const postReply = async (
+  replyData: replyInputData,
+  Response: (Response: AxiosResponse<replyItem>) => void,
+  Error: (Error: AxiosResponse<MyResponseData>) => void
+) => {
+  await privateApi
+  .post(`/${url}/add`, replyData)
+  .then(Response)
+  .catch(Error);
 };

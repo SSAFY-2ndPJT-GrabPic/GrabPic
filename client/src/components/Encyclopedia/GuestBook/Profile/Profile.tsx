@@ -38,13 +38,14 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     else {
       setIsMine(false);               // 내 도감 X -> 타 유저 정보 조회 및 갱신
 
-      getUserInfo(userId)             
-        .then((res: OwnerInfoType) => {
-          setOwnerInfo(res);
-        })
-        .catch((err) => console.error(err));
+      getUserInfo(
+        userId,
+        (res) => {
+          setOwnerInfo(res.data);
+        },
+        (err) => console.error(err)
+      )
       
-        
       checkIsSub(userId)              // 해당 사용자를 구독했는지 판별 및 갱신
         .then((res) => {
           setIsSub(res);
