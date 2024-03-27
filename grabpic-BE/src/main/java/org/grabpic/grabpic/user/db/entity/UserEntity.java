@@ -30,6 +30,7 @@ public class UserEntity {
     private String name;
     private LocalDate birth;
     private String gender;
+    @Setter
     private String profileImage;
     private String role;
     private long subsCount;
