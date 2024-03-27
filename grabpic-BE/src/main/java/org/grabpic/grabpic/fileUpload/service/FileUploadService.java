@@ -12,6 +12,7 @@ public interface FileUploadService {
     public List<String> uploadObjectToS3Many(List<MultipartFile> files) throws IOException;
     public void makeframe(String nickname, MultipartFile[] files);
 
+    public void uploadprofileImage(MultipartFile file, String token) throws IOException;
 
     //파일삭제
 //    public boolean deleteObjectToS3Many(List<String> fileUrlList);
