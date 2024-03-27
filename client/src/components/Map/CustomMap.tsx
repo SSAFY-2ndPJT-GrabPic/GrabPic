@@ -10,6 +10,7 @@ import minusImg from '../../assets/Map/minus.png';
 import myLocateMarker from '../../assets/Map/myLocateMarker.png';
 import myPositionImg from '../../assets/Map/gps.png';
 import reLoadImg from '../../assets/Map/magnifier.png';
+import { useNavigate } from 'react-router-dom';
 
 const CustomMap: React.FC = () => {
   // 상태
@@ -17,14 +18,14 @@ const CustomMap: React.FC = () => {
   const [myCenter, setMyCenter] = useState<T.MyCenter | null>(null);
   const [pinLists, setpinLists] = useState<T.PinData[]>([]);
   const [isPinActive, setPinActive] = useState<boolean>(false);
-  const [isFilterActive, setFilterActive] = useState<[number, boolean[]]>([
-    1,
-    [true, false, false],
-  ]);
+  const [isFilterActive, setFilterActive] = useState<[number, boolean[]]>([ 1, [true, false, false] ]);
   const [isSetUp, setSetUp] = useState<boolean>(false);
   const [mapLevel, setMapLevel] = useState<number>(3);
   const [loadDist, setLoadDist] = useState<number>(0.15);
   const [loadPage] = useState<number>(1);
+
+  const navigate = useNavigate();
+
   const mapRef = useRef<kakao.maps.Map>(null);
 
   // 내 위치 찾기
@@ -59,9 +60,11 @@ const CustomMap: React.FC = () => {
     page: number,
     sort: number
   ) => {
+
     if (position === null) {
       return;
     }
+
     const params = {
       latitude: position.lat,
       longitude: position.lng,
@@ -70,9 +73,11 @@ const CustomMap: React.FC = () => {
       limit: 20,
       sort: sort,
     };
+
     await dataLoad(
       params,
       (respones) => {
+        console.log(respones.data)
         setpinLists(respones.data);
       },
       (error) => {
@@ -136,6 +141,10 @@ const CustomMap: React.FC = () => {
     loadPinData(mapCenter, loadDist, loadPage, isFilterActive[0]);
   };
 
+  const goDetail = (name: string, userId: number, ency: number) => {
+    navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
+  }
+
   return (
     <M.MapContainer>
       {mapCenter !== null && (
@@ -164,18 +173,8 @@ const CustomMap: React.FC = () => {
           <MapMarker key={myCenter.lat - myCenter.lng} position={myCenter} image={{src: myLocateMarker, size: { width: 29, height: 42}}}/>
         )}
           {pinLists.map((pin, index) => (
-            // <MapMarker
-            //   key={index}
-            //   title={pin.name}
-            //   position={{ lat: pin.latitude, lng: pin.longitude }}
-            //   image={{
-            //           src: pin.thumnailImage,
-            //           size: {width: 35, height: 35},
-            //           options:{shape:"circle"}
-            //         }}
-            // />
             <CustomOverlayMap key={index} position={{ lat: pin.latitude, lng: pin.longitude }} clickable={true}>
-              <M.PinDataContainer>
+              <M.PinDataContainer onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>
                 <M.PinImg src={pin.thumnailImage} />
               </M.PinDataContainer>
             </CustomOverlayMap>
@@ -235,9 +234,9 @@ const CustomMap: React.FC = () => {
         <M.PinList>
           {pinLists.map((pin, index) => (
             <M.ItemContainer key={index}>
-             <M.ItemImg src={pin.thumnailImage} alt="" />
+             <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
              <M.ItemDataContainer>
-               <M.ItemNameSpan>{pin.name}</M.ItemNameSpan>
+               <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
                <M.ItemInfoContainer>
                  <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
                  <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
