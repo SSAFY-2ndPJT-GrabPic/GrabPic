@@ -22,7 +22,9 @@ const CustomMap: React.FC = () => {
   const [isSetUp, setSetUp] = useState<boolean>(false);
   const [mapLevel, setMapLevel] = useState<number>(3);
   const [loadDist, setLoadDist] = useState<number>(0.15);
-  const [loadPage] = useState<number>(1);
+  const [loadPage, setLoadPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -145,6 +147,13 @@ const CustomMap: React.FC = () => {
     navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
   }
 
+  const loadPrevRef = useRef<HTMLDivElement>(null);
+  const loadNextRef = useRef<HTMLDivElement>(null);
+
+  const PrevObserver = new IntersectionObserver();
+  const nextObserver = new IntersectionObserver();
+
+  
   return (
     <M.MapContainer>
       {mapCenter !== null && (
@@ -232,6 +241,7 @@ const CustomMap: React.FC = () => {
           </M.FilterButton>
         </M.FilterContainer>
         <M.PinList>
+          {isLoading && <div ref={loadPrevRef} />}
           {pinLists.map((pin, index) => (
             <M.ItemContainer key={index}>
              <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
@@ -244,6 +254,7 @@ const CustomMap: React.FC = () => {
              </M.ItemDataContainer>
            </M.ItemContainer>
           ))}
+          {isLoading && <div ref={loadNextRef} />}
         </M.PinList>
       </M.ListContainer>
     </M.MapContainer>
