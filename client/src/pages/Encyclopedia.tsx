@@ -17,25 +17,30 @@ const EncyBody = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-`
+`;
 interface EncyclopediaProps {
   userId: number;
 }
 
 const Encyclopedia: React.FC<EncyclopediaProps> = ({ userId }) => {
-  const encyLocate = useRecoilValue(headerState)
-  let userIdData = userId
+  const encyLocate = useRecoilValue(headerState);
+  let userIdData = userId;
   const location = useLocation();
 
   if (location.state) {
-    userIdData = location.state.userId
+    userIdData = location.state.userId;
   }
 
   return (
     <div>
       <EncyHeader />
       <EncyBody>
-        {encyLocate === 'chart' ? <Chart /> : encyLocate === 'collection' ? <Collection userId={userIdData} /> : <GuestBook userId={userIdData} />}
+        {encyLocate === 'chart' ? 
+          <Chart />
+        : encyLocate === 'collection' ? 
+          <Collection userId={userIdData} />
+        :
+          <GuestBook userId={userIdData} />}
       </EncyBody>
     </div>
   );
