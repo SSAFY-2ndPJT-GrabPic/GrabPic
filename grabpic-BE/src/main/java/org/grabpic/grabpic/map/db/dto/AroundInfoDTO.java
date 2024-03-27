@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 public class AroundInfoDTO {
 
     private long encyclopedia;
+    // 수집한 사람 Id
+    private long userId;
     private String name;
     private LocalDateTime registDateTime;
     private String address;

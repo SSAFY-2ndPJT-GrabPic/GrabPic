@@ -26,9 +26,13 @@ public class UserEntity {
     @Setter
     private String password;
     private String provider;
+    @Setter
     private String nickname;
+    @Setter
     private String name;
+    @Setter
     private LocalDate birth;
+    @Setter
     private String gender;
     private String profileImage;
     private String role;

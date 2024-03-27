@@ -171,6 +171,32 @@ public class UserController {
         }
     }
 
+    @PostMapping("/myinfochange")
+    public ResponseEntity<?> myInfoChange(HttpServletRequest request, @RequestBody InfoDTO infoDTO) {
+        try {
+            userService.changeMyInfo(infoDTO, request.getHeader("access"));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            boolean result = userService.logout(request, response);
+            if(result) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     //테스트용 코드
     //    @GetMapping("/getinfo")
 //    public ResponseEntity<?> getHeader(@RequestHeader("access") String accessToken) {
