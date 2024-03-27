@@ -22,9 +22,18 @@ public interface EncyclopediaRepository extends JpaRepository<EncyclopediaEntity
             "FUNCTION('sin', FUNCTION('radians', :latitude)) * FUNCTION('sin', FUNCTION('radians', e.latitude)))) < :range")
     Page<EncyclopediaEntity> findAround(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("range") double range, Pageable pageable);
 
-//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id ORDER BY e.registDateTime DESC")
-//    List<GalleryPostDTO> findEncyclopediaDetailsBySubscriberId(@Param("thatId") Long id, Pageable pageable);
+    @Query("SELECT COUNT(*) FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
+    long countByEncyclopediaDetail(@Param("id") Long id);
+
+    @Query("SELECT e FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
+    List<EncyclopediaEntity> findEncyclopediaDetailsBySubscriberId(@Param("id") Long id, Pageable pageable);
+
+    @Query("SELECT e FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId != :id and e.user.userId != :id")
+    List<EncyclopediaEntity> findEncyclopediaDetailsOthers(@Param("id") Long id, Pageable pageable);
+
+//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
+//    List<GalleryPostDTO> findEncyclopediaDetailsBySubscriberId(@Param("id") Long id, Pageable pageable);
 //
-//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id ORDER BY e.registDateTime DESC")
-//    List<GalleryPostDTO> findEncyclopediaDetailsOthers(@Param("thatId") Long id, Pageable pageable);
+//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId != :id and e.user.userId != :id")
+//    List<GalleryPostDTO> findEncyclopediaDetailsOthers(@Param("id") Long id, Pageable pageable);
 }
