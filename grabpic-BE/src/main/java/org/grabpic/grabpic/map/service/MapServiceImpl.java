@@ -40,6 +40,7 @@ public class MapServiceImpl implements MapService{
         List<AroundInfoDTO> aroundInfoDTOList = new ArrayList<>();
         for(EncyclopediaEntity encyclopedia : aroundList) {
             AroundInfoDTO aroundInfoDTO = new AroundInfoDTO();
+            aroundInfoDTO.setUserId(encyclopedia.getUser().getUserId());
             aroundInfoDTO.setEncyclopedia(encyclopedia.getEncyclopediaId());
             aroundInfoDTO.setName(encyclopedia.getBiologyList().getName());
             aroundInfoDTO.setRegistDateTime(encyclopedia.getRegistDateTime());

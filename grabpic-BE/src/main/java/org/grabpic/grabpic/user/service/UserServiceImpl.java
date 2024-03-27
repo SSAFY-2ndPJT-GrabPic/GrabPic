@@ -2,8 +2,10 @@ package org.grabpic.grabpic.user.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.grabpic.grabpic.user.config.BusinessLogicException;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
@@ -218,6 +220,66 @@ public class UserServiceImpl implements UserService {
             return infoDTO;
         }
         return null;
+    }
+
+    @Override
+    public void changeMyInfo(InfoDTO infoDTO, String token) {
+        Optional<UserEntity> optionalUser = userRepository.findById(jwtUtil.getUserId(token));
+        if (optionalUser.isPresent()) {
+            UserEntity user = optionalUser.get();
+            // 닉네임, 이름, 생일, 성별
+            user.setNickname(infoDTO.getNickname());
+            user.setName(infoDTO.getName());
+            user.setBirth(infoDTO.getBirth());
+            user.setGender(infoDTO.getGender());
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
+        String refresh = null;
+        Cookie[] cookies = request.getCookies();
+        // refresh 쿠키 찾기
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refresh")) {
+                refresh = cookie.getValue();
+            }
+        }
+        if (refresh == null) {
+            //response status code
+//            return "refresh token null";
+            return false;
+        }
+        //expired check
+        try {
+            jwtUtil.isExpired(refresh);
+        } catch (ExpiredJwtException e) {
+
+            //response status code
+//            return "refresh token expired";
+            return false;
+        }
+        // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
+        String category = jwtUtil.getCategory(refresh);
+        if (!category.equals("refresh")) {
+            //response status code
+//            return "invalid refresh token";
+            return false;
+        }
+
+        if(jwtUtil.getUserId(request.getHeader("access")) != jwtUtil.getUserId(refresh)) {
+            //로그인 정보 불일치
+            return false;
+        }
+
+        Cookie cookie = new Cookie("refresh", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+        response.setStatus(HttpServletResponse.SC_OK);
+        return true;
     }
 
 
