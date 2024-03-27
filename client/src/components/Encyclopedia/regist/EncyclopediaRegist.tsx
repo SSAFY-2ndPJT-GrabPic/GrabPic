@@ -3,6 +3,17 @@ import * as E from './EncyclopediaResgist.style';
 
 import { useRecoilState } from 'recoil';
 import * as R from '../../../recoil/atoms/SettingState';
+// import { registEncy } from '../../../api/encyclopedia';
+
+// const dummyData = {
+//   biologyId : 1,
+//   registDate : "2020-01-01",
+//   latitude : 36.12123,
+//   longitude : 128.121121,
+//   address : "우리집 옆집",
+//   content : "안녕 나는 메모",
+//   imageUrl : "tmp"
+// }
 
 export const EncyclopediaResgist: React.FC = () => {
     const {state} = useLocation();
@@ -17,7 +28,7 @@ export const EncyclopediaResgist: React.FC = () => {
     }
 
     const registClick = () => {
-        // const params = {}
+      // registEncy(dummyData)
     }
 
   return (
