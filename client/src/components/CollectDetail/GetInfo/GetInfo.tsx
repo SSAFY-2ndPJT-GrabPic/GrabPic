@@ -1,7 +1,7 @@
 import React from 'react';
 import * as G from '../DetailInfo.style';
 import { MapMarker, Map, useKakaoLoader as useKakaoLoaderOrigin } from 'react-kakao-maps-sdk';
-import { CollectDetailType } from '../../../type/CollectDetailType';
+import { CollectDetailType } from '../../../type/CollectType';
 
 interface GetInfoProps {
   getInfo: CollectDetailType;

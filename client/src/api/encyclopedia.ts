@@ -1,47 +1,41 @@
+import { AxiosResponse } from 'axios';
 import { privateApi } from '../utils/http-commons';
+import { CollectDetailType, CollectItem, RegistType } from '../type/CollectType';
+import { MyResponseData } from '../type/ApiResponseType';
 
 const url = 'encyclopedia';
 
-export const getCollectList = async (userId: number) => {
-  try {
-    const res = await privateApi.get(`/${url}/preview/${userId}`);
-    const collectList = res.data;
+export const getCollectList = async(
+  userId : number,
+  Response : (Response : AxiosResponse<CollectItem[]>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.get(`/${url}/preview/${userId}`)
+  .then(Response)
+  .catch(Error)
+}
 
-    return collectList;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const getCollectDetail = async(
+  encyclopediaId : number,
+  Response : (Response : AxiosResponse<CollectDetailType>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.get(`/${url}/detail/${encyclopediaId}`)
+  .then(Response)
+  .catch(Error)
+}
 
-export const getCollectDetail = async (encyclopediaId: number) => {
-  try {
-    const res = await privateApi.get(`/${url}/detail/${encyclopediaId}`);
-    const collectDetail = res.data;
-
-    return collectDetail;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const registEncy = async (params: {
-  biologyId : number;
-  registDate : string;
-  latitude : number;
-  longitude : number;
-  address : string;
-  content : string;
-  imageUrl : string;
-}) => {
-  try {
-    const res = await privateApi.post(`/${url}/add`, params);
-    const isRegist = res.data;
-
-    return isRegist;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const registEncy = async(
+  params: {
+    biologyId : number;
+    registDate : string;
+    latitude : number;
+    longitude : number;
+    address : string;
+    content : string;
+    imageUrl : string;
+  },
+  Response : (Response : AxiosResponse<RegistType>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.post(`/${url}/add`, params)
+  .then(Response)
+  .catch(Error)
+}

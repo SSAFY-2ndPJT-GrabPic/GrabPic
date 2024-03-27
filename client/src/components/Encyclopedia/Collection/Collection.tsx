@@ -6,12 +6,7 @@ import { filterState, wantState } from '../../../recoil/atoms/CollectFilterState
 import Filter from './Filter';
 import { getCollectList } from '../../../api/encyclopedia';
 import { useLocation } from 'react-router-dom';
-
-interface CollectItem {
-  encyclopediaId: number;
-  name: string;
-  thumbnailImageUrl: string;
-}
+import { CollectItem } from '../../../type/CollectType';
 
 interface CollectionProps {
   userId: number;
@@ -30,11 +25,13 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
     if (location.state) {
       userIdData = location.state.userId;
     }
-    getCollectList(userIdData)
-      .then((res) => {
-        setCollectList(res);
-      })
-      .catch((err) => console.error(err));
+    getCollectList(
+      userIdData,
+      (res) => {
+        setCollectList(res.data);
+      },
+      (err) => { console.error(err) }
+    )
   }, []);
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import * as I from './IndivTitle.style'
-import { CollectDetailType } from '../../../type/CollectDetailType';
+import { CollectDetailType } from '../../../type/CollectType';
 
 interface IndivTitleProps {
   indivInfo: CollectDetailType

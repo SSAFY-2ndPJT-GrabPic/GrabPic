@@ -14,3 +14,19 @@ export interface CollectDetailType {
   imageUrl: string;
   shortsVideoUrl: null;
 }
+
+export interface CollectItem {
+  encyclopediaId: number;
+  name: string;
+  thumbnailImageUrl: string;
+}
+
+export interface RegistType {
+  biologyId : number;
+  registDate : string;
+  latitude : number;
+  longitude : number;
+  address : string;
+  content : string;
+  imageUrl : string;
+}
