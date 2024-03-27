@@ -9,13 +9,14 @@ export interface MyCenter {
 }
 
 export interface PinData {
-    encyclopedia: string;
-    name: string;
-    registDateTime: string;
     address: string;
+    encyclopedia: number;
     latitude: number;
     longitude: number;
+    name: string;
     rareCount: 0;
+    registDateTime: string;
+    thumnailImage: string;
 }
 
 export interface RequestData {
@@ -24,7 +25,7 @@ export interface RequestData {
     range:  number;
     page : number;
     limit : number;
-    sort : number
+    sort : number;
 }
 
 export enum ScaleDistance {
