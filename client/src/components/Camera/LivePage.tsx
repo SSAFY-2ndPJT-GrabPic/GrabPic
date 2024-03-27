@@ -4,7 +4,7 @@ import { WebCam } from './WebCam';
 import * as L from './LivePage.style';
 import { useNavigate } from 'react-router-dom';
 
-import CloseIconUrl from '../../assets/icon/closeX.png';
+import CloseIconUrl from '../../assets/icon/closeX2.png';
 
 export const LivePage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);

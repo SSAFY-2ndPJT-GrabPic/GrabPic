@@ -1,28 +1,22 @@
 import React from 'react';
 import * as I from '../DetailInfo.style'
+import { CollectDetailType } from '../../../type/CollectDetailType';
 
 interface IndivInfoProps {
-  indivInfo: {
-    indivImageUrl: string;
-    indivName: string;
-    indivEngName: string;
-    indivClassify: string[];
-    summaryDetail: string;
-    details: string;
-  }
+  indivInfo: CollectDetailType
 }
 
 const IndivInfo: React.FC<IndivInfoProps> = ({ indivInfo }) => {
   return (
     <I.Container>
-      <I.Wrap>
+      {/* <I.Wrap>
         <I.Title>요약</I.Title>
         <I.Context>{indivInfo.summaryDetail}</I.Context>
-      </I.Wrap>
+      </I.Wrap> */}
 
       <I.Wrap>
         <I.Title>상세 설명</I.Title>
-        <I.Context>{indivInfo.details}</I.Context>
+        <I.Context>{indivInfo.content}</I.Context>
       </I.Wrap>
     </I.Container>
   );

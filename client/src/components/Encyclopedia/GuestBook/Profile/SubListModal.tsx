@@ -40,7 +40,12 @@ const SubListModal: React.FC<SubListModalProps> = () => {
         </S.TitleBox>
         <S.ListBox>
           {subList.map((item, idx) => (
-            <S.ListItem to={`/encyclopedia/${item.nickname}`} state={{ userId: item.userId}} key={idx}>
+            <S.ListItem 
+              to={`/encyclopedia/${item.nickname}`} 
+              state={{ userId: item.userId}} 
+              key={idx}
+              onClick={() => setIsOpenState({ what: '', userId: 0})}
+            >
               <S.UserImg src={item.profileImage} />
               <S.UserNickname>{item.nickname}</S.UserNickname>
             </S.ListItem>

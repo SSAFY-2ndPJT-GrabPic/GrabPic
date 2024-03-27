@@ -111,8 +111,6 @@ export const TokenRefresh = async(
 export const getUserInfo = async (userId: number) => {
   try {
     const res = await privateApi.get(`/${url}/info/${userId}`);
-    console.log(res.data);
-
     const userDetails: OwnerInfoType = res.data;
 
     return userDetails;
