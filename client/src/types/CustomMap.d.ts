@@ -9,6 +9,7 @@ export interface MyCenter {
 }
 
 export interface PinData {
+    userId: number;
     address: string;
     encyclopedia: number;
     latitude: number;
