@@ -5,7 +5,7 @@ export class WebCam {
       navigator.mediaDevices.getUserMedia &&
       videoRef
     ) {
-      console.log("camera open");
+      // console.log("camera open");
       navigator.mediaDevices
         .getUserMedia({
           video: { facingMode: "environment" },
@@ -14,13 +14,13 @@ export class WebCam {
           videoRef.srcObject = stream;
         });
     } else {
-      console.log("error");
+      // console.log("error");
     }
   };
 
   close = (videoRef: HTMLVideoElement | null) => {
     if (videoRef) {
-      console.log("camera close");
+      // console.log("camera close");
       const stream = videoRef.srcObject as MediaStream;
 
       if (stream) {
