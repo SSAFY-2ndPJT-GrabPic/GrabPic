@@ -1,6 +1,6 @@
 import * as M from "./CustomMap.style"
 import React, { useEffect, useRef, useState } from 'react';
-import { Loader, MapMarker, Map } from "react-kakao-maps-sdk";
+import { Loader, MapMarker, Map, CustomOverlayMap } from "react-kakao-maps-sdk";
 import { dataLoad } from "../../api/map";
 import * as T from "../../types/CustomMap.d";
 
@@ -46,7 +46,7 @@ const CustomMap: React.FC = () => {
       setMapCenter({
         lat: 37.483034,
         lng: 126.902435
-      })
+      });
     }
   }
 
@@ -155,10 +155,24 @@ const CustomMap: React.FC = () => {
         {myCenter !== null && (
           <MapMarker key={myCenter.lat - myCenter.lng} position={myCenter} image={{src: myLocateMarker, size: { width: 29, height: 42}}}/>
         )}
-        {/* locations을 반복하여 각 위치에 마커 생성 */}
           {pinLists.map((pin, index) => (
-          <MapMarker key={index} position={{ lat: pin.latitude, lng: pin.longitude }}/>
-        ))}
+            // <MapMarker
+            //   key={index}
+            //   title={pin.name}
+            //   position={{ lat: pin.latitude, lng: pin.longitude }}
+            //   image={{
+            //           src: pin.thumnailImage,
+            //           size: {width: 35, height: 35},
+            //           options:{shape:"circle"}
+            //         }}
+            // />
+            <CustomOverlayMap key={index} position={{ lat: pin.latitude, lng: pin.longitude }} clickable={true}>
+              <M.PinDataContainer>
+                <M.PinImg src={pin.thumnailImage} />
+              </M.PinDataContainer>
+            </CustomOverlayMap>
+            ))
+          }
       </Map>
       )}
 
@@ -197,16 +211,16 @@ const CustomMap: React.FC = () => {
         </M.FilterContainer>
         <M.PinList>
           {pinLists.map((pin, index) => (
-             <M.PinItemContainer key={index}>
-             <M.PinImgContainer src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiiWR3G7uCpLQYKesAWQDjueG8KsZ-OICDBw&s" alt="" />
-             <M.PinDataContainer>
-               <M.PinNameSpan>{pin.name}</M.PinNameSpan>
-               <M.PinInfoContainer>
-                 <M.PinInfoSpan>{pin.registDate}</M.PinInfoSpan>
-                 <M.PinInfoSpan>{pin.address}</M.PinInfoSpan>
-               </M.PinInfoContainer>
-             </M.PinDataContainer>
-           </M.PinItemContainer>
+            <M.ItemContainer key={index}>
+             <M.ItemImg src={pin.thumnailImage} alt="" />
+             <M.ItemDataContainer>
+               <M.ItemNameSpan>{pin.name}</M.ItemNameSpan>
+               <M.ItemInfoContainer>
+                 <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
+                 <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
+               </M.ItemInfoContainer>
+             </M.ItemDataContainer>
+           </M.ItemContainer>
           ))}
           
         </M.PinList>
