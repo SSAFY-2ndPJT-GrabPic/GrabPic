@@ -8,10 +8,13 @@ import org.grabpic.grabpic.encyclopedia.db.dto.GalleryPostDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
 import org.grabpic.grabpic.encyclopedia.db.entity.ChartDataEntity;
+import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
 import org.grabpic.grabpic.encyclopedia.service.EncyclopediaService;
+import org.grabpic.grabpic.fileUpload.service.FileUploadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ import java.util.List;
 public class EncyclopediaController {
 
     private final EncyclopediaService encyclopediaService;
+    private final FileUploadService fileUploadService;
 
     @GetMapping("/preview/{userId}")
     public ResponseEntity<?> previewInfo(@PathVariable long userId) {
@@ -35,10 +39,16 @@ public class EncyclopediaController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> collectionAdd(@RequestBody CollectionRegistDTO collectionRegistDTO, HttpServletRequest request) {
+    public ResponseEntity<?> collectionAdd(@RequestPart("collectionRegistDTO") CollectionRegistDTO collectionRegistDTO, @RequestPart("files") MultipartFile[] files, HttpServletRequest request) {
         try {
-            encyclopediaService.collectionRegist(collectionRegistDTO, request.getHeader("access"));
-            encyclopediaService.addChartData(collectionRegistDTO, request.getHeader("access"));
+            String token = request.getHeader("access");
+            // 기본적인 데이터 저장하고 도감 행을 추가하는 서비스
+            EncyclopediaEntity encyclopedia = encyclopediaService.collectionRegist(collectionRegistDTO, token);
+            // 몽고 DB에 차트용 데이터 추가하는 서비스
+            encyclopediaService.addChartData(collectionRegistDTO, token);
+            // AI 서버에 보간용 사진 덩어리 보내는 서비스
+            fileUploadService.makeframe(encyclopedia.getEncyclopediaId(), files);
+            // 메인 사진으로 썸네일용 사진 생성해서 S3에 저장하고 정보에 같이 등록하는 서비스 or S3에서 썸네일 생성
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());

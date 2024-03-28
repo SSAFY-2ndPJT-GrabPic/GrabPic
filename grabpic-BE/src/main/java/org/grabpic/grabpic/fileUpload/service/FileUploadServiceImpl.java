@@ -4,6 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
+import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaRepository;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
@@ -17,6 +19,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +38,7 @@ public class FileUploadServiceImpl implements FileUploadService{
     private String bucketName; //버킷 이름
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
+    private final EncyclopediaRepository encyclopediaRepository;
 
     //이름 중복 방지를 위해 랜덤으로 생성
     private String changedImageName(String originName) {
@@ -85,9 +90,9 @@ public class FileUploadServiceImpl implements FileUploadService{
     }
 
     @Override
-    public void makeframe(String nickname, MultipartFile[] files) {
+    public void makeframe(long encyId, MultipartFile[] files) {
         //기본 경로
-        String uploadDir = "/home/ubuntu/dir-BE/frame/" + nickname + "/";
+        String uploadDir = "/home/ubuntu/dir-BE/frame/" + encyId + "/";
 
         //폴더가 없으면 생성
         File directory = new File(uploadDir);
@@ -116,16 +121,25 @@ public class FileUploadServiceImpl implements FileUploadService{
             //boolean result = test.delete();
         }
         //닉네임 전달 내용 포함
-        body.add("PK", nickname);
-        // 요청 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        // 요청 엔터티 생성
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        // RestTemplate을 사용하여 POST 요청 전송
-        RestTemplate restTemplate = new RestTemplate();
+        body.add("PK", encyId);
+
+        WebClient webClient = WebClient.builder().build();
         String url = "http://180.64.174.78:5001/uploader"; // 업로드할 URL
-        String response = restTemplate.postForObject(url, requestEntity, String.class);
+
+        webClient.post()
+                .uri(url)
+                .bodyValue(body)
+                .header("Content-Type", "multipart/form-data")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        // 보간된 파일의 url
+        String uploadUrl = "https://grabpic.s3.ap-northeast-2.amazonaws.com/frame/" + encyId + ".mp4";
+        // 파일 URL 저장
+        EncyclopediaEntity encyclopedia = encyclopediaRepository.findByEncyclopediaId(encyId);
+        encyclopedia.setShortsVideoUrl(uploadUrl);
+        encyclopediaRepository.save(encyclopedia);
 
         //사용한 파일 지우기
         for (MultipartFile file : files) {
@@ -141,7 +155,7 @@ public class FileUploadServiceImpl implements FileUploadService{
     @Override
     public void uploadprofileImage(MultipartFile file, String token) throws IOException {
         // 허용할 MIME 타입들 설정 (이미지, 동영상 파일만 허용하는 경우)
-        List<String> allowedMimeTypes = List.of("image/jpeg", "image/png");
+        List<String> allowedMimeTypes = List.of("image/jpg", "image/jpeg", "image/png");
 
         // 허용되지 않는 MIME 타입의 파일은 처리하지 않음
         String fileContentType = file.getContentType();
@@ -169,12 +183,10 @@ public class FileUploadServiceImpl implements FileUploadService{
             throw new IOException(); //커스텀 예외 던짐.
         }
 
-        Optional<UserEntity> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            UserEntity user = optionalUser.get();
-            user.setProfileImage(amazonS3.getUrl(bucketName, changedName).toString());
-            userRepository.save(user);
-        }
+        UserEntity user = userRepository.findByUserId(userId);
+        user.setProfileImage(amazonS3.getUrl(bucketName, changedName).toString());
+        userRepository.save(user);
+
 
     }
 

@@ -81,7 +81,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
     }
 
     @Override
-    public void collectionRegist(CollectionRegistDTO collectionRegistDTO, String token) {
+    public EncyclopediaEntity collectionRegist(CollectionRegistDTO collectionRegistDTO, String token) {
         long userId = jwtUtil.getUserId(token);
 
         EncyclopediaEntity encyclopedia = EncyclopediaEntity.builder()
@@ -101,11 +101,11 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 .content(collectionRegistDTO.getContent())
                 .build();
 
-        UserEntity user = userRepository.findById(userId).get();
+        UserEntity user = userRepository.findByUserId(userId);
         user.increaseCollectCount();
         userRepository.save(user);
 
-        encyclopediaRepository.save(encyclopedia);
+        return encyclopediaRepository.save(encyclopedia);
     }
 
     public ChartDataEntity getChartData(long userId){
@@ -168,7 +168,9 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
             for (EncyclopediaEntity encyclopedia : encyclopediaEntityList) {
                 GalleryPostDTO galleryPostDTO = new GalleryPostDTO();
                 galleryPostDTO.setEncyclopediaId(encyclopedia.getEncyclopediaId());
+                galleryPostDTO.setWriterId(encyclopedia.getUser().getUserId());
                 galleryPostDTO.setWriterNickName(encyclopedia.getUser().getNickname());
+                galleryPostDTO.setProfileImage(encyclopedia.getUser().getProfileImage());
                 galleryPostDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
                 galleryPostDTO.setName(encyclopedia.getBiologyList().getName());
                 galleryPostDTO.setThumnailImageUrl(encyclopedia.getImageUrl());
@@ -183,7 +185,9 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
             for (EncyclopediaEntity encyclopedia : encyclopediaEntityList) {
                 GalleryPostDTO galleryPostDTO = new GalleryPostDTO();
                 galleryPostDTO.setEncyclopediaId(encyclopedia.getEncyclopediaId());
+                galleryPostDTO.setWriterId(encyclopedia.getUser().getUserId());
                 galleryPostDTO.setWriterNickName(encyclopedia.getUser().getNickname());
+                galleryPostDTO.setProfileImage(encyclopedia.getUser().getProfileImage());
                 galleryPostDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
                 galleryPostDTO.setName(encyclopedia.getBiologyList().getName());
                 galleryPostDTO.setThumnailImageUrl(encyclopedia.getImageUrl());

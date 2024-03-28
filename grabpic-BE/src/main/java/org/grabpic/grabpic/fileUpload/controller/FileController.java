@@ -42,9 +42,9 @@ public class FileController {
 
     }
 
-    @PostMapping("/makeframe/{nickname}")
-    public ResponseEntity<?> makeframe(@PathVariable String nickname, @RequestBody MultipartFile[] files) {
-        fileUploadService.makeframe(nickname, files);
+    @PostMapping("/makeframe/{encyId}")
+    public ResponseEntity<?> makeframe(@PathVariable long encyId, @RequestBody MultipartFile[] files) {
+        fileUploadService.makeframe(encyId, files);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
