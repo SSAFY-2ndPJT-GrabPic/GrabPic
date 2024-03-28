@@ -38,8 +38,7 @@ export const Login: React.FC = () => {
           navigate('/');
         }
       },
-      (error) => {
-        console.log(error);
+      () => {
       }
     )
   }
