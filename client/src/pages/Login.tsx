@@ -30,8 +30,7 @@ export const Login: React.FC = () => {
             (response) => {
               setUserInfoState(response);
             },
-            (error) => {
-              console.log(error);
+            () => {
             }
           );
           setIsLogin(true);
