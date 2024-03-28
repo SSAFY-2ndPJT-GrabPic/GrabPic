@@ -1,165 +1,148 @@
-import * as M from "./CustomMap.style"
+import * as M from './CustomMap.style';
 import React, { useEffect, useRef, useState } from 'react';
-import { MapMarker, Map } from "react-kakao-maps-sdk";
-// import useKakaoLoader from "./UseKakaoLoader";
+import { Loader, MapMarker, Map, CustomOverlayMap } from "react-kakao-maps-sdk";
+import { dataLoad } from "../../api/map";
+import * as T from "../../types/CustomMap.d";
 
 // 이미지 모음
-import plusImg from "../../assets/Map/plus.png";
-import minusImg from "../../assets/Map/minus.png";
-import myLocateMarker from "../../assets/Map/myLocateMarker.png";
-import myPositionImg from "../../assets/Map/gps.png";
-import reLoadImg from "../../assets/Map/magnifier.png";
-
-// 위도 경도 프롭처리할 예정.
-interface MapCenter {
-  lat: number;
-  lng: number;
-}
-
-interface MyCenter {
-  lat: number;
-  lng: number;
-}
-
-// 핀 데이터
-interface PinData {
-  encyclopedia: string;
-  name: string;
-  registDate: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  rareCount: 0;
-}
+import plusImg from '../../assets/Map/plus.png';
+import minusImg from '../../assets/Map/minus.png';
+import myLocateMarker from '../../assets/Map/myLocateMarker.png';
+import myPositionImg from '../../assets/Map/gps.png';
+import reLoadImg from '../../assets/Map/magnifier.png';
+import { useNavigate } from 'react-router-dom';
 
 const CustomMap: React.FC = () => {
-  // useKakaoLoader();
+  // 상태
+  const [mapCenter, setMapCenter] = useState<T.MapCenter | null>(null);
+  const [myCenter, setMyCenter] = useState<T.MyCenter | null>(null);
+  const [pinLists, setpinLists] = useState<T.PinData[]>([]);
+  const [isPinActive, setPinActive] = useState<boolean>(false);
+  const [isFilterActive, setFilterActive] = useState<[number, boolean[]]>([ 1, [true, false, false] ]);
+  const [isSetUp, setSetUp] = useState<boolean>(false);
+  const [mapLevel, setMapLevel] = useState<number>(3);
+  const [loadDist, setLoadDist] = useState<number>(0.15);
+  const [loadPage] = useState<number>(1);
 
-  // 현재 좌표 추적 위한 상태
-  const [ mapCenter, setMapCenter ] = useState<MapCenter | null>(null);
+  const navigate = useNavigate();
 
-  const [ myCenter, setMyCenter ] = useState<MyCenter | null>(null);
-
-  // 맵 레벨 변경을 위한 선언
   const mapRef = useRef<kakao.maps.Map>(null);
 
-  // 마커 리스트
-  const [pinLists, setpinLists] = useState<PinData[]>([]);
-
-  // 핀리스트 
-  const [isPinActive, setPinActive] = useState<boolean>(false);
-
-  // 필터 활성화
-  const [isFilterActive, setFilterActive] = useState<boolean[]>([true, false, false]);
-
-  // 더미데이터용 함수
-  /****************************************************/
-  // 랜덤 위도 생성
-  function generateRandomNumberInRange(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-  }
-  // 위도 경도 데이터 반환 (데이터 타입 맞추기)
-  function calculateNewCoordinates(currentLat: number, currentLng: number, radius: number): PinData {
-    // 0~360도 사이에서 랜덤한 각도 생성
-    const randomAngle = generateRandomNumberInRange(0, 360);
-    // 0~반경 사이에서 랜덤한 거리 생성
-    const randomDistance = generateRandomNumberInRange(0, radius);
-  
-    // 새로운 위치의 위도와 경도 계산
-    const encyclopedia = ''
-    const latitude = currentLat + (randomDistance / 111111) * Math.cos(randomAngle);
-    const longitude = currentLng + (randomDistance / (111111 * Math.cos(latitude * Math.PI / 180))) * Math.sin(randomAngle);
-    const name = 'testdata';
-    const address = '';
-    const registDate = new Date().getFullYear() + '-' + ((new Date().getMonth() + 1).toString().padStart(2, '0')) + '-' + new Date().getDate();
-    const rareCount = 0;
-    return { encyclopedia ,name ,registDate ,address ,latitude ,longitude , rareCount };
-  }
-  /*****************************************************/
-
   // 내 위치 찾기
-  /****************************************************/
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
-  }
 
-  function success(position: any) {
-    setMapCenter({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    });
-    setMyCenter({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    });
-    test(position.coords.latitude, position.coords.longitude);
-  }
-
-  function error() {
-    setMapCenter({
-      lat: 37.483034,
-      lng: 126.902435
-    })
-  }
-
-  function test(lat:number, lng:number) : void {
-    const newPinLists: PinData[] = [];
-    for (let i = 0; i < 20; i++) {
-      const newPin = calculateNewCoordinates(lat, lng, 500);
-      newPinLists.push(newPin);
-    }
-    setpinLists(newPinLists);
-  }
-  
-  useEffect(() => {
-    if (mapCenter === null) {
-      getLocation();
-    }
-  }, [mapCenter])
-
-  /****************************************************/
-
-
-  // 주소 변환
-  useEffect(() => {
-    console.log(1)
-    const addressFinder = new kakao.maps.services.Geocoder();
-    console.log(addressFinder)
-    pinLists.forEach((pin) => {
-      console.log(2)
-      addressFinder.coord2Address(pin.latitude, pin.longitude, (result: any, status: any) => {
-        console.log(pin.latitude, pin.longitude)
-        console.log(status)
-        if (status === kakao.maps.services.Status.OK) {
-          const address = result[0].address.address_name;
-          pin.address = address;
-          console.log(address)
-        }
+    function success(position: any) {
+      setMapCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
       });
+      setMyCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    }
+
+    function error() {
+      setMapCenter({
+        lat: 37.483034,
+        lng: 126.902435
+      });
+    }
+  }
+
+  // API
+  const loadPinData = async (
+    position: T.MapCenter | null,
+    range: number,
+    page: number,
+    sort: number
+  ) => {
+
+    if (position === null) {
+      return;
+    }
+
+    const params = {
+      latitude: position.lat,
+      longitude: position.lng,
+      range: range,
+      page: page,
+      limit: 20,
+      sort: sort,
+    };
+
+    await dataLoad(
+      params,
+      (respones) => {
+        console.log(respones.data)
+        setpinLists(respones.data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
+  // API 호출
+  useEffect(() => {
+    if (mapCenter !== null && !isSetUp) {
+      loadPinData(mapCenter, loadDist, loadPage, isFilterActive[0]);
+      setSetUp(true);
+    }
+  }, [mapCenter]);
+
+  // 지도 로드
+  useEffect(() => {
+    const ma = new Loader({
+      appkey: '52b3371f40d9c77376d831422bbae913',
+      libraries: ['clusterer', 'drawing', 'services'],
     });
 
-  }, [pinLists]);
+    ma.load().then(() => {
+      getLocation();
+    });
+  }, []);
 
+  // 기타 함수들
+  const filterChange = (index: number) => {
+    const map = mapRef.current;
+    if (!map) return;
 
-  // 필터를 클릭할 때 호출되는 함수
-  const filterChange = (index : number) => {
-    if (index === 0) setFilterActive([true, false, false])
-    else if (index === 1) setFilterActive([false, true, false])
-    else if (index === 2) setFilterActive([false, false, true])
-  }
-  
+    if (index === 0) {
+      setFilterActive([1, [true, false, false]]);
+    } else if (index === 1) {
+      setFilterActive([2, [false, true, false]]);
+    } else if (index === 2) {
+      setFilterActive([3, [false, false, true]]);
+    }
+    loadPinData(mapCenter, loadDist, loadPage, isFilterActive[0]);
+  };
+
   const zoomIn = () => {
-    const map = mapRef.current
-    if (!map) return
-    map.setLevel(map.getLevel() - 1)
-  }
+    const map = mapRef.current;
+    if (!map) return;
+    map.setLevel(map.getLevel() - 1);
+  };
 
   const zoomOut = () => {
-    const map = mapRef.current
-    if (!map) return
-    map.setLevel(map.getLevel() + 1)
+    const map = mapRef.current;
+    if (!map) return;
+    map.setLevel(map.getLevel() + 1);
+  };
+
+  const centerReset = () => {
+    getLocation();
+  };
+
+  const reLoad = () => {
+    loadPinData(mapCenter, loadDist, loadPage, isFilterActive[0]);
+  };
+
+  const goDetail = (name: string, userId: number, ency: number) => {
+    navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
   }
 
   return (
@@ -169,8 +152,15 @@ const CustomMap: React.FC = () => {
         id="map"
         center= {mapCenter}
         style= {{width: "100%", height: "100%", position: "relative", overflow: "hidden"}}
-        level={3} // 지도의 확대 레벨
+        level={mapLevel} // 지도의 확대 레벨
         ref={mapRef}
+        onZoomChanged={(map) => {
+          const level = map.getLevel();
+          const en = `level${level}` as T.ScaleDistanceKey
+          const dist = T.ScaleDistance[en]
+          setMapLevel(level)
+          setLoadDist(dist)
+        }}
         onCenterChanged={(map) => {
           const newData = map.getCenter()
           setMapCenter({
@@ -182,67 +172,82 @@ const CustomMap: React.FC = () => {
         {myCenter !== null && (
           <MapMarker key={myCenter.lat - myCenter.lng} position={myCenter} image={{src: myLocateMarker, size: { width: 29, height: 42}}}/>
         )}
-        {/* locations을 반복하여 각 위치에 마커 생성 */}
           {pinLists.map((pin, index) => (
-          <MapMarker key={index} position={{ lat: pin.latitude, lng: pin.longitude }}/>
-        ))}
+            <CustomOverlayMap key={index} position={{ lat: pin.latitude, lng: pin.longitude }} clickable={true}>
+              <M.PinDataContainer onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>
+                <M.PinImg src={pin.thumnailImage} />
+              </M.PinDataContainer>
+            </CustomOverlayMap>
+            ))
+          }
       </Map>
       )}
 
       <M.ZoomBtnContainer>
         <M.ZoomBtn onClick={zoomIn}>
-          <M.ZoomImg
-              src={plusImg}
-              alt="확대"
-          />
+          <M.ZoomImg src={plusImg} alt="확대" />
         </M.ZoomBtn>
         <M.ZoomBtn onClick={zoomOut}>
-          <M.ZoomImg
-              src={minusImg}
-              alt="축소"
-          />
+          <M.ZoomImg src={minusImg} alt="축소" />
         </M.ZoomBtn>
       </M.ZoomBtnContainer>
 
       <M.LocationBtn_Container>
-        <M.LocationBtn onClick={zoomIn}>
-          <M.SetCenterImg src={myPositionImg}/>
+        <M.LocationBtn onClick={centerReset}>
+          <M.SetCenterImg src={myPositionImg} />
         </M.LocationBtn>
-        <M.LocationBtn onClick={zoomOut}>
-          <M.ReLoadImg src={reLoadImg}/>
+        <M.LocationBtn onClick={reLoad}>
+          <M.ReLoadImg src={reLoadImg} />
         </M.LocationBtn>
       </M.LocationBtn_Container>
-
 
       <M.ListContainer active={isPinActive}>
         <M.HandleContainer onClick={() => setPinActive(!isPinActive)}>
           <M.DragHandle />
         </M.HandleContainer>
         <M.FilterContainer>
-            <M.FilterButton clickActive={isFilterActive[0]} onClick={() => filterChange(0)}>최신순</M.FilterButton>
-            <M.FilterButton clickActive={isFilterActive[1]} onClick={() => filterChange(1)}>오래된순</M.FilterButton>
-            <M.FilterButton clickActive={isFilterActive[2]} onClick={() => filterChange(2)}>희귀도순</M.FilterButton>
+          <M.FilterButton
+            clickActive={isFilterActive[1][0]}
+            onClick={() => {
+              filterChange(0);
+            }}
+          >
+            최신순
+          </M.FilterButton>
+          <M.FilterButton
+            clickActive={isFilterActive[1][1]}
+            onClick={() => {
+              filterChange(1);
+            }}
+          >
+            오래된순
+          </M.FilterButton>
+          <M.FilterButton
+            clickActive={isFilterActive[1][2]}
+            onClick={() => {
+              filterChange(2);
+            }}
+          >
+            희귀도순
+          </M.FilterButton>
         </M.FilterContainer>
         <M.PinList>
           {pinLists.map((pin, index) => (
-             <M.PinItemContainer key={index}>
-             <M.PinImgContainer src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiiWR3G7uCpLQYKesAWQDjueG8KsZ-OICDBw&s" alt="" />
-             <M.PinDataContainer>
-               <M.PinNameSpan>{pin.name}</M.PinNameSpan>
-               <M.PinInfoContainer>
-                 <M.PinInfoSpan>{pin.registDate}</M.PinInfoSpan>
-                 <M.PinInfoSpan>{pin.address}</M.PinInfoSpan>
-               </M.PinInfoContainer>
-             </M.PinDataContainer>
-           </M.PinItemContainer>
+            <M.ItemContainer key={index}>
+             <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
+             <M.ItemDataContainer>
+               <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
+               <M.ItemInfoContainer>
+                 <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
+                 <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
+               </M.ItemInfoContainer>
+             </M.ItemDataContainer>
+           </M.ItemContainer>
           ))}
-          
         </M.PinList>
       </M.ListContainer>
     </M.MapContainer>
-  )
-} 
+  );
+};
 
-
-export default CustomMap
-
+export default CustomMap;

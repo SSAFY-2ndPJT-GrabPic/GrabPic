@@ -6,7 +6,7 @@ export type UserInfoType = {
   name: string;
   birth: string;
   gender: string;
-  profilePicture: string;
+  profileImage: string;
   subsCount: number;
   collectCount: number;
 };
@@ -15,7 +15,7 @@ export interface OwnerInfoType {
   userId: number;
   nickname: string;
   gender: string;
-  profilePicture: string;
+  profileImage: string;
   subsCount: number;
   collectCount: number;
 }

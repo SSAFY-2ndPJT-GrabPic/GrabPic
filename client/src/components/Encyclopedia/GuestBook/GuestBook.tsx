@@ -10,8 +10,8 @@ interface GuestBookProps {
 const GuestBook: React.FC<GuestBookProps> = ({ userId }) => {
   return (
     <G.Container>
-      <Profile userId={userId} />
       <Reply userId={userId} />
+      <Profile userId={userId} />
     </G.Container>
   );
 };

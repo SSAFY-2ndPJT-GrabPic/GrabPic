@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import loadingDefault from '../../../assets/CollectDetail/loadingGif.gif'
 
 export const Container = styled.div`
   display: flex;
@@ -6,12 +7,18 @@ export const Container = styled.div`
 `
 
 export const RepresentImg = styled.img.attrs(({ src }) => ({
-  src: src, alt: '대표이미지'
+  src: src || loadingDefault, alt: '대표이미지'
 }))`
   width: 100%;
   height: 250px;
   object-fit: cover;
   object-position: 50% 50%;
+
+  ${({ src }) => src === loadingDefault && `
+      height: 150px;
+      object-fit: contain;
+
+  `}
 `
 
 export const InfoWrap = styled.div`

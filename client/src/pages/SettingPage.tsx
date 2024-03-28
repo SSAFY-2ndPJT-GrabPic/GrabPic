@@ -8,7 +8,6 @@ import logoutIconUrl from '../assets/Setting/logout.png'
 import secessionIconUrl from '../assets/Setting/secession.png'
 import { useNavigate } from 'react-router-dom'
 
-
 export default function Setting () {
   const [,setIsModal] = useRecoilState<boolean>(R.isModalState);
   const [,setIsModalNo] = useRecoilState<number>(R.isModalNo);

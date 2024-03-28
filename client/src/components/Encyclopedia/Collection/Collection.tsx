@@ -1,48 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
 import * as C from './Collection.style';
-import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png'
-// import Img1 from '../../../assets/Encyclopedia/dummy/Ellipse 21.png'
-import Img2 from '../../../assets/Encyclopedia/dummy/Ellipse 21-1.png'
-import Img3 from '../../../assets/Encyclopedia/dummy/Ellipse 21-2.png'
-import Img4 from '../../../assets/Encyclopedia/dummy/Ellipse 21-3.png'
-import Img5 from '../../../assets/Encyclopedia/dummy/Ellipse 22.png'
-import Img6 from '../../../assets/Encyclopedia/dummy/Ellipse 22-1.png'
-import Img7 from '../../../assets/Encyclopedia/dummy/Ellipse 22-2.png'
-import Img8 from '../../../assets/Encyclopedia/dummy/Ellipse 22-3.png'
-import Img9 from '../../../assets/Encyclopedia/dummy/Ellipse 23.png'
-import Img10 from '../../../assets/Encyclopedia/dummy/Ellipse 23-1.png'
-import Img11 from '../../../assets/Encyclopedia/dummy/Ellipse 23-2.png'
-import Img12 from '../../../assets/Encyclopedia/dummy/Ellipse 23-3.png'
+import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterState, wantState } from '../../../recoil/atoms/CollectFilterState';
 import Filter from './Filter';
+import { getCollectList } from '../../../api/encyclopedia';
+import { useLocation } from 'react-router-dom';
+import { CollectItem } from '../../../type/CollectType';
 
-interface CollectItem {
-  name: string;
-  url: string;
+interface CollectionProps {
+  userId: number;
 }
 
-const collectList: CollectItem[] = [
-  // {name: '앵무새', url: Img1},
-  {name: '토끼', url: Img2},
-  {name: '햄스터', url: Img3},
-  {name: '리트리버', url: Img4},
-  {name: '해파리', url: Img5},
-  {name: '북극 곰', url: Img6},
-  {name: '기린', url: Img7},
-  {name: '바다 거북', url: Img8},
-  {name: '닭', url: Img9},
-  {name: '독수리', url: Img10},
-  {name: '금붕어', url: Img11},
-  {name: '다람쥐', url: Img12},
-]
+const Collection: React.FC<CollectionProps> = ({ userId }) => {
+  const [isOpen, setIsOpenState] = useRecoilState(filterState);
+  const want = useRecoilValue(wantState);
 
-interface CollectionProps {}
+  const location = useLocation();
+  let userIdData = userId;
 
-const Collection: React.FC<CollectionProps> = () => {
-  const [isOpen, setIsOpenState] = useRecoilState(filterState)
-  const want = useRecoilValue(wantState)
+  const [collectList, setCollectList] = useState<CollectItem[]>([]);
+
+  useEffect(() => {
+    if (location.state) {
+      userIdData = location.state.userId;
+    }
+    getCollectList(
+      userIdData,
+      (res) => {
+        setCollectList(res.data);
+      },
+      (err) => { console.error(err) }
+    )
+  }, []);
 
   return (
     <>
@@ -50,19 +40,24 @@ const Collection: React.FC<CollectionProps> = () => {
       <C.Container>
         <C.BtnAlign>
           <C.FilterBtn onClick={() => setIsOpenState(true)}>
-            <C.FilterImg src={ filterBtnImg } />
+            <C.FilterImg src={filterBtnImg} />
             <C.FilterTxt>{want}</C.FilterTxt>
           </C.FilterBtn>
         </C.BtnAlign>
 
-        <C.CollectContainer className='grid gird-cols-3'>
+        <C.CollectContainer className="grid gird-cols-3">
           {collectList.map((collectItem, index) => (
-            <Link to={`/detail/${collectItem.name}`} key={index}>
-              <C.CollectItem>
-                <C.ItemImg src={collectItem.url} />
-                <C.ItemName>{collectItem.name}</C.ItemName>
-              </C.CollectItem>
-            </Link>
+            <C.CollectItem
+              key={index}
+              to={`/detail/${collectItem.name}`}
+              state={{
+                encyclopediaId: collectItem.encyclopediaId,
+                userId: userId,
+              }}
+            >
+              <C.ItemImg src={collectItem.thumbnailImageUrl} />
+              <C.ItemName>{collectItem.name}</C.ItemName>
+            </C.CollectItem>
           ))}
         </C.CollectContainer>
       </C.Container>

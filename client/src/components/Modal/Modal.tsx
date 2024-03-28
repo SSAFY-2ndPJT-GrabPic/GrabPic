@@ -5,6 +5,8 @@ import * as R from '../../recoil/atoms/SettingState';
 import { isLoginState } from '../../recoil/atoms/UserState';
 import { useNavigate } from 'react-router';
 
+import { userLogout } from '../../api/user';
+
 export const Modal: React.FC = () => {
   const [modalTitle, setModalTitle] = useState('정말 로그아웃하시겠습니까?');
   const [modalText, setModalText] = useState('');
@@ -49,12 +51,21 @@ export const Modal: React.FC = () => {
     setIsModal(false);
   };
 
-  const modalBtnYesClick = () => {
+  const modalBtnYesClick = async () => {
     setIsModal(false);
     if (isModalNo === 1 || isModalNo === 2) {
-      localStorage.removeItem('accessToken');
-      setIsLogin(false);
-      navgiate('/login');
+      await userLogout(
+        () => {
+          // localStorage.removeItem('accessToken');
+          // localStorage.removeItem('recoil-persist');
+          localStorage.clear();
+          setIsLogin(false);
+          navgiate('/login');
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     } else if (isModalNo === 3) {
       navgiate('/camera');
     } else if (isModalNo === 4) {

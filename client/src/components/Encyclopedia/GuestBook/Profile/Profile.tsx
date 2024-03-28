@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as P from './Profile.style';
 import { getUserInfo } from '../../../../api/user';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
-import { checkIsSub } from '../../../../api/subscribe';
+import { cancelSubscribe, checkIsSub, getSubEncys, wantSubscribe } from '../../../../api/subscribe';
 import { OwnerInfoType } from '../../../../type/UserType';
 import { useNavigate } from 'react-router-dom';
+import SubListModal from './SubListModal';
+import { guestBookModalState } from '../../../../recoil/atoms/GuestBookModalState';
 
 interface ProfileProps {
   userId: number;
@@ -18,33 +20,47 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     userId: 0,
     nickname: '',
     gender: '',
-    profilePicture: '',
+    profileImage: '',
     subsCount: 0,
     collectCount: 0,
   });
 
   const [isMine, setIsMine] = useState<boolean>(false);  // 내 도감인지 판별
   const [isSub, setIsSub] = useState<boolean>(false);    // 구독한 사용자인지 판별
+  const [subEncyCount, setSubEncyCount] = useState<number>(0);
 
   useEffect(() => {
     if (userId === myInfo.userId) {   // 내 도감 O -> user정보 갱신 + 내 도감임을 표시
-      setOwnerInfo(myInfo);
       setIsMine(true);
-    } else {
-      getUserInfo(userId)             // 내 도감 X -> 타 유저 정보 조회 및 갱신
-        .then((res: OwnerInfoType) => {
-          setOwnerInfo(res);
-        })
-        .catch((err) => console.error(err));
+      setOwnerInfo(myInfo);
+    } 
+    
+    else {
+      setIsMine(false);               // 내 도감 X -> 타 유저 정보 조회 및 갱신
 
+      getUserInfo(
+        userId,
+        (res) => {
+          setOwnerInfo(res.data);
+        },
+        (err) => console.error(err)
+      )
+      
       checkIsSub(userId)              // 해당 사용자를 구독했는지 판별 및 갱신
         .then((res) => {
           setIsSub(res);
         })
         .catch((err) => console.error(err));
     }
-  }, [userId, myInfo]);
 
+    getSubEncys(userId)
+      .then((res: any) => {
+        setSubEncyCount(res.length)
+      })
+      .catch((err) => console.error(err))
+
+    }, [userId]);
+    
   // 내 도감 O : 회원정보 수정 버튼 컬러
   // 내 도감 X & 구독 O : 구독 중 버튼 컬러
   // 내 도감 X & 구독 X : 구독하기 버튼 컬러
@@ -65,35 +81,63 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
     if (isMine) {
       navigate('/userinfo')
       return 
-    } else if (isSub) {
-      
-      return
-    } else {
+    } 
+    
+    else if (isSub) {
+      cancelSubscribe(ownerInfo.userId)
+      .then((res) => {
+        setIsSub(false)
+        setOwnerInfo({
+          ...ownerInfo,
+          subsCount: res.ownerSubCount
+        })
+      })
+      .catch((err) => alert(err))
 
       return
-    }
+    } 
+    
+    else {
+      wantSubscribe(ownerInfo.userId)
+      .then((res) => {
+        setIsSub(true)
+        setOwnerInfo({
+          ...ownerInfo,
+          subsCount: res.ownerSubCount
+        })
+      })
+      .catch((err) => alert(err))
 
+      return
+    }  
   })
+
+  const [isOpen, setIsOpen] = useRecoilState(guestBookModalState)
 
   return (
     <P.Container>
+      {isOpen.what && <SubListModal/>}
       <P.UserContainer>
-        <P.ProfileImg src={ownerInfo.profilePicture} />
+        <P.ProfileImg src={ownerInfo.profileImage} />
         <P.NickName>{ownerInfo.nickname}</P.NickName>
       </P.UserContainer>
       <P.SubContainer>
         <P.TxtContainer>
           <div>
             <P.NumTxt>{ownerInfo.collectCount}</P.NumTxt>
-            <P.ExplainTxt>수집 수</P.ExplainTxt>
+            <P.ExplainTxt>Collect</P.ExplainTxt>
           </div>
-          <div>
+          <div onClick={() => setIsOpen({ what: 'ency', userId: ownerInfo.userId})}>
+            <P.NumTxt>{subEncyCount}</P.NumTxt>
+            <P.ExplainTxt>Subing</P.ExplainTxt>
+          </div>
+          <div onClick={() => setIsOpen({ what: 'user', userId: ownerInfo.userId})}>
             <P.NumTxt>{ownerInfo.subsCount}</P.NumTxt>
-            <P.ExplainTxt>구독자 수</P.ExplainTxt>
+            <P.ExplainTxt>Suber</P.ExplainTxt>
           </div>
         </P.TxtContainer>
         <P.SubBtn style={btnColor} onClick={() => subBtnHandler()}>
-          {isMine ? '회원 정보 수정' : isSub ? '구독 중' : '구독하기'}
+          {isMine ? '회원 정보 수정' : isSub ? '구독 중' : '구독 하기'}
         </P.SubBtn>
       </P.SubContainer>
     </P.Container>

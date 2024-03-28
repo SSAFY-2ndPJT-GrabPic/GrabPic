@@ -9,10 +9,10 @@ export const LiveVideo = styled.video`
 
 export const CameraExitBtn = styled.button`
   position: fixed;
-  top: 26px;
-  right: 26px;
+  top: 16px;
+  right: 16px;
   z-index: 2;
-  width: 30px;
+  width: 26px;
 `;
 
 export const CameraCanvas = styled.canvas`

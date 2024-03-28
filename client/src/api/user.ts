@@ -1,16 +1,9 @@
 import { AxiosResponse } from 'axios';
 import { noneApi, privateApi } from '../utils/http-commons';
 import { UserInfoType, OwnerInfoType } from '../type/UserType';
+import { MyResponseData } from '../type/ApiResponseType';
 
 const url = 'user';
-
-interface MyResponseData {
-  data: string;
-  status: number;
-  statusText: string;
-  headers: Record<string, string>;
-  config: string;
-}
 
 export const userLogin = async (
   params: { email: string; password: string },
@@ -19,6 +12,14 @@ export const userLogin = async (
 ) => {
   await noneApi.post(`/${url}/login`, params).then(Response).catch(Error);
 };
+
+export const userLogout = async (
+  Response: (Response: AxiosResponse<MyResponseData>) => void,
+  Error: (Error: AxiosResponse<MyResponseData>) => void ) => {
+  await privateApi.post(`/${url}/logout`)
+  .then(Response)
+  .catch(Error);
+}
 
 export const userInfo = async (
   Response: (Response: UserInfoType) => void,
@@ -108,16 +109,11 @@ export const TokenRefresh = async(
   .catch(Error)
 }
 
-export const getUserInfo = async (userId: number) => {
-  try {
-    const res = await privateApi.get(`/${url}/info/${userId}`);
-    console.log(res.data);
-
-    const userDetails: OwnerInfoType = res.data;
-
-    return userDetails;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const getUserInfo = async(
+  userId: number,
+  Response : (Response : AxiosResponse<OwnerInfoType>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.get(`/${url}/info/${userId}`)
+  .then(Response)
+  .catch(Error)
+}
