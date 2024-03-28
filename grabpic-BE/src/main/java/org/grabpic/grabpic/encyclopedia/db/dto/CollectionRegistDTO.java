@@ -13,10 +13,8 @@ import java.time.LocalDateTime;
 public class CollectionRegistDTO {
 
     private long biologyId;
-    private LocalDateTime registDateTime;
     private double latitude;
     private double longitude;
     private String address;
     private String content;
-    private String imageUrl;
 }

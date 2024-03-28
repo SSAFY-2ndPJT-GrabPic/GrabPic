@@ -2,11 +2,11 @@ package org.grabpic.grabpic.encyclopedia.service;
 
 import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.biologyList.db.entity.BiologyListEntity;
-import org.grabpic.grabpic.encyclopedia.db.dto.CollectionRegistDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.GalleryPostDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.InfoDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
+import org.grabpic.grabpic.biologyList.db.repository.BiologyListRepository;
+import org.grabpic.grabpic.encyclopedia.db.dto.*;
+import org.grabpic.grabpic.encyclopedia.db.entity.ChartDataEntity;
 import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
+import org.grabpic.grabpic.encyclopedia.db.repository.ChartDataRepository;
 import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaRepository;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,8 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
     private final EncyclopediaRepository encyclopediaRepository;
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
+    private final BiologyListRepository biologyListRepository;
+    private final ChartDataRepository chartDataRepository;
 
     @Override
     public List<InfoPreviewDTO> previewInfo(long userId) {
@@ -46,6 +50,37 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
     }
 
     @Override
+    public void addChartData(CollectionRegistDTO collectionRegistDTO, String token){
+        long biologyId = collectionRegistDTO.getBiologyId();
+        long userId = jwtUtil.getUserId(token);
+
+        BiologyListEntity entity = biologyListRepository.findById(biologyId).get();
+        ChartDataEntity data;
+        if(chartDataRepository.existsById(userId)){
+            data = chartDataRepository.findById(userId);
+        }else{
+            data = new ChartDataEntity();
+            data.setId(userId);
+        }
+
+        Map<String, NodeDto> nodeMap = data.getNodeData();
+        Map<String, EdgeDto> edgeMap = data.getEdgeData();
+
+        nodeMap.put(entity.getOrdo(), new NodeDto(entity.getOrdo(), entity.getOrdo()));
+        nodeMap.put(entity.getFamilia(), new NodeDto(entity.getFamilia(), entity.getFamilia()));
+        nodeMap.put(entity.getGenus(), new NodeDto(entity.getGenus(), entity.getGenus()));
+        nodeMap.put(entity.getSpecies(), new NodeDto(entity.getSpecies(), entity.getSpecies()));
+        edgeMap.put(entity.getSpecies()+"간선", new EdgeDto(entity.getSpecies()+"간선", entity.getSpecies(), entity.getGenus()));
+        edgeMap.put(entity.getGenus()+"간선", new EdgeDto(entity.getGenus()+"간선", entity.getGenus(), entity.getFamilia()));
+        edgeMap.put(entity.getFamilia()+"간선", new EdgeDto(entity.getFamilia()+"간선", entity.getFamilia(), entity.getFamilia()));
+
+        data.setNodeData(nodeMap);
+        data.setEdgeData(edgeMap);
+
+        chartDataRepository.save(data);
+    }
+
+    @Override
     public void collectionRegist(CollectionRegistDTO collectionRegistDTO, String token) {
         long userId = jwtUtil.getUserId(token);
 
@@ -55,7 +90,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 //보내준 데이터에서 id 추출
                 .biologyList(BiologyListEntity.builder().BiologyListId(collectionRegistDTO.getBiologyId()).build())
                 //등록 날짜
-                .registDateTime(collectionRegistDTO.getRegistDateTime())
+                .registDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 //위도
                 .latitude(collectionRegistDTO.getLatitude())
                 //경도
@@ -64,8 +99,6 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 .address(collectionRegistDTO.getAddress())
                 //메모
                 .content(collectionRegistDTO.getContent())
-                //이미지 Url
-                .imageUrl(collectionRegistDTO.getImageUrl())
                 .build();
 
         UserEntity user = userRepository.findById(userId).get();
@@ -73,6 +106,10 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         userRepository.save(user);
 
         encyclopediaRepository.save(encyclopedia);
+    }
+
+    public ChartDataEntity getChartData(long userId){
+        return chartDataRepository.findById(userId);
     }
 
     @Override
