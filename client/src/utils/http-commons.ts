@@ -58,6 +58,7 @@ authtokenApi.interceptors.request.use((config) => {
   if (token) {
     config.headers['AUTH-TOKEN'] = `${token}`;
   }
+  console.log(config.headers);
   return config;
 });
 

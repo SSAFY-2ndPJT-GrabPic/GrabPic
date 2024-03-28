@@ -13,10 +13,12 @@ export const userLogin = async (
   await noneApi.post(`/${url}/login`, params).then(Response).catch(Error);
 };
 
-export const userLogout = async () => {
+export const userLogout = async (
+  Response: (Response: AxiosResponse<MyResponseData>) => void,
+  Error: (Error: AxiosResponse<MyResponseData>) => void ) => {
   await privateApi.post(`/${url}/logout`)
-  .then((e) => {console.log(e)})
-  .catch((e) => {console.log(e)});
+  .then(Response)
+  .catch(Error);
 }
 
 export const userInfo = async (

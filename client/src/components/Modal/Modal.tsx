@@ -51,14 +51,20 @@ export const Modal: React.FC = () => {
     setIsModal(false);
   };
 
-  const modalBtnYesClick = () => {
+  const modalBtnYesClick = async () => {
     setIsModal(false);
     if (isModalNo === 1 || isModalNo === 2) {
-      userLogout();
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('recoil-persist');
-      setIsLogin(false);
-      navgiate('/login');
+      await userLogout(
+        () => {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('recoil-persist');
+          setIsLogin(false);
+          navgiate('/login');
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     } else if (isModalNo === 3) {
       navgiate('/camera');
     } else if (isModalNo === 4) {
