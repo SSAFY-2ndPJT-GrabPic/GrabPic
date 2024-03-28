@@ -15,6 +15,10 @@ export const ItemImg = styled.img.attrs(({ src }) => ({
   width: 100%;
   /* height: 360px; */
   object-fit: contain;
+
+  ${props => (props.src === 'tmp' || props.src === null) &&`
+    height: 360px;
+  `}
 `
 
 export const NameTag = styled.div`

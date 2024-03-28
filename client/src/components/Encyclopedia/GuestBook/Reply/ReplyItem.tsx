@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as R from './ReplyItem.style'
+import { getUserInfo } from '../../../../api/user';
 
 interface ReplyItemProps {
   guestBookId: number;
@@ -36,11 +37,24 @@ const ReplyItem: React.FC<ReplyItemProps> = ({ writerNickName, writerId, content
       return `${seconds}초 전`;
     }
   }
+
+  const [userImgUrl, setUserImgUrl] = useState<string>('')
+  useEffect(() => {
+    getUserInfo(
+      writerId,
+      (res) => {
+        setUserImgUrl(res.data.profileImage)
+      },
+      (err) => console.error(err)
+    )
+
+  }, [])
+
   
   return (
     <R.Container>
       <R.ImgContainer to={`/encyclopedia/${writerNickName}`} state={{ userId: writerId }}>
-        <R.ProfileImg src={''} />
+        <R.ProfileImg src={userImgUrl} />
       </R.ImgContainer>
       <R.ContentContainer>
         <R.NickNDateContainer>

@@ -18,15 +18,15 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
   })
 
   // 방명록 리스트 조회 api
-  useEffect(() => {
-    getGuestBookData(
-      userId,
-      (res) => {
-        setReplyList(res.data)
-      },
-      (err) => { console.error(err) }
-    )
-  }, [userId])
+  // useEffect(() => {
+  //   getGuestBookData(
+  //     userId,
+  //     (res) => {
+  //       setReplyList(res.data)
+  //     },
+  //     (err) => { console.error(err) }
+  //   )
+  // }, [userId])
 
   // 방명록 작성 input값 변동될 때마다 replyData 갱신
   const handleReplyChange = (e: any) => {
@@ -74,12 +74,54 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
     }
   };
 
+  const [page, setPage] = useState<number>(1)
+
+  const handleObserver = (entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      setPage((prePage) => prePage + 1);
+      console.log(page)
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0, //  Intersection Observer의 옵션, 0일 때는 교차점이 한 번만 발생해도 실행, 1은 모든 영역이 교차해야 콜백 함수가 실행.
+    });
+
+    // 최하단 요소를 관찰 대상으로 지정함
+    const observerTarget = document.getElementById("observer");
+    // 관찰 시작
+    if (observerTarget) {
+      observer.observe(observerTarget);
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchDataHandler();
+  }, [page])
+
+  const fetchDataHandler = async () => {
+    getGuestBookData(
+      userId,
+      page,
+      (res) => {
+        if (res.data.length) {
+          setReplyList((prevList) => prevList.concat(res.data))
+        }
+      },
+      (err) => { console.error(err) }
+    )
+    console.log(replyList)
+  }
+
   return (
     <>
       <R.Container>
         {replyList.map((replyItem, index) => (
           <ReplyItem key={index} {...replyItem} />
         ))}
+        <div id='observer' />
       </R.Container>
       <R.InputContainer>
         <R.InputWrap>

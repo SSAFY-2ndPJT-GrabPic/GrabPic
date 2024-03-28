@@ -7,14 +7,12 @@ const url = 'guestbook';
 
 export const getGuestBookData = async (
   ownerId: number,
+  page: number,
   Response: (Response: AxiosResponse<replyItem[]>) => void,
   Error: (Error: AxiosResponse<MyResponseData>) => void
 ) => {
   await privateApi
-  .get(
-    `/${url}/${ownerId}`, 
-    {params:{'page': 1, 'limit': 200}}
-  )
+  .get(`/${url}/${ownerId}`, {params:{'page': page, 'limit': 20}})
   .then(Response)
   .catch(Error);
 };
