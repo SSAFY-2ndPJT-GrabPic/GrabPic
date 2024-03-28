@@ -19,6 +19,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,18 +122,20 @@ public class FileUploadServiceImpl implements FileUploadService{
         }
         //닉네임 전달 내용 포함
         body.add("PK", encyId);
-        // 요청 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        // 요청 엔터티 생성
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        // RestTemplate을 사용하여 POST 요청 전송
-        RestTemplate restTemplate = new RestTemplate();
+
+        WebClient webClient = WebClient.builder().build();
         String url = "http://180.64.174.78:5001/uploader"; // 업로드할 URL
-        String response = restTemplate.postForObject(url, requestEntity, String.class);
+
+        webClient.post()
+                .uri(url)
+                .bodyValue(body)
+                .header("Content-Type", "multipart/form-data")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
         // 보간된 파일의 url
-        String uploadUrl = "tmp";
+        String uploadUrl = "https://grabpic.s3.ap-northeast-2.amazonaws.com/frame/" + encyId + ".mp4";
         // 파일 URL 저장
         EncyclopediaEntity encyclopedia = encyclopediaRepository.findByEncyclopediaId(encyId);
         encyclopedia.setShortsVideoUrl(uploadUrl);

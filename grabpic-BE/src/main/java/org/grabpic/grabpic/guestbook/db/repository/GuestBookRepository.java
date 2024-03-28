@@ -10,6 +10,7 @@ import java.util.List;
 public interface GuestBookRepository extends JpaRepository<GuestBookEntity, Long> {
 
     List<GuestBookEntity> findByOwner_UserId(long ownerId, Pageable pageable);
+    GuestBookEntity findByGuestBookId(long guestBookId);
 
     long countByOwner_UserId(long ownerId);
 

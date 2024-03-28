@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @ToString
 public class GalleryPostDTO {
     private long encyclopediaId;
+    private long writerId;
+    private String profileImage;
     private String writerNickName;
     private LocalDateTime registDateTime;
     private String thumnailImageUrl;

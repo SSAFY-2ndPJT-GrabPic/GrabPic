@@ -53,6 +53,9 @@ dependencies {
 
 	//Oauth
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	//WebClient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'

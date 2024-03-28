@@ -82,7 +82,7 @@ public class GuestBookServiceImpl implements GuestBookService {
         }
         saveBookDTO.setRegistDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         // 수정이기 때문에 존재하는 id임이 보장되어있음
-        GuestBookEntity guestBookEntity = guestBookRepository.findById(saveBookDTO.getGuestBookId()).get();
+        GuestBookEntity guestBookEntity = guestBookRepository.findByGuestBookId(saveBookDTO.getGuestBookId());
 
         GuestBookEntity modifyResult = GuestBookEntity.builder()
                 .guestBookId(guestBookEntity.getGuestBookId())
