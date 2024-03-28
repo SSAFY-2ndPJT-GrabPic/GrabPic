@@ -36,7 +36,7 @@ public class EncyclopediaController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> collectionAdd(@RequestPart(value = "collectionRegistDTO") CollectionRegistDTO collectionRegistDTO, @RequestPart(value = "files") MultipartFile[] files, HttpServletRequest request, @RequestPart("image") MultipartFile image, @RequestPart("box")ImageBoxDto imageBoxDto) {
+    public ResponseEntity<?> collectionAdd(@RequestPart(value = "info") CollectionRegistDTO collectionRegistDTO, @RequestPart(value = "frame") MultipartFile[] files, HttpServletRequest request, @RequestPart("image") MultipartFile image, @RequestPart("box")ImageBoxDto imageBoxDto) {
         try {
             String token = request.getHeader("access");
             // 기본적인 데이터 저장하고 도감 행을 추가하는 서비스
