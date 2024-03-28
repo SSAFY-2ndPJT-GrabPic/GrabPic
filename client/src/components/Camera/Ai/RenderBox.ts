@@ -49,15 +49,15 @@ export const renderBoxes = (
 
         // 라벨 배경 그리기
         ctx.fillStyle = color;
-        const textWidth = ctx.measureText(klass + " - " + score + "%").width;
+        // const textWidth = ctx.measureText(klass + " - " + score + "%").width;
         const textHeight = parseInt(font, 10); // 10진수 기반
         const yText = y1 - (textHeight + ctx.lineWidth);
-        ctx.fillRect(
-            x1 - 1,
-            yText < 0 ? 0 : yText, // 레이블 박스 오버플로우 처리
-            textWidth + ctx.lineWidth,
-            textHeight + ctx.lineWidth
-        );
+        // ctx.fillRect(
+        //     x1 - 1,
+        //     yText < 0 ? 0 : yText, // 레이블 박스 오버플로우 처리
+        //     textWidth + ctx.lineWidth,
+        //     textHeight + ctx.lineWidth
+        // );
 
         // 라벨 그리기
         ctx.fillStyle = "#ffffff";
