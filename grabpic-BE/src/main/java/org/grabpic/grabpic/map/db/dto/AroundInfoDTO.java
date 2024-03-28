@@ -20,6 +20,6 @@ public class AroundInfoDTO {
     private String address;
     private double latitude;
     private double longitude;
-    private String thumnailImage;
+    private String thumbnailImage;
     private int rareCount;
 }

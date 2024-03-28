@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BiologyListRepository extends JpaRepository<BiologyListEntity, Long> {
 
+    BiologyListEntity findByBiologyListId(long biologyListId);
 }

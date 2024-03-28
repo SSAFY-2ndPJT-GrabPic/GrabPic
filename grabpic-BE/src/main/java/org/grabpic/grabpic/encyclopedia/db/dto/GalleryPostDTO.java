@@ -16,6 +16,6 @@ public class GalleryPostDTO {
     private String profileImage;
     private String writerNickName;
     private LocalDateTime registDateTime;
-    private String thumnailImageUrl;
+    private String thumbnailImageUrl;
     private String name;
 }
