@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import CloseIconUrl from '../../assets/icon/closeX2.png';
 
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
 
 import { detectVideo } from './Ai/Detect';
@@ -19,7 +19,7 @@ export const LivePage: React.FC = () => {
   let interval: string | number | NodeJS.Timeout | undefined;
 
   // 로딩
-  const setLoading = useSetRecoilState(isLoadingState);
+  const [Loading,setLoading] = useRecoilState(isLoadingState);
 
   // 모델 
   const [model, setModel] = useState<{ net: tf.GraphModel | null; inputShape: number[]}>({
@@ -49,7 +49,7 @@ export const LivePage: React.FC = () => {
     // AI 모델 불러오기
     tf.ready().then(async () => {
       const yolo = await tf.loadGraphModel(
-        `yolov8s_web_model/model.json`,
+        `yolov8n_web_model/model.json`,
         {
           onProgress: (val) => {
             setLoading({loading : true, progress : val});
@@ -184,8 +184,10 @@ export const LivePage: React.FC = () => {
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
-      <L.LiveVideo autoPlay muted ref={videoRef} onPlay={() => detectVideo(videoRef.current!, model, canvasRef.current!)}/>
-      <L.CameraCanvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} onClick={() => {testClick()}}/>
+      !Loading && (
+        <L.LiveVideo autoPlay muted ref={videoRef} onPlay={() => detectVideo(videoRef.current!, model, canvasRef.current!)}/>
+        <L.CameraCanvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} onClick={() => {testClick()}}/>
+        )
     </>
   );
 };
