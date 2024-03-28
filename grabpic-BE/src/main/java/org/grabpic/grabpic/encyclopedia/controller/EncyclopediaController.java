@@ -7,6 +7,7 @@ import org.grabpic.grabpic.encyclopedia.db.dto.CollectionRegistDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.GalleryPostDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
+import org.grabpic.grabpic.encyclopedia.db.entity.ChartDataEntity;
 import org.grabpic.grabpic.encyclopedia.service.EncyclopediaService;
 import org.grabpic.grabpic.fileUpload.service.FileUploadService;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,7 @@ public class EncyclopediaController {
             // 몽고 DB에 차트용 데이터 추가하는 서비스
             // AI 서버에 보간용 사진 덩어리 보내는 서비스
             // 메인 사진으로 썸네일용 사진 생성해서 S3에 저장하고 정보에 같이 등록하는 서비스 or S3에서 썸네일 생성
+            encyclopediaService.addChartData(collectionRegistDTO, request.getHeader("access"));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -68,6 +70,16 @@ public class EncyclopediaController {
             return ResponseEntity.status(HttpStatus.OK).body(galleryPostDTOList);
         } catch (Exception e) {
             log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/chart/{userId}")
+    public ResponseEntity<ChartDataEntity> chartData(@PathVariable long userId){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(encyclopediaService.getChartData(userId));
+        } catch (Exception e){
+            log.error(e. getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
