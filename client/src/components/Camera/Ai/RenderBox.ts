@@ -61,7 +61,7 @@ export const renderBoxes = (
         const color = colors.get(classes_data[i]);
         const score = (scores_data[i] * 100).toFixed(1);
 
-        if(parseFloat(score) < 61) continue;
+        // if(parseFloat(score) < 61) continue;
         let [y1, x1, y2, x2] = boxes_data.slice(i * 4, (i + 1) * 4);
         x1 *= ratios[0];
         x2 *= ratios[0];
