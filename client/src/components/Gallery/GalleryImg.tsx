@@ -1,21 +1,16 @@
 import React from 'react';
 import * as G from './GalleryImg.style'
+import { GalleryItemType } from '../../type/GalleryType';
 
 interface GalleryImgProps {
-  galleryItem : {
-    userNickname: string;
-    userProfileImg: string;
-    getDate: number[];
-    indivImgUrl: string;
-    indivName: string;
-  }
+  galleryItem : GalleryItemType
 }
 
 const GalleryImg: React.FC<GalleryImgProps> = ({ galleryItem }) => {
   return (
     <G.Container>
-      <G.ItemImg src={galleryItem.indivImgUrl} />
-      <G.NameTag>{galleryItem.indivName}</G.NameTag>
+      <G.ItemImg src={galleryItem.thumnailImageUrl} />
+      <G.NameTag>{galleryItem.name}</G.NameTag>
     </G.Container>
   );
 };
