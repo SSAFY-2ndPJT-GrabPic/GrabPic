@@ -7,3 +7,9 @@ export type RenderBoxesParams = {
     classes_data: Int32Array; // 클래스 데이터는 Int32Array 타입
     ratios: [number, number]; // ratios는 숫자 튜플 타입
 }
+
+export type ElementsParams = {
+    class : number;
+    score : number;
+    box : {x1 : number,x2 : number, y1 : number, y2 : number};
+}
