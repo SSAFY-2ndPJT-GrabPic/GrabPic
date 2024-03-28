@@ -32,35 +32,6 @@ privateApi.interceptors.request.use((config) => {
   return config;
 });
 
-export const joinApi: AxiosInstance = axios.create({
-  baseURL: baseURL,
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  }
-});
-
-export const textApi: AxiosInstance = axios.create({
-  baseURL: baseURL,
-  headers: {
-    'Content-Type': 'text/plain',
-  }
-});
-
-export const authtokenApi: AxiosInstance = axios.create({
-  baseURL: baseURL,
-  headers: {
-    'AUTH-TOKEN': `${localStorage.getItem('token')}`,
-  }
-})
-
-authtokenApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers['AUTH-TOKEN'] = `${token}`;
-  }
-  return config;
-});
-
 export const profileImgApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
@@ -72,7 +43,7 @@ export const profileImgApi: AxiosInstance = axios.create({
 profileImgApi.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
-    config.headers['AUTH-TOKEN'] = `${token}`;
+    config.headers['access'] = `${token}`;
   }
   return config;
 });

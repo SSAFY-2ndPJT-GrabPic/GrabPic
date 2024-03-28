@@ -11,7 +11,7 @@ import CloseIconUrl from '../../assets/icon/closeX.png';
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
 
-import { detectVideo } from './Ai/Detect';
+import detectVideo from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export const LivePage: React.FC = () => {
   // 로딩
   const setLoading = useSetRecoilState(isLoadingState);
 
-  // 모델
+  // 모델 
   const [model, setModel] = useState<{ net: tf.GraphModel | null; inputShape: number[]}>({
     net: null,
     inputShape: [1, 0, 0, 3],
@@ -32,9 +32,9 @@ export const LivePage: React.FC = () => {
   const capturedLen = useRef(0);
 
   // 비디오
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   // 객체 틀 박스
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   
 
   // webCam을 가져와서 오픈한다.
@@ -153,6 +153,30 @@ export const LivePage: React.FC = () => {
     })
   }
 
+  const testClick = (e : unknown) => {
+    console.log(e);
+
+    if (videoRef.current) {
+
+      // canvas 생성.
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const context = canvas.getContext('2d');
+
+      // canvas를 생성하였다면
+      if (context) {
+
+        // 그린다.
+        context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL('image/png');
+        // 바로 페이지를 넘기면서 이미지를 넘긴다.
+        // console.log(dataURL);
+        // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
+      }
+    }
+  }
+
   return (
     <>
       <button onClick={capture}>test</button>
@@ -160,8 +184,8 @@ export const LivePage: React.FC = () => {
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
-      <L.LiveVideo autoPlay muted ref={videoRef} onPlay={() => detectVideo(videoRef, model, canvasRef)}/>
-      <canvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} />
+      <L.LiveVideo autoPlay muted ref={videoRef} onPlay={() => detectVideo(videoRef.current!, model, canvasRef.current!)}/>
+      <L.CameraCanvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} onClick={(e) => {testClick(e)}}/>
     </>
   );
 };

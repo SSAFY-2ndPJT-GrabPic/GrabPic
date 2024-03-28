@@ -108,6 +108,12 @@ export const TokenRefresh = async(
   .catch(Error)
 }
 
+export const userLogout = async () => {
+  await privateApi.post(`/${url}/logout`)
+  .then((e) => { console.log(e)})
+  .catch((e) => {console.log(e)});
+}
+
 export const getUserInfo = async (userId: number) => {
   try {
     const res = await privateApi.get(`/${url}/info/${userId}`);
