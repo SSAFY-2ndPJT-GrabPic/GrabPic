@@ -35,6 +35,7 @@ public class EncyclopediaEntity {
     private String address;
     private String imageUrl;
     private String thumbnailImageUrl;
+    @Setter
     private String shortsVideoUrl;
 
 }
