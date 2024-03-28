@@ -18,7 +18,9 @@ export const Login: React.FC = () => {
   const setUserInfoState = useSetRecoilState(R.userInfoState);
   
   useEffect(() => {
-    autoCheck();
+    const isLogin = localStorage.getItem('isLogin');
+    if(isLogin === 'true')
+      autoCheck();
   })
 
   const autoCheck = async () => {

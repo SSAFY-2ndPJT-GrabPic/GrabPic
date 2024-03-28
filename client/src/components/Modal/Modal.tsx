@@ -56,8 +56,9 @@ export const Modal: React.FC = () => {
     if (isModalNo === 1 || isModalNo === 2) {
       await userLogout(
         () => {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('recoil-persist');
+          // localStorage.removeItem('accessToken');
+          // localStorage.removeItem('recoil-persist');
+          localStorage.clear();
           setIsLogin(false);
           navgiate('/login');
         },

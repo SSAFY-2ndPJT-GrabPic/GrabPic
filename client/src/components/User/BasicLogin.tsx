@@ -80,6 +80,7 @@ export const BasicLogin: React.FC = () => {
         async (response) => {
           if (response.status === httpStatusCode.OK) {
             localStorage.setItem('accessToken', response.headers.access);
+            localStorage.setItem('isLogin','true');
             await userInfo(
               (response) => {
                 setUserInfoState(response);
