@@ -1,4 +1,4 @@
-import labels from "./labels.json";
+import { Labels } from "./AiLabels";
 
 /**
  * 예측 상자를 렌더링합니다.
@@ -30,7 +30,7 @@ export const renderBoxes = (
 
     for (let i = 0; i < scores_data.length; ++i) {
         // 클래스 임계값을 기반으로 필터링
-        const klass = labels[classes_data[i]];
+        const klass = Labels[classes_data[i]];
         const color = colors.get(classes_data[i]);
         const score = (scores_data[i] * 100).toFixed(1);
 

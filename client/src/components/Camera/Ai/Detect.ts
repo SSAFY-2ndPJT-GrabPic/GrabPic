@@ -1,9 +1,8 @@
 import * as tf from "@tensorflow/tfjs";
 import { renderBoxes } from "./RenderBox";
-import labels from "./labels.json";
 
 // 클래스의 개수
-const numClass: number = labels.length;
+const numClass: number = 80;
 
 /**
  * 모델에 전달되기 전 이미지/프레임을 전처리합니다.
@@ -49,7 +48,7 @@ const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: num
 export const detect = async (source: HTMLImageElement | HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement, callback: () => void = () => { }): Promise<void> => {
     
     if(!model.net)  return;
-    
+
     const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // 모델 너비 및 높이 가져오기
 
     tf.engine().startScope(); // TF 엔진 스코핑 시작
