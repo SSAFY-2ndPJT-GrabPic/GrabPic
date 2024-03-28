@@ -7,6 +7,7 @@ import org.grabpic.grabpic.encyclopedia.db.dto.CollectionRegistDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.GalleryPostDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoDTO;
 import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
+import org.grabpic.grabpic.encyclopedia.db.entity.ChartDataEntity;
 import org.grabpic.grabpic.encyclopedia.service.EncyclopediaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,7 @@ public class EncyclopediaController {
     public ResponseEntity<?> collectionAdd(@RequestBody CollectionRegistDTO collectionRegistDTO, HttpServletRequest request) {
         try {
             encyclopediaService.collectionRegist(collectionRegistDTO, request.getHeader("access"));
+            encyclopediaService.addChartData(collectionRegistDTO, request.getHeader("access"));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -63,6 +65,16 @@ public class EncyclopediaController {
             return ResponseEntity.status(HttpStatus.OK).body(galleryPostDTOList);
         } catch (Exception e) {
             log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/chart/{userId}")
+    public ResponseEntity<ChartDataEntity> chartData(@PathVariable long userId){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(encyclopediaService.getChartData(userId));
+        } catch (Exception e){
+            log.error(e. getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
