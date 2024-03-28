@@ -1,23 +1,47 @@
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import * as E from './EncyclopediaResgist.style';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import * as R from '../../../recoil/atoms/SettingState';
+import { registEncy } from '../../../api/encyclopedia';
+import { UserInfoType } from '../../../type/UserType';
+import { userInfoState } from '../../../recoil/atoms/UserState';
+import { headerState } from '../../../recoil/atoms/EncyHeaderState';
+
+const dummyData = {
+  biologyId : 1,
+  registDate : "2020-01-01",
+  latitude : 36.12123,
+  longitude : 128.121121,
+  address : "우리집 옆집",
+  content : "안녕 나는 메모",
+  imageUrl : "tmp"
+}
 
 export const EncyclopediaResgist: React.FC = () => {
     const {state} = useLocation();
     const image = state.image;
-
+    
     const [,setIsModal] = useRecoilState<boolean>(R.isModalState);
     const [,setIsModalNo] = useRecoilState<number>(R.isModalNo);
-
+    
     const cancelCilck = () => {
-        setIsModal(true);
-        setIsModalNo(3);
+      setIsModal(true);
+      setIsModalNo(3);
     }
+    
+    const navigate = useNavigate();
+    const userInfo = useRecoilValue<UserInfoType>(userInfoState)
+    const setEncyLocate = useSetRecoilState(headerState)
 
     const registClick = () => {
-        // const params = {}
+      registEncy(dummyData,      
+        () => {
+          setEncyLocate('collection')
+          navigate(`/encyclopedia/${userInfo.nickname}`, { state: { userId: userInfo.userId} })
+        },
+        (err) => { console.error(err) }
+      )
     }
 
   return (

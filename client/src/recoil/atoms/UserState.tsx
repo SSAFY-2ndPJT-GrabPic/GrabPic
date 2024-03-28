@@ -1,13 +1,9 @@
 import { atom } from 'recoil';
 import { UserInfoType } from '../../type/UserType';
-import { recoilPersist } from 'recoil-persist'
-
-const { persistAtom } = recoilPersist();
 
 export const isLoginState = atom<boolean>({
   key: 'isLogin',
   default: false,
-  effects_UNSTABLE: [persistAtom],
 });
 
 export const userInfoState = atom<UserInfoType>({
@@ -19,9 +15,8 @@ export const userInfoState = atom<UserInfoType>({
     nickname: '',
     birth: '',
     gender: '',
-    profilePicture: '',
+    profileImage: '',
     subsCount: 0,
     collectCount: 0
   },
-  effects_UNSTABLE: [persistAtom],
 });
