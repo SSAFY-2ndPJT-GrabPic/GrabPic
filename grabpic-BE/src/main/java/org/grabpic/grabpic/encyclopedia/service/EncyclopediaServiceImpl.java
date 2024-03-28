@@ -88,7 +88,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 //로그인된 사용자의 key값을 가져와서 등록
                 .user(UserEntity.builder().userId(userId).build())
                 //보내준 데이터에서 id 추출
-                .biologyList(BiologyListEntity.builder().BiologyListId(collectionRegistDTO.getBiologyId()).build())
+                .biologyList(BiologyListEntity.builder().biologyListId(collectionRegistDTO.getBiologyId()).build())
                 //등록 날짜
                 .registDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 //위도
@@ -173,7 +173,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 galleryPostDTO.setProfileImage(encyclopedia.getUser().getProfileImage());
                 galleryPostDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
                 galleryPostDTO.setName(encyclopedia.getBiologyList().getName());
-                galleryPostDTO.setThumnailImageUrl(encyclopedia.getImageUrl());
+                galleryPostDTO.setThumbnailImageUrl(encyclopedia.getImageUrl());
                 galleryPostDTOList.add(galleryPostDTO);
             }
         }
@@ -190,7 +190,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
                 galleryPostDTO.setProfileImage(encyclopedia.getUser().getProfileImage());
                 galleryPostDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
                 galleryPostDTO.setName(encyclopedia.getBiologyList().getName());
-                galleryPostDTO.setThumnailImageUrl(encyclopedia.getImageUrl());
+                galleryPostDTO.setThumbnailImageUrl(encyclopedia.getImageUrl());
                 galleryPostDTOList.add(galleryPostDTO);
             }
         }

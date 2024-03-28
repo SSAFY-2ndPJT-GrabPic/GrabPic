@@ -31,9 +31,9 @@ public interface EncyclopediaRepository extends JpaRepository<EncyclopediaEntity
     @Query("SELECT e FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId != :id and e.user.userId != :id")
     List<EncyclopediaEntity> findEncyclopediaDetailsOthers(@Param("id") Long id, Pageable pageable);
 
-//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
+//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumbnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
 //    List<GalleryPostDTO> findEncyclopediaDetailsBySubscriberId(@Param("id") Long id, Pageable pageable);
 //
-//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId != :id and e.user.userId != :id")
+//    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumbnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId != :id and e.user.userId != :id")
 //    List<GalleryPostDTO> findEncyclopediaDetailsOthers(@Param("id") Long id, Pageable pageable);
 }
