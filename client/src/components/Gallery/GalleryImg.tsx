@@ -9,7 +9,7 @@ interface GalleryImgProps {
 const GalleryImg: React.FC<GalleryImgProps> = ({ galleryItem }) => {
   return (
     <G.Container>
-      <G.ItemImg src={galleryItem.thumnailImageUrl} />
+      <G.ItemImg src={galleryItem.thumbnailImageUrl} />
       <G.NameTag>{galleryItem.name}</G.NameTag>
     </G.Container>
   );

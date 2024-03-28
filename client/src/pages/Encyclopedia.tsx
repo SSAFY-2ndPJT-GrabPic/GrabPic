@@ -36,7 +36,7 @@ const Encyclopedia: React.FC<EncyclopediaProps> = ({ userId }) => {
       <EncyHeader />
       <EncyBody>
         {encyLocate === 'chart' ? 
-          <Chart />
+          <Chart userId={userIdData} />
         : encyLocate === 'collection' ? 
           <Collection userId={userIdData} />
         :

@@ -47,6 +47,7 @@ const Gallery: React.FC<GalleryProps> = () => {
           setGalleryList(prevList => prevList.concat(newList))
           setIsLoading(false)
         }
+        console.log(galleryList)
       },
       (err) => {
         console.error(err)

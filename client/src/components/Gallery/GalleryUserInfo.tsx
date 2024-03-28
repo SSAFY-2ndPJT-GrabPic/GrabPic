@@ -37,11 +37,11 @@ const GalleryUserInfo: React.FC<GalleryUserInfoProps> = ({ galleryItem }) => {
   
   return (
     <G.Container>
-      <Link to={`/encyclopedia/${galleryItem.writerNickName}`}>
+      <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}>
         <G.UserProfileImg src={galleryItem.profileImage} />
       </Link>
       <G.UserTxt>
-        <Link to={`/encyclopedia/${galleryItem.writerNickName}`}>
+        <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}>
           <G.NickTxt>{galleryItem.writerNickName}</G.NickTxt>
         </Link>
         <G.DateTxt>{timeTransHandler(galleryItem.registDateTime)}</G.DateTxt>

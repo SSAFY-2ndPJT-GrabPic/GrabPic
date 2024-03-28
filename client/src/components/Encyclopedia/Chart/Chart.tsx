@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as C from './Chart.style';
 import cytoscape, { CytoscapeOptions } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
+// import { getChartList } from '../../../api/encyclopedia';
+import { ChartList } from '../../../type/ChartType';
 cytoscape.use(coseBilkent);
-
-interface ChartProps {}
 
 interface dummyData {
   id: number;
@@ -115,50 +115,56 @@ interface data {
   };
 }
 
+interface ChartProps {
+  userId: number;
+}
+
+// const Chart: React.FC<ChartProps> = ({ userId }) => {
 const Chart: React.FC<ChartProps> = () => {
-  // <C.Chart> 컴포넌트 참조
-  const chartRef = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<HTMLDivElement | null>(null);  // <C.Chart> 컴포넌트 참조
+  const data: data[] = [];   // node + edge 데이터 담을 리스트
+  const [chartList, setChartList] = useState<ChartList>()
 
-  // node + edge 데이터 담을 리스트
-  const data: data[] = [];
-
+  // Chart데이터 받아오기
+  useEffect(() => {
+    // console.log(userId)
+    // getChartList(
+    //   userId,
+    //   (res) => {
+    //     setChartList(res.data)
+    //     console.log(res.data)
+    //   },
+    //   (err) => { console.error(err) }
+    // )
+    setChartList(dummyData)
+  }, [])
+  
   // nodeData와 edgeData에 대한 value를 data 리스트에 담는 작업
-  for (const key of Object.keys(dummyData)) {
-    if (key !== 'id') {
-      for (const value of Object.values((dummyData as any)[key])) {
-        data.push({
-          data: value as {
-            id: string;
-            label: string;
-            url?: string | undefined;
-            source?: string | undefined;
-            target?: string | undefined;
-          },
-        });
+  if (chartList) {
+    for (const key of Object.keys(chartList)) {
+      if (key !== 'id') {
+        for (const value of Object.values((chartList as any)[key])) {
+          data.push({
+            data: value as {
+              id: string;
+              label: string;
+              url?: string | undefined;
+              source?: string | undefined;
+              target?: string | undefined;
+            },
+          });
+        }
       }
     }
   }
 
-  // // rank를 활용하기 위해 data만 입력한 cytoscape 객체
-  // const cy_for_rank = cytoscape({
-  //   elements: data,
-  // });
-
-  // // elements들의 rank들
-  // const pageRank = cy_for_rank.elements().pageRank({});
-
-  // const nodeMaxSize = 50;
-  // const nodeMinSize = 10;
-  // const fontMaxSize = 30;
-  // const fontMinSize = 10;
-
-  useEffect(() => {
+  const fetchChart = async () => {
     if (chartRef.current) {
       const options: CytoscapeOptions = {
         container: chartRef.current,
-
+  
         elements: data,
-
+  
         style: [
           {
             selector: 'node',
@@ -172,7 +178,7 @@ const Chart: React.FC<ChartProps> = () => {
                   ? '#7dd228'
                   : '#b5ec81';
               },
-
+  
               shape: function (ele: any) {
                 return ele.id().endsWith('목')
                   ? 'round-pentagon'
@@ -182,11 +188,11 @@ const Chart: React.FC<ChartProps> = () => {
                   ? 'round-heptagon'
                   : 'round-octagon';
               },
-
+  
               'font-family': 'TmoneyR',
-
+  
               label: 'data(label)',
-
+  
               width: function (ele: any) {
                 return ele.id().endsWith('목')
                   ? 50
@@ -196,7 +202,7 @@ const Chart: React.FC<ChartProps> = () => {
                   ? 30
                   : 20;
               },
-
+  
               height: function (ele) {
                 return ele.id().endsWith('목')
                   ? 50
@@ -206,7 +212,7 @@ const Chart: React.FC<ChartProps> = () => {
                   ? 30
                   : 20;
               },
-
+  
               'font-size': function (ele: any) {
                 return ele.id().endsWith('목')
                   ? 24
@@ -218,29 +224,25 @@ const Chart: React.FC<ChartProps> = () => {
               },
             },
           },
-
+  
           {
             selector: 'edge',
             style: {
               width: 3,
               'line-color': '#BDBDBD',
-              // 'curve-style': 'bezier', // 화살표 추가
-              // 'source-arrow-color': '#ccc', // target -> source로 화살표 방향
-              // 'source-arrow-shape': 'triangle-backcurve', // 화살표 모양 지정
             },
           },
         ],
-
+  
         layout: {
           name: 'cose-bilkent',
           animate: false, // whether to transition the node positions
           fit: true, // whether to fit to viewport
-          // gravityRangeCompound: 1.5,
-          // tile: true,
         } as { name: string; animate: boolean; fit: boolean },
       };
-      const cy = cytoscape(options);
 
+      const cy = cytoscape(options);
+  
       cy.on('tap', function (e) {
         const url = e.target.data('url');
         if (url && url !== '') {
@@ -248,7 +250,12 @@ const Chart: React.FC<ChartProps> = () => {
         }
       });
     }
-  }, []);
+  }
+
+  // chartList 받아와야(=값 변경 돼야) cytoscape 실행
+  useEffect(() => {
+    fetchChart()
+  }, [chartList]);
 
   return (
     <C.Container>

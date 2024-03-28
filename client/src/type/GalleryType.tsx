@@ -4,6 +4,6 @@ export interface GalleryItemType {
   writerNickName: string;
   writerId: string;
   registDateTime: string;
-  thumnailImageUrl: string;
+  thumbnailImageUrl: string;
   name: string;
 }

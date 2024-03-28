@@ -3,6 +3,7 @@ import { privateApi } from '../utils/http-commons';
 import { CollectDetailType, CollectItem, RegistType } from '../type/CollectType';
 import { MyResponseData } from '../type/ApiResponseType';
 import { GalleryItemType } from '../type/GalleryType';
+import { ChartList } from '../type/ChartType';
 
 const url = 'encyclopedia';
 
@@ -45,7 +46,16 @@ export const getGalleryList = async(
   page: number,
   Response : (Response : AxiosResponse<GalleryItemType>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-  await privateApi.get('/encyclopedia/gallery/list', {params:{'page': page, 'limit': 10}})
+  await privateApi.get(`/${url}/gallery/list`, {params:{'page': page, 'limit': 10}})
+  .then(Response)
+  .catch(Error)
+}
+
+export const getChartList = async(
+  userId: number,
+  Response : (Response : AxiosResponse<ChartList>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.get(`/${url}/chart/${userId}`)
   .then(Response)
   .catch(Error)
 }
