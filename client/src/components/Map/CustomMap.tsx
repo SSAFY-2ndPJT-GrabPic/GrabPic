@@ -158,7 +158,7 @@ const CustomMap: React.FC = () => {
   }
 
   const [refreshing, setRefreshing] = useState(false);
-  const [startY, setStartY] = useState(0);
+  const [startY] = useState(0);
   const [isLoadingTop, setIsLoadingTop] = useState(false);
   const [isLoadingBottom, setIsLoadingBottom] = useState(false);
 
