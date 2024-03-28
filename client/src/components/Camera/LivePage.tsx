@@ -11,7 +11,7 @@ import CloseIconUrl from '../../assets/icon/closeX2.png';
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
 
-import detectVideo from './Ai/Detect';
+import { detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export const LivePage: React.FC = () => {
   });
 
   // 이미지 자동 저장.
-  const [capturedImages, setCapturedImages] = useState<string[]>([]);
+  const [, setCapturedImages] = useState<string[]>([]);
   const capturedLen = useRef(0);
 
   // 비디오
@@ -49,7 +49,7 @@ export const LivePage: React.FC = () => {
     // AI 모델 불러오기
     tf.ready().then(async () => {
       const yolo = await tf.loadGraphModel(
-        `yolov8s_web_model/model.json`,
+        `yolov8m_web_model/model.json`,
         {
           onProgress: (val) => {
             setLoading({loading : true, progress : val});
@@ -116,27 +116,27 @@ export const LivePage: React.FC = () => {
 
 
   // 캡쳐 함수
-  const capture = () => {
-    // 비디오 값이 있다면.
-    if (videoRef.current) {
+  // const capture = () => {
+  //   // 비디오 값이 있다면.
+  //   if (videoRef.current) {
 
-      // canvas 생성.
-      const canvas = document.createElement('canvas');
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      const context = canvas.getContext('2d');
+  //     // canvas 생성.
+  //     const canvas = document.createElement('canvas');
+  //     canvas.width = videoRef.current.videoWidth;
+  //     canvas.height = videoRef.current.videoHeight;
+  //     const context = canvas.getContext('2d');
 
-      // canvas를 생성하였다면
-      if (context) {
+  //     // canvas를 생성하였다면
+  //     if (context) {
 
-        // 그린다.
-        context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        const dataURL = canvas.toDataURL('image/png');
-        // 바로 페이지를 넘기면서 이미지를 넘긴다.
-        navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
-      }
-    }
-  };
+  //       // 그린다.
+  //       context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+  //       const dataURL = canvas.toDataURL('image/png');
+  //       // 바로 페이지를 넘기면서 이미지를 넘긴다.
+  //       navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
+  //     }
+  //   }
+  // };
 
   // 닫기 버튼 이전 페이지로 돌아간다.
   const closeBtnClick = () => {
@@ -144,17 +144,16 @@ export const LivePage: React.FC = () => {
   };
 
   
-  // 이미지들 서버 전송 테스트
-  const imgTest = () => {
-    const formData = new FormData();
+  // // 이미지들 서버 전송 테스트
+  // const imgTest = () => {
+  //   const formData = new FormData();
 
-    capturedImages.forEach((image,index) => {
-      formData.append(`image${index}`, image);
-    })
-  }
+  //   capturedImages.forEach((image,index) => {
+  //     formData.append(`image${index}`, image);
+  //   })
+  // }
 
-  const testClick = (e : unknown) => {
-    console.log(e);
+  const testClick = () => {
 
     if (videoRef.current) {
 
@@ -170,6 +169,7 @@ export const LivePage: React.FC = () => {
         // 그린다.
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL('image/png');
+        dataURL;
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
         // console.log(dataURL);
         // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
@@ -179,13 +179,13 @@ export const LivePage: React.FC = () => {
 
   return (
     <>
-      <button onClick={capture}>test</button>
-      <button onClick={imgTest}>testtttt</button>
+      {/* <button onClick={capture}>test</button>
+      <button onClick={imgTest}>testtttt</button> */}
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
       <L.LiveVideo autoPlay muted ref={videoRef} onPlay={() => detectVideo(videoRef.current!, model, canvasRef.current!)}/>
-      <L.CameraCanvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} onClick={(e) => {testClick(e)}}/>
+      <L.CameraCanvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} onClick={() => {testClick()}}/>
     </>
   );
 };
