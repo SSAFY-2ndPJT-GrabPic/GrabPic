@@ -5,6 +5,8 @@ import * as R from '../../recoil/atoms/SettingState';
 import { isLoginState } from '../../recoil/atoms/UserState';
 import { useNavigate } from 'react-router';
 
+import { userLogout } from '../../api/user';
+
 export const Modal: React.FC = () => {
   const [modalTitle, setModalTitle] = useState('정말 로그아웃하시겠습니까?');
   const [modalText, setModalText] = useState('');
@@ -52,7 +54,9 @@ export const Modal: React.FC = () => {
   const modalBtnYesClick = () => {
     setIsModal(false);
     if (isModalNo === 1 || isModalNo === 2) {
+      userLogout();
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('recoil-persist');
       setIsLogin(false);
       navgiate('/login');
     } else if (isModalNo === 3) {

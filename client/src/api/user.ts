@@ -20,6 +20,12 @@ export const userLogin = async (
   await noneApi.post(`/${url}/login`, params).then(Response).catch(Error);
 };
 
+export const userLogout = async () => {
+  await privateApi.post(`/${url}/logout`)
+  .then((e) => {console.log(e)})
+  .catch((e) => {console.log(e)});
+}
+
 export const userInfo = async (
   Response: (Response: UserInfoType) => void,
   Error: (Error: AxiosResponse<MyResponseData>) => void
