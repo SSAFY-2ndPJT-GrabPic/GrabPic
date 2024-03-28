@@ -2,7 +2,7 @@ import * as tf from "@tensorflow/tfjs";
 import { renderBoxes } from "./RenderBox";
 
 // 클래스의 개수
-const numClass: number = 80;
+const numClass: number = 3;
 
 /**
  * 모델에 전달되기 전 이미지/프레임을 전처리합니다.

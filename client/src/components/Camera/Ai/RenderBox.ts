@@ -33,7 +33,8 @@ export const renderBoxes = (
         const klass = Labels[classes_data[i]];
         const color = colors.get(classes_data[i]);
         const score = (scores_data[i] * 100).toFixed(1);
-
+        console.log(score);
+        if(parseFloat(score) < 61) continue;
         let [y1, x1, y2, x2] = boxes_data.slice(i * 4, (i + 1) * 4);
         x1 *= ratios[0];
         x2 *= ratios[0];
@@ -61,7 +62,7 @@ export const renderBoxes = (
 
         // 라벨 그리기
         ctx.fillStyle = "#ffffff";
-        ctx.fillText(klass + " - " + score + "%", x1 - 1, yText < 0 ? 0 : yText);
+        ctx.fillText(klass + " - " + score + "%", x1 - 1, yText < 0 ? 10 : yText);
     }
 };
 
