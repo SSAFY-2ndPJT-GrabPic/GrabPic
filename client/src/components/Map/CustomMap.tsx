@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Loader, MapMarker, Map, CustomOverlayMap } from "react-kakao-maps-sdk";
 import { dataLoad } from "../../api/map";
 import * as T from "../../types/CustomMap.d";
-import { Oval } from 'react-loader-spinner';
 
 // 이미지 모음
 import plusImg from '../../assets/Map/plus.png';
@@ -12,6 +11,7 @@ import myLocateMarker from '../../assets/Map/myLocateMarker.png';
 import myPositionImg from '../../assets/Map/gps.png';
 import reLoadImg from '../../assets/Map/magnifier.png';
 import { useNavigate } from 'react-router-dom';
+
 
 
 const CustomMap: React.FC = () => {
@@ -29,10 +29,8 @@ const CustomMap: React.FC = () => {
   const mapRef = useRef<kakao.maps.Map>(null);
   const filterRef = useRef<number>(1);
   const pageRef = useRef<number>(1);
-  const NoMoreDataRef = useRef<Boolean>(false);
   const listRef = useRef<HTMLDivElement>(null);
-  const topLoaderRef = useRef<HTMLDivElement>(null);
-  const bottomLoaderRef = useRef<HTMLDivElement>(null);
+
   
   // 내 위치 찾기
   function getLocation() {
@@ -83,8 +81,9 @@ const CustomMap: React.FC = () => {
     await dataLoad(
       params,
       (respones) => {
+        console.log(1)
         setpinLists(respones.data);
-        if (pinLists.length < 20) NoMoreDataRef.current = true;
+        console.log('load Done')
       },
       (error) => {
         console.log(error);
@@ -157,79 +156,66 @@ const CustomMap: React.FC = () => {
     navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
   }
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [startY] = useState(0);
-  const [isLoadingTop, setIsLoadingTop] = useState(false);
-  const [isLoadingBottom, setIsLoadingBottom] = useState(false);
+  const [isPrevRefreshing, setIsPrevRefreshing] = useState(false);
+  const [isNextRefreshing, setIsNextRefreshing] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // 상세 페이지로 이동하는 함수
   useEffect(() => {
-    console.log(NoMoreDataRef.current)
-    console.log(pageRef.current)
-    const list = listRef.current;
-    const topLoader = topLoaderRef.current;
-    const bottomLoader = bottomLoaderRef.current;
-    let startY = 0;
-    if (!list || !topLoader || !bottomLoader) return;
-  
-    function handleTouchStart(event : TouchEvent) {
-      startY = event.touches[0].clientY;
-    }
-  
-    function handleTouchMove(event : TouchEvent) {
-      const moveY = event.touches[0].clientY;
-      const pullDistance = moveY - startY;
-      if (pullDistance > 400) {
-        if (pageRef.current === 1) return;
-        handleSwipeUp()
-      }
-      else if (pullDistance < -400) {
-        if (NoMoreDataRef.current === true) return;
-        handleSwipeDown()
-      }
-    }
-  
-    function handleTouchEnd() {
-      if (refreshing) {
-        setTimeout(() => {
-          setRefreshing(false);
-        }, 1000);
-      }
-    }
-  
-    list.addEventListener('touchstart', handleTouchStart);
-    list.addEventListener('touchmove', handleTouchMove);
-    list.addEventListener('touchend', handleTouchEnd);
-  
-    return () => {
-      list.removeEventListener('touchstart', handleTouchStart);
-      list.removeEventListener('touchmove', handleTouchMove);
-      list.removeEventListener('touchend', handleTouchEnd);
+    const handleTouchStart = (e: TouchEvent) => {
+      setStartY(e.touches[0].clientY);
     };
 
-  }, [refreshing, startY]);
+    const handleTouchMove = (e: TouchEvent) => {
+      setCurrentY(e.touches[0].clientY);
+      if (currentY - startY > 150) {
+        setIsDragging(true);
+      }
+      if (currentY - startY < -150) {
+        setIsDragging(true);
+      }
+    };
 
-    // 위로 스와이프 시 로딩 표시
-  const handleSwipeUp = () => {
-    if (NoMoreDataRef.current === true) NoMoreDataRef.current = false;
-    setIsLoadingTop(true);
-    pageRef.current -= 1;
-    reLoad();
-    setTimeout(() => {
-      setIsLoadingTop(false);
-    }, 2000);
-  };
+    const handleTouchEnd = () => {
+        console.log(startY, currentY)
+      if (isDragging && currentY - startY > 100) {
+        setIsPrevRefreshing(true);
+      }
 
-  // 아래로 스와이프 시 로딩 표시
-  const handleSwipeDown = () => {
-    setIsLoadingBottom(true);
-    pageRef.current += 1;
-    reLoad();
-    setTimeout(() => {
-      setIsLoadingBottom(false);
-    }, 2000);
-  };
-  
+      if (isDragging && currentY - startY < -300) {
+        setIsNextRefreshing(true);
+      }
+      setIsDragging(false);
+    };
+
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [currentY, isDragging, startY]);
+
+  useEffect(() => {
+    if (!isPrevRefreshing) {
+      setStartY(0);
+      setCurrentY(0);
+    }
+    setTimeout(()=>{setIsPrevRefreshing(false)}, 1000)
+  }, [isPrevRefreshing]);
+
+  useEffect(() => {
+    if (!isNextRefreshing) {
+        setStartY(750);
+        setCurrentY(750);
+    }
+    setTimeout(()=>{setIsNextRefreshing(false)}, 1000)
+  }, [isNextRefreshing]);
+
   return (
     <M.MapContainer>
       {mapCenter !== null && (
@@ -320,40 +306,20 @@ const CustomMap: React.FC = () => {
         </M.FilterContainer>
 
         <M.PinList ref={listRef}>
-          <M.Loader ref={topLoaderRef} className={`loader ${isLoadingTop ? '' : 'hidden'}`}> 
-            <Oval
-              ariaLabel='loading-indicator'
-              height={20}
-              width={20}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-              color='#50940C'
-              secondaryColor='#50940c75'
-            />
-          </M.Loader>
+          {isPrevRefreshing && <div>Prev...</div>}
           {pinLists.map((pin, index) => (
             <M.ItemContainer key={index}>
-             <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
-             <M.ItemDataContainer>
-               <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
-               <M.ItemInfoContainer>
-                 <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
-                 <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
-               </M.ItemInfoContainer>
-             </M.ItemDataContainer>
-           </M.ItemContainer>
+            <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
+            <M.ItemDataContainer>
+              <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
+              <M.ItemInfoContainer>
+                <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
+                <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
+              </M.ItemInfoContainer>
+            </M.ItemDataContainer>
+          </M.ItemContainer>
           ))}
-          <M.Loader ref={bottomLoaderRef} className={`loader ${isLoadingBottom ? '' : 'hidden'}`}> 
-            <Oval
-              ariaLabel='loading-indicator'
-              height={20}
-              width={20}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-              color='#50940C'
-              secondaryColor='#50940c75'
-            />
-          </M.Loader>
+          {isNextRefreshing && <div>Next...</div>}
         </M.PinList>
 
       </M.ListContainer>
