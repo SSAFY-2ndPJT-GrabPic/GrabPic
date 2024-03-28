@@ -3,10 +3,7 @@ package org.grabpic.grabpic.encyclopedia.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.grabpic.grabpic.encyclopedia.db.dto.CollectionRegistDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.GalleryPostDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.InfoDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
+import org.grabpic.grabpic.encyclopedia.db.dto.*;
 import org.grabpic.grabpic.encyclopedia.db.entity.ChartDataEntity;
 import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
 import org.grabpic.grabpic.encyclopedia.service.EncyclopediaService;
@@ -39,7 +36,7 @@ public class EncyclopediaController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> collectionAdd(@RequestPart("collectionRegistDTO") CollectionRegistDTO collectionRegistDTO, @RequestPart("files") MultipartFile[] files, HttpServletRequest request) {
+    public ResponseEntity<?> collectionAdd(@RequestPart(value = "collectionRegistDTO") CollectionRegistDTO collectionRegistDTO, @RequestPart(value = "files") MultipartFile[] files, HttpServletRequest request, @RequestPart("image") MultipartFile image, @RequestPart("box")ImageBoxDto imageBoxDto) {
         try {
             String token = request.getHeader("access");
             // 기본적인 데이터 저장하고 도감 행을 추가하는 서비스
@@ -49,6 +46,7 @@ public class EncyclopediaController {
             // AI 서버에 보간용 사진 덩어리 보내는 서비스
             fileUploadService.makeframe(encyclopedia.getEncyclopediaId(), files);
             // 메인 사진으로 썸네일용 사진 생성해서 S3에 저장하고 정보에 같이 등록하는 서비스 or S3에서 썸네일 생성
+            fileUploadService.imageResizing(image, imageBoxDto, encyclopedia.getEncyclopediaId());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());

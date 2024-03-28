@@ -2,8 +2,10 @@ package org.grabpic.grabpic.fileUpload.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.grabpic.grabpic.encyclopedia.db.dto.ImageBoxDto;
 import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
 import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaRepository;
 import org.grabpic.grabpic.user.config.JWTUtil;
@@ -22,9 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URLDecoder;
+import java.nio.Buffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -188,6 +192,69 @@ public class FileUploadServiceImpl implements FileUploadService{
         userRepository.save(user);
 
 
+    }
+
+    @Override
+    public void imageResizing(MultipartFile file, ImageBoxDto dto, long encyId) throws IOException {
+        EncyclopediaEntity encyclopedia = encyclopediaRepository.findByEncyclopediaId(encyId);
+        try {
+            //메인 이미지 S3 저장
+            byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+
+            String originName = file.getOriginalFilename(); //원본 이미지 이름
+            String ext = originName.substring(originName.lastIndexOf(".")); //확장자
+
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(bytes.length);
+            objectMetadata.setContentType(file.getContentType());
+
+            // save in S3
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+            PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(
+                    bucketName, "MainImage/" + encyId + ext, byteArrayInputStream, objectMetadata
+            ).withCannedAcl(CannedAccessControlList.PublicRead));
+            byteArrayInputStream.close();
+
+            String uploadUrl = "https://grabpic.s3.ap-northeast-2.amazonaws.com/MainImage/" + encyId + ext;
+            encyclopedia.setImageUrl(uploadUrl);
+
+        } catch (IOException e) {
+            log.error("file upload error " + e.getMessage());
+            throw new IOException(); //커스텀 예외 던짐.
+        }
+
+        try{
+            //썸네일 만들고 S3 저장
+            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+            BufferedImage thumbnail = bufferedImage.getSubimage(dto.getX(), dto.getY(), dto.getW(), dto.getH());
+
+            ByteArrayOutputStream thumbnailOutput = new ByteArrayOutputStream();
+            String imageType = file.getContentType();
+            ImageIO.write(thumbnail, imageType.substring(imageType.indexOf("/")+1), thumbnailOutput);
+
+            String originName = file.getOriginalFilename(); //원본 이미지 이름
+            String ext = originName.substring(originName.lastIndexOf(".")); //확장자
+
+            ObjectMetadata thumbnailMetadata = new ObjectMetadata();
+            byte[] thumbBytes = thumbnailOutput.toByteArray();
+            thumbnailMetadata.setContentLength(thumbBytes.length);
+            thumbnailMetadata.setContentType(imageType);
+
+            InputStream thumbnailInput = new ByteArrayInputStream(thumbBytes);
+            PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(
+                    bucketName, "Thumbnail/" + encyId + ext, thumbnailInput, thumbnailMetadata
+            ).withCannedAcl(CannedAccessControlList.PublicRead));
+
+            thumbnailInput.close();
+            thumbnailOutput.close();
+
+            String uploadUrl = "https://grabpic.s3.ap-northeast-2.amazonaws.com/Thumbnail/" + encyId + ext;
+            encyclopedia.setThumbnailImageUrl(uploadUrl);
+        } catch (IOException e) {
+            log.error("file upload error " + e.getMessage());
+            throw new IOException(); //커스텀 예외 던짐.
+        }
+        encyclopediaRepository.save(encyclopedia);
     }
 
     // 추후 사용을 위한 파일 삭제 코드
