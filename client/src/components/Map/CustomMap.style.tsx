@@ -70,6 +70,7 @@ export const PinList = styled.div`
   flex-direction: column;
   align-items: center;
   padding-bottom: 10px;
+  background-color: aqua;
 `;
 
 export const PinDataContainer = styled.div`
