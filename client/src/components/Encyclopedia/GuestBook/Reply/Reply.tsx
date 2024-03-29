@@ -67,6 +67,7 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
 
   // const handleObserver = (entries: IntersectionObserverEntry[]) => {
   //   const target = entries[0];
+
   //   if (target.isIntersecting) {
   //     setPage((prePage) => prePage + 1);
   //     console.log(page)
@@ -74,9 +75,8 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
   // };
 
   // useEffect(() => {
-  //   const observer = new IntersectionObserver(handleObserver, {
-  //     threshold: 0, //  Intersection Observer의 옵션, 0일 때는 교차점이 한 번만 발생해도 실행, 1은 모든 영역이 교차해야 콜백 함수가 실행.
-  //   });
+  //   //  threshold: Intersection Observer의 옵션, 0일 때는 교차점이 한 번만 발생해도 실행, 1은 모든 영역이 교차해야 콜백 함수가 실행.
+  //   const observer = new IntersectionObserver(handleObserver, { threshold: 0 });
 
   //   // 최하단 요소를 관찰 대상으로 지정함
   //   const observerTarget = document.getElementById("observer");
@@ -101,9 +101,10 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
   //       }
   //     },
   //     (err) => { console.error(err) }
+
   //   )
   // }
-  // 
+  
   // useEffect(() => {
   //   setPage(1)
   //   console.log(page)
@@ -112,8 +113,7 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
   //     userId,
   //     page,
   //     (res) => {
-  //       console.log(res.data)
-  //       console.log(page)
+  //       console.log(page, res.data)
   //       setReplyList(res.data)
   //     },
   //     (err) => { console.error(err) }
@@ -140,7 +140,7 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
         {replyList.map((replyItem, index) => (
           <ReplyItem key={index} {...replyItem} />
         ))}
-        <div id='observer' />
+        <div id='sentinel' />
       </R.Container>
       <R.InputContainer>
         <R.InputWrap>
