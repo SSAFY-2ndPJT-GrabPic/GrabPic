@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Loader, MapMarker, Map, CustomOverlayMap } from "react-kakao-maps-sdk";
 import { dataLoad } from "../../api/map";
 import * as T from "../../types/CustomMap.d";
-import { Oval } from 'react-loader-spinner';
 
 // 이미지 모음
 import plusImg from '../../assets/Map/plus.png';
@@ -12,6 +11,7 @@ import myLocateMarker from '../../assets/Map/myLocateMarker.png';
 import myPositionImg from '../../assets/Map/gps.png';
 import reLoadImg from '../../assets/Map/magnifier.png';
 import { useNavigate } from 'react-router-dom';
+
 
 
 const CustomMap: React.FC = () => {
@@ -24,15 +24,13 @@ const CustomMap: React.FC = () => {
   const [isSetUp, setSetUp] = useState<boolean>(false);
   const [mapLevel, setMapLevel] = useState<number>(3);
   const [loadDist, setLoadDist] = useState<number>(0.15);
-  // const [loadPage, setLoadPage] = useState<number>(1);
 
   const navigate = useNavigate();
   const mapRef = useRef<kakao.maps.Map>(null);
   const filterRef = useRef<number>(1);
   const pageRef = useRef<number>(1);
   const listRef = useRef<HTMLDivElement>(null);
-  const topLoaderRef = useRef<HTMLDivElement>(null);
-  const bottomLoaderRef = useRef<HTMLDivElement>(null);
+
   
   // 내 위치 찾기
   function getLocation() {
@@ -70,7 +68,7 @@ const CustomMap: React.FC = () => {
     if (position === null) {
       return;
     }
-    console.log('get')
+
     const params = {
       latitude: position.lat,
       longitude: position.lng,
@@ -83,8 +81,9 @@ const CustomMap: React.FC = () => {
     await dataLoad(
       params,
       (respones) => {
+        console.log(1)
         setpinLists(respones.data);
-        
+        console.log('load Done')
       },
       (error) => {
         console.log(error);
@@ -157,79 +156,67 @@ const CustomMap: React.FC = () => {
     navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
   }
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [startY] = useState(0);
-  const [isLoadingTop, setIsLoadingTop] = useState(false);
-  const [isLoadingBottom, setIsLoadingBottom] = useState(false);
+  const [isPrevRefreshing, setIsPrevRefreshing] = useState(false);
+  const [isNextRefreshing, setIsNextRefreshing] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // 상세 페이지로 이동하는 함수
   useEffect(() => {
-    const list = listRef.current;
-    const topLoader = topLoaderRef.current;
-    const bottomLoader = bottomLoaderRef.current;
-  
-    if (!list || !topLoader || !bottomLoader) return;
-  
-    let startY = 0;
-  
-    function handleTouchStart(event : TouchEvent) {
-      startY = event.touches[0].clientY;
-    }
-  
-    function handleTouchMove(event : TouchEvent) {
-      const moveY = event.touches[0].clientY;
-      const pullDistance = moveY - startY;
-      event.preventDefault();
-      if (pullDistance > 400) {
-        console.log(pullDistance, '위로')
-        handleSwipeUp()
-      }
-      else if (pullDistance < -400) {
-        console.log(pullDistance, '아래로')
-        handleSwipeDown()
-      }
-    }
-  
-    function handleTouchEnd() {
-      if (refreshing) {
-        setTimeout(() => {
-          setRefreshing(false);
-        }, 1000);
-      }
-    }
-  
-    list.addEventListener('touchstart', handleTouchStart);
-    list.addEventListener('touchmove', handleTouchMove);
-    list.addEventListener('touchend', handleTouchEnd);
-  
-    return () => {
-      list.removeEventListener('touchstart', handleTouchStart);
-      list.removeEventListener('touchmove', handleTouchMove);
-      list.removeEventListener('touchend', handleTouchEnd);
+    const handleTouchStart = (e: TouchEvent) => {
+      setStartY(e.touches[0].clientY);
     };
-  }, [refreshing, pinLists, startY]);
-    // 위로 스와이프 시 로딩 표시
-  const handleSwipeUp = () => {
-    setIsLoadingTop(true);
-    // 여기서 필요한 데이터를 로드하는 비동기 작업 수행
 
-    // 예시로 setTimeout을 사용해 2초 후 로딩 표시 제거
-    setTimeout(() => {
-      setIsLoadingTop(false);
-    }, 2000);
-  };
+    const handleTouchMove = (e: TouchEvent) => {
+      
+      setCurrentY(e.touches[0].clientY);
+      if (currentY - startY > 150) {
+        setIsDragging(true);
+      }
+      if (currentY - startY < -150) {
+        setIsDragging(true);
+      }
+    };
 
-  // 아래로 스와이프 시 로딩 표시
-  const handleSwipeDown = () => {
-    setIsLoadingBottom(true);
-    // 여기서 필요한 데이터를 로드하는 비동기 작업 수행
+    const handleTouchEnd = () => {
+      console.log(startY, currentY)
+      if (isDragging && currentY - startY > 200 && startY > 400) {
+        setIsPrevRefreshing(true);
+      }
 
-    // 예시로 setTimeout을 사용해 2초 후 로딩 표시 제거
-    setTimeout(() => {
-      setIsLoadingBottom(false);
-    }, 2000);
-  };
-  
+      if (isDragging && currentY - startY < -200 && startY > 650) {
+        setIsNextRefreshing(true);
+      }
+      setIsDragging(false);
+    };
+
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [currentY, isDragging, startY]);
+
+  useEffect(() => {
+    if (!isPrevRefreshing) {
+      setStartY(0);
+      setCurrentY(0);
+    }
+    setTimeout(()=>{setIsPrevRefreshing(false)}, 1000)
+  }, [isPrevRefreshing]);
+
+  useEffect(() => {
+    if (!isNextRefreshing) {
+      setStartY(0);
+      setCurrentY(0);
+    }
+    setTimeout(()=>{setIsNextRefreshing(false)}, 1000)
+  }, [isNextRefreshing]);
+
   return (
     <M.MapContainer>
       {mapCenter !== null && (
@@ -318,41 +305,22 @@ const CustomMap: React.FC = () => {
             희귀도순
           </M.FilterButton>
         </M.FilterContainer>
+
         <M.PinList ref={listRef}>
-          <div ref={topLoaderRef} style={{ display: isLoadingTop ? 'block' : 'none' }}> 
-            <Oval
-              ariaLabel='loading-indicator'
-              height={40}
-              width={40}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-              color='#50940C'
-              secondaryColor='#50940c75'
-            />
-          </div>
+          {isPrevRefreshing && <div>Prev...</div>}
           {pinLists.map((pin, index) => (
             <M.ItemContainer key={index}>
-             <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
-             <M.ItemDataContainer>
-               <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
-               <M.ItemInfoContainer>
-                 <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
-                 <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
-               </M.ItemInfoContainer>
-             </M.ItemDataContainer>
-           </M.ItemContainer>
+            <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
+            <M.ItemDataContainer>
+              <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
+              <M.ItemInfoContainer>
+                <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
+                <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
+              </M.ItemInfoContainer>
+            </M.ItemDataContainer>
+          </M.ItemContainer>
           ))}
-          <div ref={bottomLoaderRef} style={{ display: isLoadingBottom ? 'block' : 'none' }}> 
-            <Oval
-              ariaLabel='loading-indicator'
-              height={40}
-              width={40}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-              color='#50940C'
-              secondaryColor='#50940c75'
-            />
-          </div>
+          {isNextRefreshing && <div>Next...</div>}
         </M.PinList>
 
       </M.ListContainer>

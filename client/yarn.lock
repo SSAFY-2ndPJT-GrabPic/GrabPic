@@ -4274,6 +4274,11 @@ react-loader-spinner@^6.1.6:
     react-is "^18.2.0"
     styled-components "^6.1.2"
 
+react-queue@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-queue/-/react-queue-0.6.1.tgz#5f209fe3e46863cf4666aa3ef232e6885dbef18c"
+  integrity sha512-vbCbYM3AcGnxAEoPLSwUt/zs/mG22dSVnz441nRJHhdHJAez6gCAfGPg6uKOJDEWwG3P90nSdMWxMyy1Py+Nrw==
+
 react-router-dom@^6.22.3:
   version "6.22.3"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.22.3.tgz#9781415667fd1361a475146c5826d9f16752a691"
