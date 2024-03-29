@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -38,6 +39,10 @@ public class EncyclopediaController {
     @PostMapping("/add")
     public ResponseEntity<?> collectionAdd(@RequestPart(value = "info") CollectionRegistDTO collectionRegistDTO, @RequestPart(value = "frame") MultipartFile[] files, HttpServletRequest request, @RequestPart("image") MultipartFile image, @RequestPart("box")ImageBoxDto imageBoxDto) {
         try {
+            log.info("collectionDto : " + collectionRegistDTO.toString());
+            log.info("files : " + Arrays.toString(files));
+            log.info("image : " + image);
+            log.info("box : " + imageBoxDto.toString());
             String token = request.getHeader("access");
             // 기본적인 데이터 저장하고 도감 행을 추가하는 서비스
             EncyclopediaEntity encyclopedia = encyclopediaService.collectionRegist(collectionRegistDTO, token);

@@ -1,6 +1,7 @@
 package org.grabpic.grabpic.encyclopedia.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.grabpic.grabpic.biologyList.db.entity.BiologyListEntity;
 import org.grabpic.grabpic.biologyList.db.repository.BiologyListRepository;
 import org.grabpic.grabpic.encyclopedia.db.dto.*;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EncyclopediaServiceImpl implements EncyclopediaService{
@@ -51,6 +53,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 
     @Override
     public void addChartData(CollectionRegistDTO collectionRegistDTO, String token){
+        log.info("addChartData : " + collectionRegistDTO.toString());
         long biologyId = collectionRegistDTO.getBiologyId();
         long userId = jwtUtil.getUserId(token);
 
@@ -76,12 +79,13 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 
         data.setNodeData(nodeMap);
         data.setEdgeData(edgeMap);
-
+        log.info("End of addChartData");
         chartDataRepository.save(data);
     }
 
     @Override
     public EncyclopediaEntity collectionRegist(CollectionRegistDTO collectionRegistDTO, String token) {
+        log.info("RegistCollection");
         long userId = jwtUtil.getUserId(token);
 
         EncyclopediaEntity encyclopedia = EncyclopediaEntity.builder()
@@ -104,7 +108,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         UserEntity user = userRepository.findByUserId(userId);
         user.increaseCollectCount();
         userRepository.save(user);
-
+        log.info("End of RegistCollection");
         return encyclopediaRepository.save(encyclopedia);
     }
 

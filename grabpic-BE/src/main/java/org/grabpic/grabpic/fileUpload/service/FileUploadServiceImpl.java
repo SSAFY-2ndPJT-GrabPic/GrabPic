@@ -95,6 +95,7 @@ public class FileUploadServiceImpl implements FileUploadService{
 
     @Override
     public void makeframe(long encyId, MultipartFile[] files) {
+        log.info("makeFrame");
         //기본 경로
         String uploadDir = "/home/ubuntu/dir-BE/frame/" + encyId + "/";
 
@@ -154,6 +155,7 @@ public class FileUploadServiceImpl implements FileUploadService{
         //사용한 디렉토리 지우기
         File dir = new File(uploadDir);
         boolean dirDel = dir.delete();
+        log.info("End of makeFrame");
     }
 
     @Override
@@ -196,6 +198,7 @@ public class FileUploadServiceImpl implements FileUploadService{
 
     @Override
     public void imageResizing(MultipartFile file, ImageBoxDto dto, long encyId) throws IOException {
+        log.info("ImageResizing");
         EncyclopediaEntity encyclopedia = encyclopediaRepository.findByEncyclopediaId(encyId);
         try {
             //메인 이미지 S3 저장
@@ -254,6 +257,7 @@ public class FileUploadServiceImpl implements FileUploadService{
             log.error("file upload error " + e.getMessage());
             throw new IOException(); //커스텀 예외 던짐.
         }
+        log.info("End of ImageResizing");
         encyclopediaRepository.save(encyclopedia);
     }
 
