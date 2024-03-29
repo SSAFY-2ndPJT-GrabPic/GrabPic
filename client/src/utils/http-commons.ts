@@ -32,48 +32,19 @@ privateApi.interceptors.request.use((config) => {
   return config;
 });
 
-export const joinApi: AxiosInstance = axios.create({
+
+export const formDataApi: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     'Content-Type': 'multipart/form-data',
-  }
-});
-
-export const textApi: AxiosInstance = axios.create({
-  baseURL: baseURL,
-  headers: {
-    'Content-Type': 'text/plain',
-  }
-});
-
-export const authtokenApi: AxiosInstance = axios.create({
-  baseURL: baseURL,
-  headers: {
-    'AUTH-TOKEN': `${localStorage.getItem('token')}`,
-  }
-})
-
-authtokenApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers['AUTH-TOKEN'] = `${token}`;
-  }
-  console.log(config.headers);
-  return config;
-});
-
-export const profileImgApi: AxiosInstance = axios.create({
-  baseURL: baseURL,
-  headers: {
-    'Content-Type': 'multipart/form-data',
-    'AUTH-TOKEN': `${localStorage.getItem('token')}`,
+    'access': `${localStorage.getItem('accessToken')}`,
   },
 });
 
-profileImgApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+formDataApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken');
   if (token) {
-    config.headers['AUTH-TOKEN'] = `${token}`;
+    config.headers['access'] = `${token}`;
   }
   return config;
 });

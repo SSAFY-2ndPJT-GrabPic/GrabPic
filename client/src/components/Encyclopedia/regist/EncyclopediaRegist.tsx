@@ -21,7 +21,10 @@ const dummyData = {
 export const EncyclopediaResgist: React.FC = () => {
     const {state} = useLocation();
     const image = state.image;
-    
+    const info = state.info;
+    const autoSave = state.autoSave;
+    // const boxXY = localStorage.getItem('boxXY');
+
     const [,setIsModal] = useRecoilState<boolean>(R.isModalState);
     const [,setIsModalNo] = useRecoilState<number>(R.isModalNo);
     
@@ -35,14 +38,53 @@ export const EncyclopediaResgist: React.FC = () => {
     const setEncyLocate = useSetRecoilState(headerState)
 
     const registClick = () => {
-      registEncy(dummyData,      
-        () => {
+
+      const boxParmas = {
+        x : 99,
+        y : 99,
+        h : 99,
+        w : 99,
+      }
+      const dummyBlob = new Blob([JSON.stringify(dummyData)], {type: "application/json"}) 
+      const boxBlob = new Blob([JSON.stringify(boxParmas)], {type: "application/json"}) 
+
+      const formData = new FormData();
+
+      // const frameArr: Blob[] = [];
+
+      autoSave.forEach((url : string) => {
+        const blob = dataURLtoBlob(url);
+        // console.log(blob);
+        // frameArr.push(blob)
+        formData.append('frame',blob);
+      })
+
+      const blob = dataURLtoBlob(image);
+      // formData.append('frame',image);
+      formData.append('image', blob);
+      formData.append('info', dummyBlob);
+      formData.append('box',boxBlob);
+
+      registEncy(formData,      
+        (res) => {
+          console.log(res);
           setEncyLocate('collection')
           navigate(`/encyclopedia/${userInfo.nickname}`, { state: { userId: userInfo.userId} })
         },
         (err) => { console.error(err) }
       )
     }
+
+  // 데이터 URL을 Blob으로 변환하는 함수
+  const dataURLtoBlob = (dataURL: string): Blob => {
+    const byteString = atob(dataURL.split(',')[1]);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([uint8Array], { type: 'image/jpeg' });
+  };
 
   return (
     <>
@@ -54,16 +96,11 @@ export const EncyclopediaResgist: React.FC = () => {
       <E.MainContainer>
         <div className='flex flex-col justify-center items-center mt-5'>
             <E.RegistImg src={image}/>
-            <E.RegistName className='mt-2'>고양이</E.RegistName>
+            <E.RegistName className='mt-2'>{info.name}</E.RegistName>
         </div>
         <E.ObjectInfoContainer className='mt-5'>
             <E.ObjectTitle>개체설명</E.ObjectTitle>
-            <E.ObjectContent>  개체설명이다이건 개체설명이다이건 개체설명이다이건 개체설명이다이건 개체설명이다이건 개체설명이다이건 개체설명이다</E.ObjectContent>
-            <E.ObjectLine></E.ObjectLine>
-        </E.ObjectInfoContainer>
-        <E.ObjectInfoContainer className='mt-5'>
-            <E.ObjectTitle>수집일자</E.ObjectTitle>
-            <E.ObjectContent> </E.ObjectContent>
+            <E.ObjectContent>{info.content}</E.ObjectContent>
             <E.ObjectLine></E.ObjectLine>
         </E.ObjectInfoContainer>
         <E.ObjectInfoContainer className='mt-5'>

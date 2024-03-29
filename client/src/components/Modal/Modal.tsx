@@ -67,6 +67,8 @@ export const Modal: React.FC = () => {
         }
       );
     } else if (isModalNo === 3) {
+      localStorage.removeItem('biologyId');
+      localStorage.removeItem('boxXY');
       navgiate('/camera');
     } else if (isModalNo === 4) {
       navgiate('/resetpw', { state: { page: 'resetpw' } });
