@@ -4,7 +4,7 @@ export const LiveVideo = styled.video`
     position: fixed;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    /* object-fit: cover; */
 `
 
 export const CameraExitBtn = styled.button`

@@ -50,17 +50,17 @@ export const EncyclopediaResgist: React.FC = () => {
 
       const formData = new FormData();
 
-      // const frameArr: Blob[] = [];
+      const frameArr: Blob[] = [];
 
       autoSave.forEach((url : string) => {
         const blob = dataURLtoBlob(url);
         // console.log(blob);
-        // frameArr.push(blob)
-        formData.append('frame',blob);
+        frameArr.push(blob)
+        // formData.append('frame',blob);
       })
 
       const blob = dataURLtoBlob(image);
-      // formData.append('frame',image);
+      formData.append('frame',new Blob(frameArr, { type: 'image/jpeg' }));
       formData.append('image', blob);
       formData.append('info', dummyBlob);
       formData.append('box',boxBlob);

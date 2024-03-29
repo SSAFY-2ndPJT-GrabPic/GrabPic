@@ -32,7 +32,7 @@ export const LivePage: React.FC = () => {
 
   // 이미지 자동 저장.
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
-  // const capturedLen = useRef(0);
+  const capturedLen = useRef(0);
 
   // 비디오
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -73,7 +73,7 @@ export const LivePage: React.FC = () => {
     });
 
     // 0.1초 간격 저장.
-    // autoSave();
+    autoSave();
 
     // webCam 닫는다.
     return () => {
@@ -89,40 +89,40 @@ export const LivePage: React.FC = () => {
     }
   }, [model, modelLoaded]);
 
-  // const autoSave = () => {
-  //   interval = setInterval(() => {
-  //     if (videoRef.current) {
-  //       // canvas 생성.
-  //       const canvas = document.createElement('canvas');
-  //       canvas.width = videoRef.current.videoWidth;
-  //       canvas.height = videoRef.current.videoHeight;
-  //       const context = canvas.getContext('2d');
+  const autoSave = () => {
+    interval = setInterval(() => {
+      if (videoRef.current) {
+        // canvas 생성.
+        const canvas = document.createElement('canvas');
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
+        const context = canvas.getContext('2d');
 
-  //       // canvas를 생성하였다면
-  //       if (context) {
-  //         // 그린다.
-  //         context.drawImage(
-  //           videoRef.current,
-  //           0,
-  //           0,
-  //           canvas.width,
-  //           canvas.height
-  //         );
-  //         const dataURL = canvas.toDataURL('image/png');
+        // canvas를 생성하였다면
+        if (context) {
+          // 그린다.
+          context.drawImage(
+            videoRef.current,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+          const dataURL = canvas.toDataURL('image/png');
 
-  //         if (capturedLen.current >= 20) {
-  //           setCapturedImages((prevImages) => [
-  //             ...prevImages.slice(1),
-  //             dataURL,
-  //           ]);
-  //         } else {
-  //           setCapturedImages((prevImages) => [...prevImages, dataURL]);
-  //           capturedLen.current++;
-  //         }
-  //       }
-  //     }
-  //   }, 100);
-  // };
+          if (capturedLen.current >= 20) {
+            setCapturedImages((prevImages) => [
+              ...prevImages.slice(1),
+              dataURL,
+            ]);
+          } else {
+            setCapturedImages((prevImages) => [...prevImages, dataURL]);
+            capturedLen.current++;
+          }
+        }
+      }
+    }, 100);
+  };
 
   // 캡쳐 함수
   const capture = () => {
@@ -144,7 +144,7 @@ export const LivePage: React.FC = () => {
         clearInterval(interval);
 
         const dataURL = canvas.toDataURL('image/png');
-        setCapturedImages((prevImages) => [...prevImages, dataURL]);
+        
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
         // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
         navigate(`/camera/check`, {
