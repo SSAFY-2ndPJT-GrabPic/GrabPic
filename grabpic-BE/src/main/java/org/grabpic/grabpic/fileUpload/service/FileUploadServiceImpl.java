@@ -233,13 +233,15 @@ public class FileUploadServiceImpl implements FileUploadService{
             log.info("x : " + dto.getX() + " " + "y : " + dto.getY() + " w : " + dto.getW() + " h : " + dto.getH());
             BufferedImage thumbnail = bufferedImage.getSubimage(dto.getX(), dto.getY(), dto.getW(), dto.getH());
 
+            String originName = file.getOriginalFilename(); //원본 이미지 이름
+            String ext = originName.substring(originName.lastIndexOf(".")); //확장자
+
             ByteArrayOutputStream thumbnailOutput = new ByteArrayOutputStream();
             String imageType = file.getContentType();
             System.out.println("imageType : " + imageType);
-            ImageIO.write(thumbnail, imageType.substring(imageType.indexOf("/")+1), thumbnailOutput);
+            ImageIO.write(thumbnail, ext.substring(ext.indexOf(".")+1), thumbnailOutput);
 
-            String originName = file.getOriginalFilename(); //원본 이미지 이름
-            String ext = originName.substring(originName.lastIndexOf(".")); //확장자
+
 
             ObjectMetadata thumbnailMetadata = new ObjectMetadata();
             byte[] thumbBytes = thumbnailOutput.toByteArray();
