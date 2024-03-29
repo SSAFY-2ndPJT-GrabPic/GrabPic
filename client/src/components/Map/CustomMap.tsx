@@ -168,6 +168,7 @@ const CustomMap: React.FC = () => {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      
       setCurrentY(e.touches[0].clientY);
       if (currentY - startY > 150) {
         setIsDragging(true);
@@ -178,12 +179,12 @@ const CustomMap: React.FC = () => {
     };
 
     const handleTouchEnd = () => {
-        console.log(startY, currentY)
-      if (isDragging && currentY - startY > 100) {
+      console.log(startY, currentY)
+      if (isDragging && currentY - startY > 200 && startY > 400) {
         setIsPrevRefreshing(true);
       }
 
-      if (isDragging && currentY - startY < -300) {
+      if (isDragging && currentY - startY < -200 && startY > 650) {
         setIsNextRefreshing(true);
       }
       setIsDragging(false);
@@ -210,8 +211,8 @@ const CustomMap: React.FC = () => {
 
   useEffect(() => {
     if (!isNextRefreshing) {
-        setStartY(750);
-        setCurrentY(750);
+      setStartY(0);
+      setCurrentY(0);
     }
     setTimeout(()=>{setIsNextRefreshing(false)}, 1000)
   }, [isNextRefreshing]);
