@@ -20,7 +20,7 @@ const GalleryUserInfo: React.FC<GalleryUserInfoProps> = ({ galleryItem }) => {
 
     if (weeks >= 1) {
       // .replace()는 첫번째 문자열만 치환 => "/-/g" //로 감싸진 모든 문자열을 치환해줌 (g = global match)
-      const when = registDateTime.split('T')[0].replace(/-/g, '.')
+      const when = registDateTime ? registDateTime.split('T')[0].replace(/-/g, '.') : ''
       return when;
     } else if (1 == weeks && weeks > 0) {
       return `${weeks}주 전`;
