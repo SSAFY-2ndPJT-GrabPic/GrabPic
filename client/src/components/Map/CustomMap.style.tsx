@@ -119,7 +119,7 @@ export const ItemDataContainer = styled.div`
 
 export const ItemNameSpan = styled.span`
   font-size: 16px;
-  color: #001ba7;
+  color: #3bc600;
   margin-bottom: 7px;
 `;
 
