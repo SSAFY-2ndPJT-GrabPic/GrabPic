@@ -86,9 +86,9 @@ export const LivePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // if(modelLoaded){
-    //   detectVideo(videoRef.current!, model, canvasRef.current!);
-    // }
+    if(modelLoaded){
+      detectVideo(videoRef.current!, model, canvasRef.current!);
+    }
   },[model, modelLoaded])
 
   const autoSave = () => {
@@ -169,8 +169,6 @@ export const LivePage: React.FC = () => {
 
   return (
     <>
-      {/* <button onClick={capture}>test</button>
-      <button onClick={imgTest}>testtttt</button> */}
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
