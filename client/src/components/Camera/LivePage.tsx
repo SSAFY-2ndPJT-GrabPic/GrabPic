@@ -19,7 +19,6 @@ export const LivePage: React.FC = () => {
   // 로딩
   const setLoading = useSetRecoilState(isLoadingState);
 
-
   // 모델이 로드되었음을 나타내는 상태 추가
   const [modelLoaded, setModelLoaded] = useState(false);
   // 모델
@@ -32,7 +31,7 @@ export const LivePage: React.FC = () => {
   });
 
   // 이미지 자동 저장.
-  const [, setCapturedImages] = useState<string[]>([]);
+  const [capturedImages, setCapturedImages] = useState<string[]>([]);
   const capturedLen = useRef(0);
 
   // 비디오
@@ -42,7 +41,6 @@ export const LivePage: React.FC = () => {
 
   // webCam을 가져와서 오픈한다.
   useEffect(() => {
-    
     setLoading({ loading: true, progress: 0 });
     // webCam
     const webCam = new WebCam();
@@ -86,10 +84,10 @@ export const LivePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if(modelLoaded){
+    if (modelLoaded) {
       detectVideo(videoRef.current!, model, canvasRef.current!);
     }
-  },[model, modelLoaded])
+  }, [model, modelLoaded]);
 
   const autoSave = () => {
     interval = setInterval(() => {
@@ -112,7 +110,7 @@ export const LivePage: React.FC = () => {
           );
           const dataURL = canvas.toDataURL('image/png');
 
-          if (capturedLen.current >= 10) {
+          if (capturedLen.current >= 20) {
             setCapturedImages((prevImages) => [
               ...prevImages.slice(1),
               dataURL,
@@ -128,11 +126,10 @@ export const LivePage: React.FC = () => {
 
   // 캡쳐 함수
   const capture = () => {
-    const AiClassNum = localStorage.getItem('AiClassNum');
-    if(!AiClassNum) return ;
+    const AiClassNum = localStorage.getItem('biologyId');
+    if (!AiClassNum) return;
     // 비디오 값이 있다면.
     if (videoRef.current) {
-
       // canvas 생성.
       const canvas = document.createElement('canvas');
       canvas.width = videoRef.current.videoWidth;
@@ -141,14 +138,18 @@ export const LivePage: React.FC = () => {
 
       // canvas를 생성하였다면
       if (context) {
-
         // 그린다.
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        const dataURL = canvas.toDataURL('image/png');
-        
+
         clearInterval(interval);
+
+        const dataURL = canvas.toDataURL('image/png');
+
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
-        navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
+        // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
+        navigate(`/camera/check`, {
+          state: { image: dataURL, autoSave: capturedImages },
+        });
       }
     }
   };
@@ -157,15 +158,6 @@ export const LivePage: React.FC = () => {
   const closeBtnClick = () => {
     navigate(-1);
   };
-
-  // // 이미지들 서버 전송 테스트
-  // const imgTest = () => {
-  //   const formData = new FormData();
-
-  //   capturedImages.forEach((image,index) => {
-  //     formData.append(`image${index}`, image);
-  //   })
-  // }
 
   return (
     <>
@@ -176,7 +168,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        onPlay={() => {detectVideo(videoRef.current!, model, canvasRef.current!)}}
+        onPlay={() => {
+          detectVideo(videoRef.current!, model, canvasRef.current!);
+        }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
