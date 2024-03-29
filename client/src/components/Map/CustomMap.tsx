@@ -3,6 +3,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Loader, MapMarker, Map, CustomOverlayMap } from "react-kakao-maps-sdk";
 import { dataLoad } from "../../api/map";
 import * as T from "../../types/CustomMap.d";
+import loadingGif from '../../assets/Gallery/loadingGif.gif'
+import * as G from '../../pages/Gallery.style'
+
 
 // 이미지 모음
 import plusImg from '../../assets/Map/plus.png';
@@ -24,13 +27,20 @@ const CustomMap: React.FC = () => {
   const [isSetUp, setSetUp] = useState<boolean>(false);
   const [mapLevel, setMapLevel] = useState<number>(3);
   const [loadDist, setLoadDist] = useState<number>(0.15);
+  const [moreData, setMoreData] = useState<boolean>(true);
+  const [isPrevRefreshing, setIsPrevRefreshing] = useState(false);
+  const [isNextRefreshing, setIsNextRefreshing] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
 
   const navigate = useNavigate();
   const mapRef = useRef<kakao.maps.Map>(null);
   const filterRef = useRef<number>(1);
   const pageRef = useRef<number>(1);
   const listRef = useRef<HTMLDivElement>(null);
-
+  
   
   // 내 위치 찾기
   function getLocation() {
@@ -81,9 +91,9 @@ const CustomMap: React.FC = () => {
     await dataLoad(
       params,
       (respones) => {
-        console.log(1)
+        console.log(pageRef.current)
+        if (respones.data.length < 20) setMoreData(false);
         setpinLists(respones.data);
-        console.log('load Done')
       },
       (error) => {
         console.log(error);
@@ -117,7 +127,7 @@ const CustomMap: React.FC = () => {
     if (!map) return;
 
     pageRef.current = 1;
-    console.log(pageRef.current, 'Page')
+    
     if (index === 0) {
       setFilterActive([true, false, false]);
       filterRef.current = 1
@@ -156,35 +166,28 @@ const CustomMap: React.FC = () => {
     navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
   }
 
-  const [isPrevRefreshing, setIsPrevRefreshing] = useState(false);
-  const [isNextRefreshing, setIsNextRefreshing] = useState(false);
-  const [startY, setStartY] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
       setStartY(e.touches[0].clientY);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      
       setCurrentY(e.touches[0].clientY);
-      if (currentY - startY > 150) {
+      if (currentY - startY > 300) {
         setIsDragging(true);
       }
-      if (currentY - startY < -150) {
+      if (currentY - startY < -300) {
         setIsDragging(true);
       }
     };
 
     const handleTouchEnd = () => {
       console.log(startY, currentY)
-      if (isDragging && currentY - startY > 200 && startY > 400) {
+      if (isDragging && currentY - startY > 200 && startY > 400 && pageRef.current > 1) {
         setIsPrevRefreshing(true);
       }
 
-      if (isDragging && currentY - startY < -200 && startY > 650) {
+      if (isDragging && currentY - startY < -200 && startY > 650 && moreData) {
         setIsNextRefreshing(true);
       }
       setIsDragging(false);
@@ -205,17 +208,38 @@ const CustomMap: React.FC = () => {
     if (!isPrevRefreshing) {
       setStartY(0);
       setCurrentY(0);
+    } else {
+      console.log(isPrevRefreshing)
+      setTimeout(()=>{
+        setIsPrevRefreshing(false)
+        if (isPinActive && pageRef.current > 1) {
+          setMoreData(true)
+          pageRef.current -= 1;
+          reLoad();
+        }
+      }, 1000)
     }
-    setTimeout(()=>{setIsPrevRefreshing(false)}, 1000)
+
   }, [isPrevRefreshing]);
 
   useEffect(() => {
     if (!isNextRefreshing) {
       setStartY(0);
       setCurrentY(0);
+    } else {
+      console.log(isNextRefreshing)
+      setTimeout(()=>{
+        setIsNextRefreshing(false)
+        if (isPinActive && moreData) {
+          console.log('동작')
+          pageRef.current += 1;
+          reLoad();
+        }
+      }, 1000)
     }
-    setTimeout(()=>{setIsNextRefreshing(false)}, 1000)
+
   }, [isNextRefreshing]);
+
 
   return (
     <M.MapContainer>
@@ -230,6 +254,12 @@ const CustomMap: React.FC = () => {
           const level = map.getLevel();
           const en = `level${level}` as T.ScaleDistanceKey
           const dist = T.ScaleDistance[en]
+
+          if (mapLevel < level) {
+            setMoreData(true);
+            pageRef.current = 1;
+          }
+          
           setMapLevel(level)
           setLoadDist(dist)
         }}
@@ -307,7 +337,7 @@ const CustomMap: React.FC = () => {
         </M.FilterContainer>
 
         <M.PinList ref={listRef}>
-          {isPrevRefreshing && <div>Prev...</div>}
+          {isPrevRefreshing && <G.LoadingGif src={loadingGif}/>}
           {pinLists.map((pin, index) => (
             <M.ItemContainer key={index}>
             <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
@@ -320,7 +350,7 @@ const CustomMap: React.FC = () => {
             </M.ItemDataContainer>
           </M.ItemContainer>
           ))}
-          {isNextRefreshing && <div>Next...</div>}
+          {isNextRefreshing && <G.LoadingGif src={loadingGif}/>}
         </M.PinList>
 
       </M.ListContainer>
