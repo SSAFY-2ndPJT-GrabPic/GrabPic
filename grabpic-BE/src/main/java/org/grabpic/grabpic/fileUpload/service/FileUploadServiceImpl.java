@@ -229,6 +229,7 @@ public class FileUploadServiceImpl implements FileUploadService{
         try{
             //썸네일 만들고 S3 저장
             BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+            log.info("files height : " + bufferedImage.getHeight() + "files width : " + bufferedImage.getWidth());
             log.info("x : " + dto.getX() + " " + "y : " + dto.getY() + " w : " + dto.getW() + " h : " + dto.getH());
             BufferedImage thumbnail = bufferedImage.getSubimage(dto.getX(), dto.getY(), dto.getW(), dto.getH());
 

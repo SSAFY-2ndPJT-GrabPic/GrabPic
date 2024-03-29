@@ -56,6 +56,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         log.info("addChartData : " + collectionRegistDTO.toString());
         long biologyId = collectionRegistDTO.getBiologyId();
         long userId = jwtUtil.getUserId(token);
+        System.out.println(biologyId);
 
         BiologyListEntity entity = biologyListRepository.findById(biologyId).get();
         ChartDataEntity data;
