@@ -15,6 +15,7 @@ export const CheckPage : React.FC = () => {
     const back = () => {
         localStorage.removeItem('biologyId');
         localStorage.removeItem('boxXY');
+        localStorage.removeItem('location')
         navigate(-1);
     }
 
@@ -30,7 +31,7 @@ export const CheckPage : React.FC = () => {
         const biologyId = parseInt(biologyString,10);
 
         await getBiologyInfo (
-            biologyId,
+            biologyId + 1,
             (response) => {
                 const info = response.data;
                 navigate("/regist", { state: {...state, info : info}});

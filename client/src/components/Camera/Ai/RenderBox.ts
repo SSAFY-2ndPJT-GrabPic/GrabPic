@@ -45,7 +45,7 @@ export const renderBoxes = (
             if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
                 const classData = classes_data[i / 4];
                 localStorage.setItem('biologyId',classData.toString());
-                const arr = [x1,x2,y1,y2];
+                const arr = {x : x1, w : x2-x1, y : y1, h : y2-y1};
                 localStorage.setItem('boxXY',JSON.stringify(arr))
                 break; // 해당하는 class_data를 찾았으므로 더 이상 검색하지 않음
             }

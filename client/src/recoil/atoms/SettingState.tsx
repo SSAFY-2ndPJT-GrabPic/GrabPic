@@ -17,3 +17,8 @@ export const isLoadingState = atom<{loading : boolean, progress : number}>({
     progress : 0
   },
 });
+
+export const isLoadingNo = atom<number>({
+  key : 'isLoadingNo',
+  default: 0,
+});
