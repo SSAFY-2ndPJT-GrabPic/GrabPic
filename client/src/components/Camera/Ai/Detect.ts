@@ -1,5 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
-import { renderBoxes } from "./RenderBox";
+// import { renderBoxes } from "./RenderBox";
 
 // 클래스의 개수
 const numClass: number = 3;
@@ -87,7 +87,14 @@ export const detect = async (source: HTMLImageElement | HTMLVideoElement, model:
     const scores_data = scores.gather(nms, 0).dataSync() as Int32Array; // NMS 인덱스로 점수 색인화
     const classes_data = classes.gather(nms, 0).dataSync() as Int32Array; // NMS 인덱스로 클래스 색인화
 
-    renderBoxes(canvasRef, boxes_data, scores_data, classes_data, [xRatio, yRatio]); // 상자 렌더링
+    boxes_data;
+    scores_data;
+    classes_data;
+    xRatio;
+    yRatio;
+    canvasRef;
+
+    // renderBoxes(canvasRef, boxes_data, scores_data, classes_data, [xRatio, yRatio]); // 상자 렌더링
     tf.dispose([res, transRes, boxes, scores, classes, nms]); // 메모리 해제
 
     callback();
@@ -105,7 +112,7 @@ export const detectVideo = (vidSource: HTMLVideoElement, model: { net: tf.GraphM
     /**
      * 비디오에서 각 프레임을 감지하는 함수입니다.
      */
-    return ;
+    
     const detectFrame = async (): Promise<void> => {
         if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
             const ctx = canvasRef.getContext("2d");
