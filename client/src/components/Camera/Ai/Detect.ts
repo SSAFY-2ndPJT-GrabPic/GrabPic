@@ -105,6 +105,7 @@ export const detectVideo = (vidSource: HTMLVideoElement, model: { net: tf.GraphM
     /**
      * 비디오에서 각 프레임을 감지하는 함수입니다.
      */
+    return ;
     const detectFrame = async (): Promise<void> => {
         if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
             const ctx = canvasRef.getContext("2d");
