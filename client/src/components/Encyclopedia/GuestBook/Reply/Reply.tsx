@@ -62,76 +62,73 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
     }
   };
 
-  // // 방명록 조회 및 무한스크롤
-  // const [page, setPage] = useState<number>(1)
+  // ========== 무한스크롤 ==================
+  const [page, setPage] = useState<number>(1)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  // const handleObserver = (entries: IntersectionObserverEntry[]) => {
-  //   const target = entries[0];
+  // observer 컴포넌트 만나면 발생하는 콜백 함수 -> loading중 표시
+  const handleObserver = (entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
 
-  //   if (target.isIntersecting) {
-  //     setPage((prePage) => prePage + 1);
-  //     console.log(page)
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   //  threshold: Intersection Observer의 옵션, 0일 때는 교차점이 한 번만 발생해도 실행, 1은 모든 영역이 교차해야 콜백 함수가 실행.
-  //   const observer = new IntersectionObserver(handleObserver, { threshold: 0 });
-
-  //   // 최하단 요소를 관찰 대상으로 지정함
-  //   const observerTarget = document.getElementById("observer");
-  //   // 관찰 시작
-  //   if (observerTarget) {
-  //     observer.observe(observerTarget);
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   fetchDataHandler();
-  // }, [page])
-
-  // const fetchDataHandler = async () => {
-  //   getGuestBookData(
-  //     userId,
-  //     page,
-  //     (res) => {
-  //       console.log(page, res.data)
-  //       if (res.data.length) {
-  //         setReplyList([...res.data, ...replyList])
-  //       }
-  //     },
-  //     (err) => { console.error(err) }
-
-  //   )
-  // }
+    if (target.isIntersecting && !isLoading) {
+      setIsLoading(true)
+    }
+  };
   
+  // threshold : Intersection Observer의 옵션, 0 ~ 1 (0: 일 때는 교차점이 한 번만 발생해도 실행, 1은 모든 영역이 교차해야 콜백 함수가 실행)
+  const observer = new IntersectionObserver(handleObserver, { threshold: 0 });
+
+  useEffect(() => {
+    // 최하단 요소를 관찰 대상으로 지정함
+    const observerTarget = document.getElementById("observer");
+    // 관찰 시작
+    if (observerTarget) {
+      observer.observe(observerTarget);
+    }
+  }, [])
+
+  // 로딩중이면 페이지 상승 + api 요청
+  // useEffect가 isLoading의 상태 변화를 계속 추적하며 api 쏘므로
+  // setTimeout을 통해 api 요청 한번만 갈 수 있도록 수정
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout(() => {
+        setPage((page) => page + 1);
+        fetchDataHandler();
+      }, 10)
+    }
+  }, [isLoading])
+
+  useEffect(() => {
+    setReplyList([])
+    setPage(1)
+    setIsLoading(false)
+  }, [userId])
+
+  // replyList에 데이터 추가 및 loading상태 변경
+  const fetchDataHandler = async () => {
+    await getGuestBookData(
+      userId,
+      page,
+      (res) => {
+        setReplyList(prevList => prevList.concat(res.data))
+      },
+      (err) => { console.error(err) }
+    )
+    setIsLoading(false)
+  }
+
+  // // 방명록 리스트 조회 api
   // useEffect(() => {
-  //   setPage(1)
-  //   console.log(page)
-    
   //   getGuestBookData(
   //     userId,
-  //     page,
+  //     1,
   //     (res) => {
-  //       console.log(page, res.data)
   //       setReplyList(res.data)
   //     },
   //     (err) => { console.error(err) }
   //   )
   // }, [userId])
-
-
-  // 방명록 리스트 조회 api
-  useEffect(() => {
-    getGuestBookData(
-      userId,
-      1,
-      (res) => {
-        setReplyList(res.data)
-      },
-      (err) => { console.error(err) }
-    )
-  }, [userId])
 
 
   return (
@@ -140,7 +137,7 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
         {replyList.map((replyItem, index) => (
           <ReplyItem key={index} {...replyItem} />
         ))}
-        <div id='sentinel' />
+        <div id='observer' />
       </R.Container>
       <R.InputContainer>
         <R.InputWrap>
