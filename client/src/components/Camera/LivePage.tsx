@@ -108,7 +108,7 @@ export const LivePage: React.FC = () => {
             canvas.width,
             canvas.height
           );
-          const dataURL = canvas.toDataURL('image/png');
+          const dataURL = canvas.toDataURL('image/jpeg');
 
           if (capturedLen.current >= 20) {
             setCapturedImages((prevImages) => [
@@ -144,7 +144,15 @@ export const LivePage: React.FC = () => {
         clearInterval(interval);
 
         const dataURL = canvas.toDataURL('image/png');
-        
+        const {geolocation} = navigator;
+
+        // 현재 위치
+        geolocation.getCurrentPosition((params) => { 
+          const location = {latitude : params.coords.latitude, longitude : params.coords.longitude};
+          localStorage.setItem('location', JSON.stringify(location))
+        });
+
+
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
         // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
         navigate(`/camera/check`, {
