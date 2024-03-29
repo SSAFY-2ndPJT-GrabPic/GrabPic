@@ -5,8 +5,6 @@ import { getBiologyInfo } from '../../api/camera';
 export const CheckPage : React.FC = () => {
 
     // 페이지 넘어오면서 같이 넘어온 이미지를 가져온다.
-    // const params = new URLSearchParams(window.location.search);
-    // const image = params.get('image') || '';
     const { state } = useLocation();
     
     const image = state.image || '';
@@ -23,10 +21,12 @@ export const CheckPage : React.FC = () => {
     // 전송 버튼
     const go = async () => {
         const biologyString = localStorage.getItem('biologyId');
+
         if(!biologyString) {
             back();
             return;
         }
+
         const biologyId = parseInt(biologyString,10);
 
         await getBiologyInfo (
