@@ -87,9 +87,9 @@ export const LivePage: React.FC = () => {
 
   useEffect(() => {
     console.log("effe")
-    if(modelLoaded){
-      detectVideo(videoRef.current!, model, canvasRef.current!);
-    }
+    // if(modelLoaded){
+    //   detectVideo(videoRef.current!, model, canvasRef.current!);
+    // }
   },[model, modelLoaded])
 
   const autoSave = () => {
@@ -177,6 +177,7 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
+        onPlay={() => {detectVideo(videoRef.current!, model, canvasRef.current!)}}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}

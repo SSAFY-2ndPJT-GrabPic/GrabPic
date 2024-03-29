@@ -12,6 +12,7 @@ export const CheckPage : React.FC = () => {
     // 다시시도 버튼
     const back = () => {
         localStorage.removeItem('AiClassNum');
+        localStorage.removeItem('boxXY');
         navigate(-1);
     }
 

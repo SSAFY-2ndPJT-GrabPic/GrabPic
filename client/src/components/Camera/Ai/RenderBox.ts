@@ -42,7 +42,6 @@ export const renderBoxes = (
         for (let i = 0; i < boxes_data.length; i += 4) {
             const score = (scores_data[i / 4] * 100).toFixed(1);
             if (parseFloat(score) < 61) continue;
-
             const [y1, x1, y2, x2] = boxes_data.slice(i, i + 4);
             // console.log(x1 + " " + x2 + " " + y1 + " " + y2 + " " + i)
             // 사각형 안에 있는지 여부를 확인
@@ -50,6 +49,8 @@ export const renderBoxes = (
                 const classData = classes_data[i / 4];
                 // console.log('클릭한 위치의 class_data:', classData);
                 localStorage.setItem('AiClassNum',classData.toString());
+                const arr = [x1,x2,y1,y2];
+                localStorage.setItem('boxXY',JSON.stringify(arr))
                 break; // 해당하는 class_data를 찾았으므로 더 이상 검색하지 않음
             }
         }
@@ -60,8 +61,10 @@ export const renderBoxes = (
         const klass = Labels[classes_data[i]];
         const color = colors.get(classes_data[i]);
         const score = (scores_data[i] * 100).toFixed(1);
+        console.log(score);
 
-        // if(parseFloat(score) < 61) continue;
+        if(parseFloat(score) < 61) continue;
+        
         let [y1, x1, y2, x2] = boxes_data.slice(i * 4, (i + 1) * 4);
         x1 *= ratios[0];
         x2 *= ratios[0];
