@@ -33,21 +33,17 @@ export const renderBoxes = (
 
     canvasRef.addEventListener('click', (event) => {
         const rect = canvasRef.getBoundingClientRect();
-        // console.log(event.clientX + " " + event.clientY);
-        // console.log(rect.left + " " + rect.top);
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
-        // console.log(mouseX + " " + mouseY);
         // 클릭한 위치와 그려진 요소들의 위치를 비교하여 해당하는 class_data를 찾기
         for (let i = 0; i < boxes_data.length; i += 4) {
             const score = (scores_data[i / 4] * 100).toFixed(1);
             if (parseFloat(score) < 61) continue;
             const [y1, x1, y2, x2] = boxes_data.slice(i, i + 4);
-            // console.log(x1 + " " + x2 + " " + y1 + " " + y2 + " " + i)
+
             // 사각형 안에 있는지 여부를 확인
             if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
                 const classData = classes_data[i / 4];
-                // console.log('클릭한 위치의 class_data:', classData);
                 localStorage.setItem('AiClassNum',classData.toString());
                 const arr = [x1,x2,y1,y2];
                 localStorage.setItem('boxXY',JSON.stringify(arr))
@@ -61,7 +57,6 @@ export const renderBoxes = (
         const klass = Labels[classes_data[i]];
         const color = colors.get(classes_data[i]);
         const score = (scores_data[i] * 100).toFixed(1);
-        console.log(score);
 
         if(parseFloat(score) < 61) continue;
         
