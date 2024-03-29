@@ -44,9 +44,9 @@ export const registEncy = async(
 
 export const getGalleryList = async(
   page: number,
-  Response : (Response : AxiosResponse<GalleryItemType>) => void, 
+  Response : (Response : AxiosResponse<GalleryItemType[]>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-  await privateApi.get(`/${url}/gallery/list`, {params:{'page': page, 'limit': 10}})
+  await privateApi.get(`/${url}/gallery/list`, {params:{'page': page, 'limit': 20}})
   .then(Response)
   .catch(Error)
 }
