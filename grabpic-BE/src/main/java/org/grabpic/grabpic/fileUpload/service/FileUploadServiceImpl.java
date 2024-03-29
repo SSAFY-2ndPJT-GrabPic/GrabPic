@@ -229,9 +229,9 @@ public class FileUploadServiceImpl implements FileUploadService{
         try{
             //썸네일 만들고 S3 저장
             BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+            log.info("x : " + dto.getX() + " " + "y : " + dto.getY() + " w : " + dto.getW() + " h : " + dto.getH());
             BufferedImage thumbnail = bufferedImage.getSubimage(dto.getX(), dto.getY(), dto.getW(), dto.getH());
-            byte[] bytes = IOUtils.toByteArray(file.getInputStream());
-            log.info("image length : " + bytes.length);
+
             ByteArrayOutputStream thumbnailOutput = new ByteArrayOutputStream();
             String imageType = file.getContentType();
             System.out.println("imageType : " + imageType);
@@ -242,7 +242,7 @@ public class FileUploadServiceImpl implements FileUploadService{
 
             ObjectMetadata thumbnailMetadata = new ObjectMetadata();
             byte[] thumbBytes = thumbnailOutput.toByteArray();
-            log.info("thumbnail length : " + bytes.length);
+            log.info("thumbnail length : " + thumbBytes.length);
             thumbnailMetadata.setContentLength(thumbBytes.length);
             thumbnailMetadata.setContentType(imageType);
 
