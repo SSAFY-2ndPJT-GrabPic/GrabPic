@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import * as C from './CheckPage.style'
+import { getBiologyInfo } from '../../api/camera';
 
 export const CheckPage : React.FC = () => {
 
@@ -11,14 +12,31 @@ export const CheckPage : React.FC = () => {
 
     // 다시시도 버튼
     const back = () => {
-        localStorage.removeItem('AiClassNum');
+        localStorage.removeItem('biologyId');
         localStorage.removeItem('boxXY');
         navigate(-1);
     }
 
     // 전송 버튼
-    const go = () => {
-        navigate("/regist", { state: {image : image}});
+    const go = async () => {
+        const biologyString = localStorage.getItem('biologyId');
+        if(!biologyString) {
+            back();
+            return;
+        }
+        const biologyId = parseInt(biologyString,10);
+
+        await getBiologyInfo (
+            biologyId,
+            (response) => {
+                console.log(response);
+            },
+            (error) => {
+                console.log(error);
+            }
+        )
+
+        // navigate("/regist", { state: {image : image}});
     }
 
     return (

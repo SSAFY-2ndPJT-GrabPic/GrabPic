@@ -44,7 +44,7 @@ export const renderBoxes = (
             // 사각형 안에 있는지 여부를 확인
             if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
                 const classData = classes_data[i / 4];
-                localStorage.setItem('AiClassNum',classData.toString());
+                localStorage.setItem('biologyId',classData.toString());
                 const arr = [x1,x2,y1,y2];
                 localStorage.setItem('boxXY',JSON.stringify(arr))
                 break; // 해당하는 class_data를 찾았으므로 더 이상 검색하지 않음
