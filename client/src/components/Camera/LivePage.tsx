@@ -86,7 +86,6 @@ export const LivePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("effe")
     // if(modelLoaded){
     //   detectVideo(videoRef.current!, model, canvasRef.current!);
     // }
@@ -113,7 +112,7 @@ export const LivePage: React.FC = () => {
           );
           const dataURL = canvas.toDataURL('image/png');
 
-          if (capturedLen.current >= 20) {
+          if (capturedLen.current >= 10) {
             setCapturedImages((prevImages) => [
               ...prevImages.slice(1),
               dataURL,
@@ -146,6 +145,8 @@ export const LivePage: React.FC = () => {
         // 그린다.
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL('image/png');
+        
+        clearInterval(interval);
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
         navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
       }
