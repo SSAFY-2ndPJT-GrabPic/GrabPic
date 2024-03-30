@@ -46,7 +46,7 @@ const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: num
  * @param callback 감지 프로세스 이후 실행할 함수
  */
 export const detect = async (source: HTMLImageElement | HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement, callback: () => void = () => { }): Promise<void> => {
-    
+
     if(!model.net)  return;
 
     const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // 모델 너비 및 높이 가져오기

@@ -35,10 +35,13 @@ export const renderBoxes = (
         const rect = canvasRef.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
+        
         // 클릭한 위치와 그려진 요소들의 위치를 비교하여 해당하는 class_data를 찾기
         for (let i = 0; i < boxes_data.length; i += 4) {
+
             const score = (scores_data[i / 4] * 100).toFixed(1);
             if (parseFloat(score) < 61) continue;
+
             const [y1, x1, y2, x2] = boxes_data.slice(i, i + 4);
 
             // 사각형 안에 있는지 여부를 확인
