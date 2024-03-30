@@ -6,6 +6,28 @@ export const Container = styled.div`
   flex-direction: column;
 `
 
+export const NamePlyContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`
+
+export const PlayBtn = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(86, 86, 86, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+`
+
+export const PlayBtnImg = styled.img`
+  width: 18px;
+`
+
 export const RepresentImg = styled.img.attrs(({ src }) => ({
   src: src || loadingDefault, alt: '대표이미지'
 }))`
@@ -17,7 +39,18 @@ export const RepresentImg = styled.img.attrs(({ src }) => ({
   ${({ src }) => src === loadingDefault && `
       height: 150px;
       object-fit: contain;
+  `}
+`
 
+export const AIVideo = styled.video`
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  object-position: 50% 50%;
+
+  ${({ src }) => src === loadingDefault && `
+      height: 150px;
+      object-fit: contain;
   `}
 `
 
