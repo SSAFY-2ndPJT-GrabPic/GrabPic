@@ -3,6 +3,7 @@ import * as R from './Reply.style'
 import ReplyItem from './ReplyItem';
 import { getGuestBookData, postReply } from '../../../../api/guestBook';
 import { replyInputData, replyItem } from '../../../../type/GuestBookType';
+import loadingGif from '../../../../assets/Gallery/loadingGif.gif'
 
 
 interface ReplyProps {
@@ -92,8 +93,8 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
   // setTimeout을 통해 api 요청 한번만 갈 수 있도록 수정
   useEffect(() => {
     if (isLoading) {
+      setPage((page) => page + 1);
       setTimeout(() => {
-        setPage((page) => page + 1);
         fetchDataHandler();
       }, 10)
     }
@@ -102,7 +103,7 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
   useEffect(() => {
     setReplyList([])
     setPage(1)
-    setIsLoading(false)
+    setIsLoading(true)
   }, [userId])
 
   // replyList에 데이터 추가 및 loading상태 변경
@@ -137,7 +138,9 @@ const Reply: React.FC<ReplyProps> = ({ userId }) => {
         {replyList.map((replyItem, index) => (
           <ReplyItem key={index} {...replyItem} />
         ))}
-        <div id='observer' />
+        <R.ObserverContainer id='observer' style={{height: '30px'}}>
+          {isLoading && <R.LoadingGif src={loadingGif} />}
+        </R.ObserverContainer>
       </R.Container>
       <R.InputContainer>
         <R.InputWrap>
