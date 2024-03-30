@@ -242,7 +242,7 @@ const Chart: React.FC<ChartProps> = () => {
   
         layout: {
           name: 'cose-bilkent',
-          animate: true,          // whether to transition the node positions
+          animate: false,          // whether to transition the node positions
           fit: true,              // whether to fit to viewport
         } as { name: string; animate: boolean; fit: boolean },  // 의존성 파일에 없는 key는 타입 단언
       };

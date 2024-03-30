@@ -9,6 +9,5 @@ export const ObserverContainer = styled.div`
 
 export const LoadingGif = styled.img`
   height: 60px;
-
   object-fit: cover;
 `
