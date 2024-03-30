@@ -7,7 +7,7 @@ import { registEncy } from '../../../api/encyclopedia';
 import { UserInfoType } from '../../../type/UserType';
 import { userInfoState } from '../../../recoil/atoms/UserState';
 import { headerState } from '../../../recoil/atoms/EncyHeaderState';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 
 
@@ -20,6 +20,9 @@ export const EncyclopediaResgist: React.FC = () => {
   const boxXYString = localStorage.getItem('boxXY');
   const boxXY = boxXYString ? JSON.parse(boxXYString) : null;
 
+  const locationString = localStorage.getItem('location')
+  const location = locationString ? JSON.parse(locationString) : null;
+
   // 화면 전환
   const navigate = useNavigate();
   const userInfo = useRecoilValue<UserInfoType>(userInfoState);
@@ -27,6 +30,8 @@ export const EncyclopediaResgist: React.FC = () => {
 
   // 서버로 보낼 info정보
   const [inputData, setInputData] = useState<string>('');
+  // 서버로 보낼 주소 정보
+  const [address, setAddress] = useState<string>('');
 
   // 취소, 실패 모달
   const setIsModal = useSetRecoilState<boolean>(R.isModalState);
@@ -35,6 +40,17 @@ export const EncyclopediaResgist: React.FC = () => {
   // 전송 로딩.
   const setIsLoadingState = useSetRecoilState(R.isLoadingState);
   const setIsLoadingNo = useSetRecoilState(R.isLoadingNo);
+
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const fetchedAddress = await reverseGeocode(location.latitude, location.longitude);
+      setAddress(fetchedAddress);
+    };
+  
+    fetchAddress(); // 비동기 함수 호출
+  })
+
 
   // 취소 버튼
   const cancelCilck = () => {
@@ -46,7 +62,7 @@ export const EncyclopediaResgist: React.FC = () => {
   };
 
   // 등록 버튼
-  const registClick = () => {
+  const registClick = async () => {
     // 버튼 누르면 바로 로딩이 돌아간다.
     setIsLoadingState({ loading: true, progress: 0 });
     setIsLoadingNo(1);
@@ -59,14 +75,11 @@ export const EncyclopediaResgist: React.FC = () => {
       w: parseFloat(boxXY.h),
     };
 
-    const locationString = localStorage.getItem('location')
-    const location = locationString ? JSON.parse(locationString) : null;
-
     const infoData = {
       biologyId: info.biologyListId,
       latitude: location.latitude,
       longitude: location.longitude,
-      address: "wnth",
+      address: address,
       content: inputData,
     };
     console.log(infoData);
@@ -130,6 +143,34 @@ export const EncyclopediaResgist: React.FC = () => {
     return flag === 1 ? new Blob([uint8Array], { type: 'image/jpeg' }) : new Blob([uint8Array], { type: 'image/png' });
   };
 
+
+  // 주소 변환.
+  const reverseGeocode = async (lat: number, lon: number) => {
+    try {
+      const apiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
+      const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lon}&y=${lat}`;
+  
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `KakaoAK ${apiKey}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw '주소를 가져오는데 실패했습니다.';
+      }
+  
+      const data = await response.json();
+      if (data.documents && data.documents.length > 0) {  
+        return data.documents[0].address.address_name;
+      } else {
+        throw '주소를 찾을 수 없습니다.';
+      }
+    } catch (error) {
+      throw '주소를 가져오는데 오류가 발생했습니다.';
+    }
+  }
+
   // 메모 값.
   const textInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputData(e.target.value);
@@ -154,7 +195,7 @@ export const EncyclopediaResgist: React.FC = () => {
         </E.ObjectInfoContainer>
         <E.ObjectInfoContainer className="mt-5">
           <E.ObjectTitle>수집위치</E.ObjectTitle>
-          <E.ObjectContent></E.ObjectContent>
+          <E.ObjectContent>{address}</E.ObjectContent>
           <E.ObjectLine></E.ObjectLine>
         </E.ObjectInfoContainer>
         <E.ObjectInfoContainer className="mt-5">

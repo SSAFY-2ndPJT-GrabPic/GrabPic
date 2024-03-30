@@ -79,6 +79,10 @@ export const LivePage: React.FC = () => {
     return () => {
       clearInterval(interval);
       webCam.close(currentVideoRef);
+
+      // 메모리 해제
+      if(model.net)
+        model.net.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -152,6 +156,8 @@ export const LivePage: React.FC = () => {
           localStorage.setItem('location', JSON.stringify(location))
         });
 
+        if(model.net)
+        model.net.dispose();
 
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
         // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
@@ -164,6 +170,9 @@ export const LivePage: React.FC = () => {
 
   // 닫기 버튼 이전 페이지로 돌아간다.
   const closeBtnClick = () => {
+    if(model.net)
+      model.net.dispose();
+
     navigate(-1);
   };
 
