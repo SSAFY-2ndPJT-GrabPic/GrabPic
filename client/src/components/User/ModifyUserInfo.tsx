@@ -1,8 +1,5 @@
 import React, { useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import * as R from '../EmailVerification/Verification.style';
-import * as G from '../../styles/globalCSS';
 import * as M from './ModifyUserInfo.style';
 
 import profileUrl from '../../assets/icon/profile.png';
@@ -10,47 +7,17 @@ import profileUrl from '../../assets/icon/profile.png';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/UserState';
 
+import closeIcon from '../../assets/icon/close.png'
+import changeIcon from '../../assets/icon/change.png'
+
 export const ModifyUserInfo: React.FC = () => {
-  const navigate = useNavigate();
-  const { state } = useLocation();
 
   const userInfo = useRecoilValue(userInfoState);
 
-  const [nickName, setNickName] = useState(userInfo.nickname);
-  const [name, setName] = useState(userInfo.name);
-  const [birth, setBirth] = useState(userInfo.birth);
-  const [gender, setGender] = useState('');
 
   // 이미지 선택
   const inputImgRef = useRef<HTMLInputElement>(null);
-  const [profileImg, setProfileImg] = useState<string | null>(null);
-
-  // 성별 체크. 회원정보 수정 페이지에서는 추후 삭제.
-  const checkBoxOne = (checkThis: React.ChangeEvent<HTMLInputElement>) => {
-    const checkBoxes = document.getElementsByName(
-      'checkbox'
-    ) as NodeListOf<HTMLInputElement>;
-
-    for (let i = 0; i < 2; i++) {
-      if (checkBoxes[i] !== checkThis.target) {
-        checkBoxes[i].checked = false;
-      }
-    }
-    setGender(checkThis.target.defaultValue);
-  };
-
-  // 설정 완료 후 서버 전송용 데이터
-  const handleClick = () => {
-    const newState = {
-      ...state,
-      nickName: nickName,
-      name: name,
-      birth: birth,
-      gender: gender,
-    };
-    console.log(newState);
-    navigate('/');
-  };
+  const [profileImg, setProfileImg] = useState(userInfo.profileImage);
 
   // 이미지 선택 후 이미지 미리보기 변경.
   const imageChange = (e : React.ChangeEvent<HTMLInputElement>) => {
@@ -66,13 +33,16 @@ export const ModifyUserInfo: React.FC = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-row mt-10 items-center">
-        <R.VerificationTitle>회원정보 수정</R.VerificationTitle>
-      </div>
+      <div className="flex flex-row items-center self-center mt-5">
+        <M.InfoClose to={'/setting'}>
+            <img src={closeIcon} alt="" />
+        </M.InfoClose>
+        <M.MainTitle>회원정보 수정</M.MainTitle>
+        </div>
       <div className="flex mt-10 items-center self-center">
         <form>
-          <M.profileImg src={profileImg || profileUrl} onClick={() => inputImgRef.current?.click()}/>
-          <M.profileImgInput
+          <M.ProfileImg src={profileImg || profileUrl} onClick={() => inputImgRef.current?.click()}/>
+          <M.ProfileImgInput
             type="file"
             accept="image/jpg,impge/png,image/jpeg"
             ref={inputImgRef}
@@ -80,52 +50,32 @@ export const ModifyUserInfo: React.FC = () => {
           />
         </form>
       </div>
-      <G.InputContainer className="mt-6">
-        <span>닉네임</span>
-        <G.InputBox
-          placeholder="닉네임"
-          onChange={(e) => setNickName(e.target.value)}
-        />
-        {/* <G.InputError>test</G.InputError> */}
-      </G.InputContainer>
-      <G.InputContainer>
-        <span>이름</span>
-        <G.InputBox
-          placeholder="이름"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        {/* <G.InputError>test</G.InputError> */}
-      </G.InputContainer>
-      <G.InputContainer>
-        <span>생년월일</span>
-        <G.InputBox
-          type="date"
-          value={birth}
-          onChange={(e) => setBirth(e.target.value)}
-        />
-        {/* <G.InputError>test</G.InputError> */}
-      </G.InputContainer>
-      <G.InputContainerRow>
-        <span>성별</span>
-        <G.InputCheckBox
-          value="남자"
-          type="checkbox"
-          name="checkbox"
-          onChange={(e) => checkBoxOne(e)}
-        />
-        <span>남자</span>
-        <G.InputCheckBox
-          value="여자"
-          type="checkbox"
-          name="checkbox"
-          onChange={(e) => checkBoxOne(e)}
-        />
-        <span>여자</span>
-      </G.InputContainerRow>
-      <G.InputButtonActive className="mt-3" onClick={handleClick}>
-        설정완료
-      </G.InputButtonActive>
+      <M.InfoContainer className='mt-5'>
+        <M.InfoTitel>이름</M.InfoTitel>
+        <M.InfoText>{userInfo.name}</M.InfoText>
+      </M.InfoContainer>
+      <M.InfoContainer>
+        <M.InfoTitel>이메일</M.InfoTitel>
+        <M.InfoText>{userInfo.email}</M.InfoText>
+      </M.InfoContainer>
+      <M.InfoContainer>
+        <M.InfoTitel>닉네임</M.InfoTitel>
+        <M.InfoText>{userInfo.nickname}</M.InfoText>
+        <M.ChangeBtn><img src={changeIcon}/></M.ChangeBtn>
+      </M.InfoContainer>
+      <M.InfoContainer>
+        <M.InfoTitel>비밀번호</M.InfoTitel>
+        <M.InfoText>변경하기</M.InfoText>
+        <M.ChangeBtn><img src={changeIcon}/></M.ChangeBtn>
+      </M.InfoContainer>
+      <M.InfoContainer>
+        <M.InfoTitel>생년월일</M.InfoTitel>
+        <M.InfoText>{userInfo.birth}</M.InfoText>
+      </M.InfoContainer>
+      <M.InfoContainer>
+        <M.InfoTitel>성별</M.InfoTitel>
+        <M.InfoText>{userInfo.gender}</M.InfoText>
+      </M.InfoContainer>
     </div>
   );
 };
