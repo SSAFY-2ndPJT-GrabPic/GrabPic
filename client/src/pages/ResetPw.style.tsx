@@ -12,6 +12,17 @@ export const Close = styled(Link)`
     }
 `
 
+export const CloseBtn = styled.button`
+    width: 20%;
+    position: absolute;
+    left: 5%;
+
+    img {
+    width: 25px;
+    height: 25px;
+    }
+`
+
 export const ResetPwText = styled.span`
     font-family: 'BMJUA';
     font-size: x-large;

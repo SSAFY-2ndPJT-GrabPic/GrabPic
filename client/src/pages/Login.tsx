@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { BasicLogin } from "../components/User/BasicLogin";
-import { SocailLogin } from "../components/User/SocialLogin";
+import { BasicLogin } from "../components/User/Login/BasicLogin";
+import { SocailLogin } from "../components/User/Login/SocialLogin";
 
 import { TokenRefresh,userInfo } from "../api/user";
 

@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 import Home from '../pages/Home';
 import { Login } from '../pages/Login';
-import { SocialLoginRedirect } from './User/SocialLoginRedirect';
+import { SocialLoginRedirect } from './User/Login/SocialLoginRedirect';
 import ResetPw from '../pages/ResetPw';
 import Join from '../pages/Join';
 import Encyclopedia from '../pages/Encyclopedia';
@@ -46,7 +46,7 @@ export default function Router() {
         <Route path="regist" element={<EncyclopediaResgist/>}/>
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/setting" element={<SettingPage />} />
-        <Route path="/userinfo" element={<UserInfo />} />
+        <Route path="/userinfo/*" element={<UserInfo />} />
       </Route>
 
       {/* 헤더 & 네브가 필요 없는 페이지 */}

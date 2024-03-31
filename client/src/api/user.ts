@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { noneApi, privateApi } from '../utils/http-commons';
+import { noneApi, privateApi,formDataApi } from '../utils/http-commons';
 import { UserInfoType, OwnerInfoType } from '../type/UserType';
 import { MyResponseData } from '../type/ApiResponseType';
 
@@ -116,4 +116,13 @@ export const getUserInfo = async(
   await privateApi.get(`/${url}/info/${userId}`)
   .then(Response)
   .catch(Error)
+}
+
+export const changeProfileImg = async (
+  params:FormData,
+  Response : (Response : AxiosResponse<OwnerInfoType>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+    await formDataApi.post(`/fileupload/profileimage`,params)
+    .then(Response)
+    .catch(Error);
 }
