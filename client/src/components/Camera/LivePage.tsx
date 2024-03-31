@@ -174,7 +174,7 @@ export const LivePage: React.FC = () => {
     if(model.net)
       model.net.dispose();
 
-    navigate('/home')
+    navigate('/')
 
   };
 
