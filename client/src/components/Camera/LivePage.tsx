@@ -14,6 +14,7 @@ import { detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
+
   let interval: string | number | NodeJS.Timeout | undefined;
 
   // 로딩
@@ -49,7 +50,7 @@ export const LivePage: React.FC = () => {
 
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`best_web_model/model.json`, {
+      const yolo = await tf.loadGraphModel(`animal_web_model/model.json`, {
         onProgress: (val) => {
           setLoading({ loading: true, progress: val });
         },
@@ -173,7 +174,8 @@ export const LivePage: React.FC = () => {
     if(model.net)
       model.net.dispose();
 
-    navigate(-1);
+    navigate('/home')
+
   };
 
   return (
