@@ -48,6 +48,10 @@ export const Modal: React.FC = () => {
       setModalTitle('저장에 실패하였습니다.')
       setModalText('다시 시도해주세요.')
       setOneBtn(true);
+    } else if (isModalNo === 7){
+      setModalTitle('성공')
+      setModalText('변경이 완료되었습니다.')
+      setOneBtn(true);
     }
   }, [isModal, isModalNo]);
 

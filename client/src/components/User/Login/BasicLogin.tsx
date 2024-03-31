@@ -2,21 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useSetRecoilState } from 'recoil';
-import * as R from '../../recoil/atoms/UserState';
+import * as R from '../../../recoil/atoms/UserState';
 
-import { userLogin, userInfo } from '../../api/user';
+import { userLogin, userInfo } from '../../../api/user';
 
 import * as L from './Login.style';
-import * as G from '../../styles/globalCSS';
+import * as G from '../../../styles/globalCSS';
 
-import { httpStatusCode } from '../../utils/http-status';
+import { httpStatusCode } from '../../../utils/http-status';
 
-import { useRecoilState } from 'recoil';
-import * as S from '../../recoil/atoms/SettingState'
+import * as S from '../../../recoil/atoms/SettingState'
 
 export const BasicLogin: React.FC = () => {
-  const [,setIsModal] = useRecoilState<boolean>(S.isModalState);
-  const [,setIsModalNo] = useRecoilState<number>(S.isModalNo);
+  const setIsModal = useSetRecoilState<boolean>(S.isModalState);
+  const setIsModalNo = useSetRecoilState<number>(S.isModalNo);
 
   const navigate = useNavigate();
 
