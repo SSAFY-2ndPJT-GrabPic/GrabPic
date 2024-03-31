@@ -23,7 +23,12 @@ public class BiologyListEntity {
     private String species;
     private String name;
     private String summary;
-    private String content;
+    private String title1;
+    private String content1;
+    private String title2;
+    private String content2;
+    private String title3;
+    private String content3;
     private String imageThumbnail;
     private String imageDetail;
 
