@@ -35,7 +35,7 @@ export const UserTxtWrap = styled.div`
   padding-bottom: 4px;
 `
 
-export const nickName = styled.div`
+export const nickName = styled(Link)`
   font-family: 'BMJUA';
   font-size: 16px;
   color: #363636;

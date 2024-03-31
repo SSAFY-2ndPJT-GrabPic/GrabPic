@@ -3,7 +3,7 @@ import * as I from './IndivTitle.style'
 import { CollectDetailType } from '../../../type/CollectType';
 import PauseImg from '../../../assets/CollectDetail/pause.png'
 import PlayImg from '../../../assets/CollectDetail/play.png'
-import testVideo from '../../../assets/CollectDetail/testVideo.mp4'
+// import testVideo from '../../../assets/CollectDetail/testVideo.mp4'
 
 interface IndivTitleProps {
   indivInfo: CollectDetailType
@@ -16,8 +16,9 @@ const IndivTitle: React.FC<IndivTitleProps> = ({ indivInfo }) => {
     <I.Container>
         {isImage
           ? <I.RepresentImg src={indivInfo.imageUrl === 'tmp' || null ? '' : indivInfo.imageUrl} />
-          : <I.AIVideo src={testVideo} autoPlay loop muted />}
-
+          // : <I.AIVideo src={testVideo} autoPlay loop muted />}
+          : <I.AIVideo src={indivInfo.shortsVideoUrl ? indivInfo.shortsVideoUrl : ''} autoPlay loop muted controls />}
+          {/* : <I.AIVideo src="https://grabpic.s3.ap-northeast-2.amazonaws.com/frame/118.mp4" autoPlay loop muted controls />} */}
       <I.InfoWrap>
         <I.NamePlyContainer>
           <I.NameTxt>

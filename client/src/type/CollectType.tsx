@@ -12,7 +12,7 @@ export interface CollectDetailType {
   longitude: number;
   address: string;
   imageUrl: string;
-  shortsVideoUrl: null;
+  shortsVideoUrl: string;
 }
 
 export interface CollectItem {
