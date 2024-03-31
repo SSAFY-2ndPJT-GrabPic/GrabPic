@@ -12,7 +12,7 @@ export const getGuestBookData = async (
   Error: (Error: AxiosResponse<MyResponseData>) => void
 ) => {
   await privateApi
-  .get(`/${url}/${ownerId}`, {params:{'page': page, 'limit': 6}})
+  .get(`/${url}/${ownerId}`, {params:{'page': page, 'limit': 10}})
   .then(Response)
   .catch(Error);
 };

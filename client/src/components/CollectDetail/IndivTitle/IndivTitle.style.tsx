@@ -47,11 +47,6 @@ export const AIVideo = styled.video`
   height: 250px;
   object-fit: cover;
   object-position: 50% 50%;
-
-  ${({ src }) => src === loadingDefault && `
-      height: 150px;
-      object-fit: contain;
-  `}
 `
 
 export const InfoWrap = styled.div`
