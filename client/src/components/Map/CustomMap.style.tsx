@@ -70,7 +70,6 @@ export const PinList = styled.div`
   flex-direction: column;
   align-items: center;
   padding-bottom: 10px;
-  background-color: aqua;
 `;
 
 export const PinDataContainer = styled.div`
@@ -120,7 +119,7 @@ export const ItemDataContainer = styled.div`
 
 export const ItemNameSpan = styled.span`
   font-size: 16px;
-  color: #001ba7;
+  color: #3bc600;
   margin-bottom: 7px;
 `;
 
@@ -205,3 +204,15 @@ export const ZoomImg = styled.img`
   width: 18px;
   border:none;
 `;
+
+export const Loader = styled.div`
+  &.loader {
+  opacity: 1;
+  transition: opacity 0.3s ease; /* 투명도에 대한 transition 적용 */
+  }
+
+  &.loader.hidden {
+    opacity: 0; /* 숨겨진 상태일 때 투명도 조정 */
+    pointer-events: none; /* 숨겨진 상태일 때 이벤트 차단 */
+  }
+`

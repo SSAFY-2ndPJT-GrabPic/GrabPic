@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { privateApi } from '../utils/http-commons';
+import { privateApi,formDataApi } from '../utils/http-commons';
 import { CollectDetailType, CollectItem, RegistType } from '../type/CollectType';
 import { MyResponseData } from '../type/ApiResponseType';
 import { GalleryItemType } from '../type/GalleryType';
@@ -26,27 +26,19 @@ export const getCollectDetail = async(
 }
 
 export const registEncy = async(
-  params: {
-    biologyId : number;
-    registDate : string;
-    latitude : number;
-    longitude : number;
-    address : string;
-    content : string;
-    imageUrl : string;
-  },
+  params:FormData,
   Response : (Response : AxiosResponse<RegistType>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-  await privateApi.post(`/${url}/add`, params)
+  await formDataApi.post(`/${url}/add`, params)
   .then(Response)
   .catch(Error)
 }
 
 export const getGalleryList = async(
   page: number,
-  Response : (Response : AxiosResponse<GalleryItemType>) => void, 
+  Response : (Response : AxiosResponse<GalleryItemType[]>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-  await privateApi.get(`/${url}/gallery/list`, {params:{'page': page, 'limit': 10}})
+  await privateApi.get(`/${url}/gallery/list`, {params:{'page': page, 'limit': 20}})
   .then(Response)
   .catch(Error)
 }

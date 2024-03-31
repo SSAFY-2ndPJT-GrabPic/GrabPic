@@ -44,6 +44,10 @@ export const Modal: React.FC = () => {
       setModalTitle('회원 정보가 일치하지 않습니다.')
       setModalText('다시 시도해주세요.')
       setOneBtn(true);
+    } else if (isModalNo === 6){
+      setModalTitle('저장에 실패하였습니다.')
+      setModalText('다시 시도해주세요.')
+      setOneBtn(true);
     }
   }, [isModal, isModalNo]);
 
@@ -67,6 +71,8 @@ export const Modal: React.FC = () => {
         }
       );
     } else if (isModalNo === 3) {
+      localStorage.removeItem('biologyId');
+      localStorage.removeItem('boxXY');
       navgiate('/camera');
     } else if (isModalNo === 4) {
       navgiate('/resetpw', { state: { page: 'resetpw' } });

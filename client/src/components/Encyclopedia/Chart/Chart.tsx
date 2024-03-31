@@ -158,6 +158,12 @@ const Chart: React.FC<ChartProps> = () => {
     }
   }
 
+  // Chart 노드 클릭 시 컬렉션 페이지 이동 + 해당 노드 기준 필터링 데이터만 노출
+  const clickEventHandler = (target: string) => {
+    console.log(target, 'click해따!')
+  }
+
+  // cytoscape 라이브러리 사용
   const fetchChart = async () => {
     if (chartRef.current) {
       const options: CytoscapeOptions = {
@@ -236,18 +242,15 @@ const Chart: React.FC<ChartProps> = () => {
   
         layout: {
           name: 'cose-bilkent',
-          animate: false, // whether to transition the node positions
-          fit: true, // whether to fit to viewport
-        } as { name: string; animate: boolean; fit: boolean },
+          animate: false,          // whether to transition the node positions
+          fit: true,              // whether to fit to viewport
+        } as { name: string; animate: boolean; fit: boolean },  // 의존성 파일에 없는 key는 타입 단언
       };
 
       const cy = cytoscape(options);
   
       cy.on('tap', function (e) {
-        const url = e.target.data('url');
-        if (url && url !== '') {
-          window.open(url);
-        }
+        clickEventHandler(e.target.id())
       });
     }
   }
