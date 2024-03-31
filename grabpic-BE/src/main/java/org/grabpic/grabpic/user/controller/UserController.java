@@ -197,6 +197,12 @@ public class UserController {
         }
     }
 
+    @PostMapping("/validate")
+    public ResponseEntity<?> userValidate(HttpServletRequest request) {
+        userService.userValidate(request.getHeader("access"));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     //테스트용 코드
     //    @GetMapping("/getinfo")
 //    public ResponseEntity<?> getHeader(@RequestHeader("access") String accessToken) {

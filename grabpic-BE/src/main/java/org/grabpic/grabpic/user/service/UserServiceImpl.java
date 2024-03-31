@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -266,6 +268,15 @@ public class UserServiceImpl implements UserService {
         response.addCookie(cookie);
         response.setStatus(HttpServletResponse.SC_OK);
         return true;
+    }
+
+    @Override
+    public void userValidate(String token) {
+        long userId = jwtUtil.getUserId(token);
+        UserEntity user = userRepository.findByUserId(userId);
+        user.setValidateDate(LocalDate.now(ZoneId.of("Asia/Seoul")));
+        user.setRole("ROLE_VALIDATE");
+        userRepository.save(user);
     }
 
 
