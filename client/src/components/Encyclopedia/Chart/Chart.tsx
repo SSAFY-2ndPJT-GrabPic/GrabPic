@@ -32,7 +32,6 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
       userId,
       (res) => {
         setChartList(res.data)
-        console.log(res.data)
       },
       (err) => { console.error(err) }
     )
