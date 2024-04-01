@@ -21,4 +21,6 @@ public interface UserService {
     public InfoDTO myInfo(String token);
     public void changeMyInfo(InfoDTO infoDTO, String token);
     public boolean logout(HttpServletRequest request, HttpServletResponse response);
+    public void userValidate(String token, HttpServletResponse response);
+    public boolean checkPassword(String token, String password);
 }

@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -108,15 +110,12 @@ public class UserServiceImpl implements UserService {
         //get refresh token
         String refresh = null;
         for (Cookie cookie : cookies) {
-
             if (cookie.getName().equals("refresh")) {
-
                 refresh = cookie.getValue();
             }
         }
 
         if (refresh == null) {
-
             //response status code
             return "refresh token null";
         }
@@ -125,7 +124,6 @@ public class UserServiceImpl implements UserService {
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-
             //response status code
             return "refresh token expired";
         }
@@ -134,7 +132,6 @@ public class UserServiceImpl implements UserService {
         String category = jwtUtil.getCategory(refresh);
 
         if (!category.equals("refresh")) {
-
             //response status code
             return "invalid refresh token";
         }
@@ -215,10 +212,18 @@ public class UserServiceImpl implements UserService {
     public void changeMyInfo(InfoDTO infoDTO, String token) {
         UserEntity user = userRepository.findByUserId(jwtUtil.getUserId(token));
         // 닉네임, 이름, 생일, 성별
-        user.setNickname(infoDTO.getNickname());
-        user.setName(infoDTO.getName());
-        user.setBirth(infoDTO.getBirth());
-        user.setGender(infoDTO.getGender());
+        if(infoDTO.getNickname() != null) {
+            user.setNickname(infoDTO.getNickname());
+        }
+        if(infoDTO.getName() != null) {
+            user.setName(infoDTO.getName());
+        }
+        if(infoDTO.getBirth() != null) {
+            user.setBirth(infoDTO.getBirth());
+        }
+        if(infoDTO.getGender() != null) {
+            user.setGender(infoDTO.getGender());
+        }
         userRepository.save(user);
     }
 
@@ -266,6 +271,25 @@ public class UserServiceImpl implements UserService {
         response.addCookie(cookie);
         response.setStatus(HttpServletResponse.SC_OK);
         return true;
+    }
+
+    @Override
+    public void userValidate(String token, HttpServletResponse response) {
+        long userId = jwtUtil.getUserId(token);
+        UserEntity user = userRepository.findByUserId(userId);
+        user.setValidateDate(LocalDate.now(ZoneId.of("Asia/Seoul")));
+        user.setRole("ROLE_VALIDATE");
+
+        Cookie cookie = new Cookie("refresh", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean checkPassword(String token, String password) {
+        return userRepository.existsByUserIdAndPassword(jwtUtil.getUserId(token), password);
     }
 
 

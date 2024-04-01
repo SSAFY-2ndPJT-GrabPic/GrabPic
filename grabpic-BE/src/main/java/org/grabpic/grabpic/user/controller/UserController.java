@@ -10,6 +10,7 @@ import org.grabpic.grabpic.errors.exception.RestApiException;
 import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
+import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.grabpic.grabpic.user.service.MailService;
 import org.grabpic.grabpic.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -195,6 +196,18 @@ public class UserController {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> userValidate(HttpServletRequest request, HttpServletResponse response) {
+        userService.userValidate(request.getHeader("access"), response);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/checkpassword")
+    public ResponseEntity<?> checkpassword(HttpServletRequest request, @RequestBody LoginDTO loginDTO) {
+        boolean result = userService.checkPassword(request.getHeader("access"), loginDTO.getPassword());
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     //테스트용 코드

@@ -36,14 +36,15 @@ public class UserEntity {
     private String gender;
     @Setter
     private String profileImage;
+    @Setter
     private String role;
     private long subsCount;
     private long mySubsCount;
     private long collectCount;
     //탈퇴 날짜
+    @Setter
     private LocalDate validateDate;
     //탈퇴 여부, mysql default는 false(tinyint 0)
-    private boolean isDeleted;
 
     //구독자 수 증가 메소드
     public void increaseSubsCount() {
