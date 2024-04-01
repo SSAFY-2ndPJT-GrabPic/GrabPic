@@ -93,6 +93,9 @@ export const BasicLogin: React.FC = () => {
             // 회원정보 불일치
             setIsModal(true);
             setIsModalNo(5);
+          } else if (response.status === httpStatusCode.delete){
+            setIsModal(true);
+            setIsModalNo(10);
           }
         },
         () => {

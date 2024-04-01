@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useState } from 'react';
 import * as M from './ModifyUserInfo.style';
 
-// import { changeProfileImg } from '../../../api/user';
+import { changeProfileImg } from '../../../api/user';
 
 
 import { useRecoilValue } from 'recoil';
@@ -27,14 +27,14 @@ export const ModifyUserInfo: React.FC = () => {
     const file = e.target.files?.[0];
     if(file){
       // console.log(file);
-      // const formData = new FormData();
-      // formData.append('image', file);
+      const formData = new FormData();
+      formData.append('image', file);
 
-      // await changeProfileImg(
-      //   formData,
-      //   (res) => {console.log(res)},
-      //   (error) => {console.log(error)}
-      // )
+      await changeProfileImg(
+        formData,
+        (res) => {console.log(res)},
+        (error) => {console.log(error)}
+      )
 
       const reader = new FileReader();
       reader.onloadend = () => {

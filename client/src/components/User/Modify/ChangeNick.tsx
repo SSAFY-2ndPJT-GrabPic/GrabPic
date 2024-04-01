@@ -3,7 +3,7 @@ import * as R from '../../EmailVerification/Verification.style';
 import * as G from '../../../styles/globalCSS';
 import { useState } from 'react';
 
-import { nickNameCheck } from '../../../api/user';
+import * as U from '../../../api/user';
 
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import * as S from '../../../recoil/atoms/SettingState';
@@ -30,13 +30,12 @@ export default function ChangeNick() {
   // 닉네임 유효성 검사
   const validateNick = async (s: string) => {
     setNick(s);
-    console.log(s);
+
     if (nickRegex.test(s)) {
-      await nickNameCheck(
+      await U.nickNameCheck(
         s,
         (response) => {
           if (typeof response.data === 'string') {
-            console.log(response.data);
             if (response.data === '중복닉네임없음') {
               setIsNick(true);
               setNickMsg('');
@@ -77,8 +76,12 @@ export default function ChangeNick() {
 
 
     // 회원가입, 비밀번호 재설정 페이지에 따라 이동이 다름.
-    await nickNameCheck(
-      nick,
+    const params = {
+      nickname : nick,
+    }
+
+    await U.userChange(
+      params,
       () => {
         setUserInfo({...userInfo, nickname:nick});
         setIsModalNo(7);
