@@ -1,6 +1,7 @@
 const conatiner = {
   audio: false,
   video: {
+    facingMode: "environment",
     width: {
       min: window.innerWidth,
       ideal: window.innerWidth,
@@ -27,14 +28,14 @@ export class WebCam {
     ) {
       // console.log("camera open");
       navigator.mediaDevices.getUserMedia(conatiner).then((stream) => {
-        const videoTrack = stream.getVideoTracks()[0];
-        // 트랙 설정 확인
-        console.log(window.innerWidth);
-        console.log(window.innerHeight);
-        const settings = videoTrack.getSettings();
-        console.log('폭 (width):', settings.width);
-        console.log('높이 (height):', settings.height);
-        console.log('프레임 속도 (frame rate):', settings.frameRate);
+        // const videoTrack = stream.getVideoTracks()[0];
+        // // 트랙 설정 확인
+        // console.log(window.innerWidth);
+        // console.log(window.innerHeight);
+        // const settings = videoTrack.getSettings();
+        // console.log('폭 (width):', settings.width);
+        // console.log('높이 (height):', settings.height);
+        // console.log('프레임 속도 (frame rate):', settings.frameRate);
         videoRef.srcObject = stream;
       });
     }
