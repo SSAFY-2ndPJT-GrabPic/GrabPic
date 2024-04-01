@@ -184,8 +184,6 @@ export const LivePage: React.FC = () => {
 
   return (
     <>
-      <span>{window.innerWidth} , {window.innerWidth}</span>
-      <span>{document.documentElement.clientWidth} , {document.documentElement.clientHeight}</span>
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
