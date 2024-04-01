@@ -3,14 +3,14 @@ const conatiner = {
   video: {
     facingMode: "environment",
     width: {
-      min: document.documentElement.clientWidth,
-      ideal: document.documentElement.clientWidth,
-      max: document.documentElement.clientWidth,
+      min: Math.max(document.documentElement.clientWidth,window.innerWidth),
+      ideal: Math.max(document.documentElement.clientWidth,window.innerWidth),
+      max: Math.max(document.documentElement.clientWidth,window.innerWidth),
     },
     height: {
-      min: document.documentElement.clientHeight,
-      ideal: document.documentElement.clientHeight,
-      max: document.documentElement.clientHeight,
+      min: Math.max(document.documentElement.clientHeight,window.innerHeight),
+      ideal: Math.max(document.documentElement.clientHeight,window.innerHeight),
+      max: Math.max(document.documentElement.clientHeight,window.innerHeight),
     },
     frameRate: {
       ideal: 60,
