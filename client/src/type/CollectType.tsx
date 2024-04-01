@@ -42,5 +42,4 @@ export interface chartParamType {
   familia?:string;
   species?:string;
   genus?:string;
-  page:number;
 }
