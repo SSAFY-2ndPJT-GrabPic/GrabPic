@@ -20,11 +20,11 @@ public class EncyclopediaEntity {
     // PK
     private long encyclopediaId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "BIOLOGY_LIST_ID")
     private BiologyListEntity biologyList;
 
