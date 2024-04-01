@@ -1,6 +1,5 @@
 import sys
 import os
-import time
 import boto3
 from botocore.client import Config
 from botocore.exceptions import ClientError
@@ -21,7 +20,7 @@ BUCKET_NAME = 'grabpic'
 def main(argv):
     # 커멘드라인 파라메터 입력
     PK = argv[1]
-    file = PK + '/video.mp4'
+    file = PK + '/video2.mp4'
     isFileExist = True;
 
     # 해당 파일이 존재하는지 확인
@@ -30,11 +29,12 @@ def main(argv):
             isFileExist = False;
             handle_upload_img(file, PK)
     # 작업이 완료되면 디렉토리 삭제
-    os.system('sudo rm -rf ' + USERNAME)
+    os.system('sudo rm -rf ' + PK)
 
 
 def handle_upload_img(f, PK):  # f = 파일명
     data = open(f, 'rb')
+    file_size = os.path.getsize(f)
     client = boto3.client(
         's3',
         aws_access_key_id=ACCESS_KEY_ID,
@@ -43,7 +43,7 @@ def handle_upload_img(f, PK):  # f = 파일명
     # s3 버킷에 업로드 ('local_file', 'upload_name')
     # client.Bucket(BUCKET_NAME).upload_file(f, 'video.mp4')
 
-    client.put_object(Bucket=BUCKET_NAME, Key='frame/' + PK + '.mp4', Body=data)
+    client.put_object(Bucket=BUCKET_NAME, Key='frame/' + PK + '.mp4', Body=data, ContentType='video/mp4')
 
 
 if __name__ == "__main__":
