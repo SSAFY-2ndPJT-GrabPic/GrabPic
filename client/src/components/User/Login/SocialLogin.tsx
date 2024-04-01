@@ -12,11 +12,11 @@ export const SocailLogin: React.FC = () => {
   const loginClick = (e : number) => {
     console.log(e);
     if(e === 1) 
-      window.location.href = url + '/login/oauth2/authorization/google';
+      window.location.href = url + '/oauth2/authorization/google';
     else if(e === 2)
-      window.location.href = url + '/login/oauth2/authorization/naver';
+      window.location.href = url + '/oauth2/authorization/naver';
     else
-      window.location.href = url + '/login/oauth2/authorization/kakao';
+      window.location.href = url + '/oauth2/authorization/kakao';
   }
 
   return (

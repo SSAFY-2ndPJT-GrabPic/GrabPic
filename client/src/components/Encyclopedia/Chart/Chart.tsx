@@ -4,6 +4,11 @@ import cytoscape, { CytoscapeOptions } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { getChartList } from '../../../api/encyclopedia';
 import { ChartList } from '../../../type/ChartType';
+import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../../../api/user';
+import { useRecoilState } from 'recoil';
+import { headerState } from '../../../recoil/atoms/EncyHeaderState';
+import { chartParamType } from '../../../type/CollectType';
 cytoscape.use(coseBilkent);
 
 interface data {
@@ -24,6 +29,8 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);  // <C.Chart> 컴포넌트 참조
   const data: data[] = [];   // node + edge 데이터 담을 리스트
   const [chartList, setChartList] = useState<ChartList>()
+  const navigate = useNavigate();
+  const [userNickname, setUserNickname] = useState<string>('')
 
   // Chart데이터 받아오기
   useEffect(() => {
@@ -34,6 +41,12 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
         setChartList(res.data)
       },
       (err) => { console.error(err) }
+    )
+
+    getUserInfo(
+      userId,
+      (res) => {setUserNickname(res.data.nickname)},
+      (err) => console.error(err)
     )
   }, [])
   
@@ -56,10 +69,57 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
     }
   }
 
-  // Chart 노드 클릭 시 컬렉션 페이지 이동 + 해당 노드 기준 필터링 데이터만 노출
-  const clickEventHandler = (target: string) => {
-    console.log(target, 'click해따!')
+  // const setEncyTabState = useSetRecoilState(headerState)
+  const [param, setParam] = useState<chartParamType>({})
+  const [encyLocate, setEncyLocate] = useRecoilState(headerState)
+  
+  const routHandler = (lookWhere: string) => {
+    // console.log(lookWhere)
+    const beforeBtn = document.getElementById(encyLocate)
+    if (beforeBtn) {
+      beforeBtn.style.backgroundColor = '#E1E1E1';
+      beforeBtn.style.color = '#5C5C5C';
+    }
+    
+    const goBtn = document.getElementById(lookWhere)
+    
+    if (goBtn) {
+      setEncyLocate(lookWhere)
+      goBtn.style.backgroundColor = '#81D42E';
+      goBtn.style.color = '#FFFFFF';
+    }
   }
+
+  
+  // Chart 노드 클릭 시 컬렉션 페이지 이동 + 해당 노드 기준 필터링 데이터만 노출
+  const setParamHandler = async (target: string) => {
+    let key = ''
+    let value = ''
+    if (target.endsWith('목')) {
+      key = 'ordo';
+    } else if (target.endsWith('과')) {
+      key = 'familia';
+    } else if (target.endsWith('속')) {
+      key = 'genus';
+    } else {
+      key = 'species';
+    }
+    value = target;
+    
+    setParam({[key]: value, ...param})
+    setIsCall(true)
+  }
+  
+  const [isCall, setIsCall] = useState<boolean>(false)
+  // param이 변경되면 필터링 api 호출
+  useEffect(() => {
+    if (isCall) {
+      navigate(`/encyclopedia/${userNickname}`, {state: {userId: userId, param: param}})
+      routHandler('collection')
+      setIsCall(false) 
+    }
+
+  }, [isCall])
 
   // cytoscape 라이브러리 사용
   const fetchChart = async () => {
@@ -148,7 +208,7 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
       const cy = cytoscape(options);
   
       cy.on('tap', function (e) {
-        clickEventHandler(e.target.id())
+        setParamHandler(e.target.id())
       });
     }
   }
