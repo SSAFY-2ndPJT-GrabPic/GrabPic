@@ -5,12 +5,12 @@ import {  useState } from 'react';
 
 import { passwordChange } from '../../../api/user';
 
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import * as S from '../../../recoil/atoms/SettingState';
 
 export default function ChangePw() {
-  const [, setIsModal] = useRecoilState<boolean>(S.isModalState);
-  const [, setIsModalNo] = useRecoilState<number>(S.isModalNo);
+  const setIsModal = useSetRecoilState<boolean>(S.isModalState);
+  const setIsModalNo = useSetRecoilState<number>(S.isModalNo);
 
   const navigate = useNavigate();
 
@@ -65,9 +65,6 @@ export default function ChangePw() {
     if (!isPw || !isCheckPw) {
       return;
     }
-    // setIsModalNo(7);
-    // setIsModal(true);
-    // navigate(-1);
 
     await passwordChange(
       pw,

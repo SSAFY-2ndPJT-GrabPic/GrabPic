@@ -67,6 +67,14 @@ export const Modal: React.FC = () => {
       setModalTitle('탈퇴된 회원입니다.')
       setModalText('다른 이메일로 로그인해주세요.')
       setOneBtn(true);
+    } else if (isModalNo === 11){
+      setModalTitle('인증코드가 재전송 되었습니다.')
+      setModalText('인증코드를 입력하세요.')
+      setOneBtn(true);
+    } else if (isModalNo === 12){
+      setModalTitle('회원가입 되었습니다.')
+      setModalText('')
+      setOneBtn(true);
     }
   }, [isModal, isModalNo]);
 
