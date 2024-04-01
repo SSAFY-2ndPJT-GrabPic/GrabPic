@@ -87,7 +87,7 @@ public class MailServiceImpl implements MailService {
     }
 
     // 인증 코드 검증
-    public int verificationCode(EmailAuthDto dto) {
+    public int verificationCode(EmailAuthDto dto, HttpServletResponse response) {
         int code = dto.getCode();
         String email = dto.getEmail();
         Optional<EmailCodeEntity> emailCodeEntity = emailCodeRepository.findById(email);
@@ -96,6 +96,10 @@ public class MailServiceImpl implements MailService {
             int tmpSaveCode = emailCodeEntity.get().getCode();
             if(code == tmpSaveCode) {
                 // 코드 일치
+                int type = dto.getType();
+                if(type == 2) {
+                    jwtUtil.createJwt("access", "email", null, -1, 300L);
+                }
                 return 1;
             } else {
                 //코드 불일치

@@ -49,7 +49,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/profileimage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> setprofileimage (@RequestParam MultipartFile file, HttpServletRequest request) {
+    public ResponseEntity<?> setprofileimage (@RequestParam("image") MultipartFile file, HttpServletRequest request) {
         try {
             fileUploadService.uploadprofileImage(file, request.getHeader("access"));
             return new ResponseEntity<>(HttpStatus.OK);

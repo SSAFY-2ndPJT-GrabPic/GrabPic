@@ -118,7 +118,7 @@ public class UserController {
     public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto, HttpServletResponse response) {
         try {
             // 1 성공, 2코드불일치, 3만료
-            int authResult = mailService.verificationCode(emailAuthDto);
+            int authResult = mailService.verificationCode(emailAuthDto, response);
             if (authResult == 1) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {

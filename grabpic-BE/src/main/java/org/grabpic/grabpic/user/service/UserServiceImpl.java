@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean changePassword(String password, String token, HttpServletResponse response) throws IOException {
+        System.out.println("비밀번호 변경요청 : " + password);
         try {
             jwtUtil.isExpired(token);
         } catch (ExpiredJwtException e) {
