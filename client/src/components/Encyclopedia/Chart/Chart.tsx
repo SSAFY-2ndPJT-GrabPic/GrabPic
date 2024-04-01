@@ -76,7 +76,7 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
   const [encyLocate, setEncyLocate] = useRecoilState(headerState)
   
   const routHandler = (lookWhere: string) => {
-    console.log(lookWhere)
+    // console.log(lookWhere)
     const beforeBtn = document.getElementById(encyLocate)
     if (beforeBtn) {
       beforeBtn.style.backgroundColor = '#E1E1E1';
