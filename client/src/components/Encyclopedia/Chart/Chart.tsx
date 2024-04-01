@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as C from './Chart.style';
 import cytoscape, { CytoscapeOptions } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
-import { getChartList, getFilterList } from '../../../api/encyclopedia';
+import { getChartList } from '../../../api/encyclopedia';
 import { ChartList } from '../../../type/ChartType';
 import { useNavigate } from 'react-router-dom';
 import { getUserInfo } from '../../../api/user';
-import { constSelector, useRecoilState, useSetRecoilState } from 'recoil';
-import { tabState } from '../../../recoil/atoms/CollectDetailState';
+import { useRecoilState } from 'recoil';
 import { headerState } from '../../../recoil/atoms/EncyHeaderState';
-import { CollectItem, chartParamType } from '../../../type/CollectType';
+import { chartParamType } from '../../../type/CollectType';
 cytoscape.use(coseBilkent);
 
 interface data {
