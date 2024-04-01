@@ -2,8 +2,10 @@ package org.grabpic.grabpic.user.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.grabpic.grabpic.user.config.BusinessLogicException;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.dto.CustomOAuth2User;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -161,53 +165,118 @@ public class UserServiceImpl implements UserService {
     @Override
     public InfoDTO userInfo(long userId) {
 
-        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        UserEntity user = userRepository.findByUserId(userId);
+        InfoDTO infoDTO = new InfoDTO();
+        infoDTO.setUserId(user.getUserId());
+        //닉네임
+        infoDTO.setNickname(user.getNickname());
+        //성별
+        infoDTO.setGender(user.getGender());
+        //구독자 수
+        infoDTO.setSubsCount(user.getSubsCount());
+        //구독한 수
+        infoDTO.setMySubsCount(user.getMySubsCount());
+        //수집 개체 수
+        infoDTO.setCollectCount(user.getCollectCount());
+        //프로필 사진
+        infoDTO.setProfileImage(user.getProfileImage());
+        return infoDTO;
 
-        if(optionalUser.isPresent()) {
-            InfoDTO infoDTO = new InfoDTO();
-            UserEntity user = optionalUser.get();
-            infoDTO.setUserId(user.getUserId());
-            //닉네임
-            infoDTO.setNickname(user.getNickname());
-            //성별
-            infoDTO.setGender(user.getGender());
-            //구독자 수
-            infoDTO.setSubsCount(user.getSubsCount());
-            //프로필 사진
-            infoDTO.setProfileImage(user.getProfileImage());
-            return infoDTO;
-        } else {
-            System.out.println("존재하지 않는 사용자");
-            return null;
-        }
     }
 
-    //내 정보를 조회, 토큰 기반이므로 유저 key값을 전달하지 않음
+    //내 정보를 조회
     @Override
     public InfoDTO myInfo(String token) {
         long userId = jwtUtil.getUserId(token);
-        Optional<UserEntity> optionalUser = userRepository.findById(userId);
-        if(optionalUser.isPresent()) {
-            UserEntity user = optionalUser.get();
-            InfoDTO infoDTO = new InfoDTO();
-            //이메일
-            infoDTO.setEmail(user.getEmail());
-            //닉네임
-            infoDTO.setNickname(user.getNickname());
-            //이름
-            infoDTO.setName(user.getName());
-            //생일
-            infoDTO.setBirth(user.getBirth());
-            //성별
-            infoDTO.setGender(user.getGender());
-            //프로필 사진
-            infoDTO.setProfileImage(user.getProfileImage());
-            //구독자 수
-            infoDTO.setSubsCount(user.getSubsCount());
+        UserEntity user = userRepository.findByUserId(userId);
+        InfoDTO infoDTO = new InfoDTO();
+        //userPK
+        infoDTO.setUserId(user.getUserId());
+        //이메일
+        infoDTO.setEmail(user.getEmail());
+        //닉네임
+        infoDTO.setNickname(user.getNickname());
+        //이름
+        infoDTO.setName(user.getName());
+        //생일
+        infoDTO.setBirth(user.getBirth());
+        //성별
+        infoDTO.setGender(user.getGender());
+        //프로필 사진
+        infoDTO.setProfileImage(user.getProfileImage());
+        //구독자 수
+        infoDTO.setSubsCount(user.getSubsCount());
+        //구독한 수
+        infoDTO.setMySubsCount(user.getMySubsCount());
+        //수집 개체 수
+        infoDTO.setCollectCount(user.getCollectCount());
+        return infoDTO;
+    }
 
-            return infoDTO;
+    @Override
+    public void changeMyInfo(InfoDTO infoDTO, String token) {
+        UserEntity user = userRepository.findByUserId(jwtUtil.getUserId(token));
+        // 닉네임, 이름, 생일, 성별
+        user.setNickname(infoDTO.getNickname());
+        user.setName(infoDTO.getName());
+        user.setBirth(infoDTO.getBirth());
+        user.setGender(infoDTO.getGender());
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
+        String refresh = null;
+        Cookie[] cookies = request.getCookies();
+        // refresh 쿠키 찾기
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refresh")) {
+                refresh = cookie.getValue();
+            }
         }
-        return null;
+        if (refresh == null) {
+            //response status code
+//            return "refresh token null";
+            return false;
+        }
+        //expired check
+        try {
+            jwtUtil.isExpired(refresh);
+        } catch (ExpiredJwtException e) {
+
+            //response status code
+//            return "refresh token expired";
+            return false;
+        }
+        // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
+        String category = jwtUtil.getCategory(refresh);
+        if (!category.equals("refresh")) {
+            //response status code
+//            return "invalid refresh token";
+            return false;
+        }
+
+        if(jwtUtil.getUserId(request.getHeader("access")) != jwtUtil.getUserId(refresh)) {
+            //로그인 정보 불일치
+            return false;
+        }
+
+        Cookie cookie = new Cookie("refresh", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+        response.setStatus(HttpServletResponse.SC_OK);
+        return true;
+    }
+
+    @Override
+    public void userValidate(String token) {
+        long userId = jwtUtil.getUserId(token);
+        UserEntity user = userRepository.findByUserId(userId);
+        user.setValidateDate(LocalDate.now(ZoneId.of("Asia/Seoul")));
+        user.setRole("ROLE_VALIDATE");
+        userRepository.save(user);
     }
 
 

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum UserError implements ErrorCode{
     INACTIVE_USER(HttpStatus.FORBIDDEN, "User is inactive"),
+    EXPIRED_MAIL_CODE(HttpStatus.UNAUTHORIZED, "Mail Code is Expired")
     ;
 
     private final HttpStatus httpStatus;

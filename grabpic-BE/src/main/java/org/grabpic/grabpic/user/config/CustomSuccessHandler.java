@@ -48,6 +48,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //            response.sendRedirect("http://localhost:5173/");
             response.sendRedirect("https://j10d104.p.ssafy.io/user/regist");
             return;
+        } else if (role.equals("ROLE_VALIDATE")) {
+            System.out.println("탈퇴한");
+            response.setStatus(205);
+            response.sendRedirect("https://j10d104.p.ssafy.io/login");
+            return;
         }
 
         String email = customUserDetails.getEmail();

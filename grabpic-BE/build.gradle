@@ -54,6 +54,12 @@ dependencies {
 	//Oauth
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+	//WebClient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	//AWS S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
@@ -65,6 +71,9 @@ dependencies {
 
 	//JASYPT
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
+
+	//MongoDB
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('test') {

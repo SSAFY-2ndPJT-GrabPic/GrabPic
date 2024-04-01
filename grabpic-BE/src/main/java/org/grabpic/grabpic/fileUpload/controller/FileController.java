@@ -1,8 +1,10 @@
 package org.grabpic.grabpic.fileUpload.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.grabpic.grabpic.fileUpload.service.FileUploadService;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,22 @@ public class FileController {
 
     }
 
+    @PostMapping("/makeframe/{encyId}")
+    public ResponseEntity<?> makeframe(@PathVariable long encyId, @RequestBody MultipartFile[] files) {
+        fileUploadService.makeframe(encyId, files);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/profileimage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> setprofileimage (@RequestParam MultipartFile file, HttpServletRequest request) {
+        try {
+            fileUploadService.uploadprofileImage(file, request.getHeader("access"));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            log.error("profileImageUploads error" + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     //나중에 쓸 파일 삭제용 메소드
 //    @PostMapping("/deletes")

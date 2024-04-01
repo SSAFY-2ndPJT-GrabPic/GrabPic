@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,10 +13,13 @@ import java.time.LocalDate;
 public class AroundInfoDTO {
 
     private long encyclopedia;
+    // 수집한 사람 Id
+    private long userId;
     private String name;
-    private LocalDate registDate;
+    private LocalDateTime registDateTime;
     private String address;
     private double latitude;
     private double longitude;
+    private String thumbnailImage;
     private int rareCount;
 }

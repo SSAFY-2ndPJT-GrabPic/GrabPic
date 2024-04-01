@@ -49,6 +49,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(loginDTO.toString());
 
         String email = loginDTO.getEmail();
         String password = loginDTO.getPassword();
@@ -75,14 +76,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        //토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, userId, 1800000L);
-        String refresh = jwtUtil.createJwt("refresh", email, role, userId, 3600000L);
+        if(role.equals("ROLE_VALIDATE")) {
+            response.setStatus(205);
+        } else {
 
-        //응답 설정
-        response.setHeader("access", access);
-        response.addCookie(createCookie("refresh", refresh));
-        response.setStatus(HttpStatus.OK.value());
+            //토큰 생성
+            String access = jwtUtil.createJwt("access", email, role, userId, 1800000L);
+            String refresh = jwtUtil.createJwt("refresh", email, role, userId, 3600000L);
+
+            //응답 설정
+            response.setHeader("access", access);
+            response.addCookie(createCookie("refresh", refresh));
+            response.setStatus(HttpStatus.OK.value());
+        }
     }
 
     //로그인 실패시 실행하는 메소드
