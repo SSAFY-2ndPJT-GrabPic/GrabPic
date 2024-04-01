@@ -35,7 +35,6 @@ export const renderBoxes = (
         const rect = canvasRef.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
-        
         // 클릭한 위치와 그려진 요소들의 위치를 비교하여 해당하는 class_data를 찾기
         for (let i = 0; i < boxes_data.length; i += 4) {
 

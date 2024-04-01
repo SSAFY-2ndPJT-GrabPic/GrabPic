@@ -50,7 +50,7 @@ export const LivePage: React.FC = () => {
 
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`animal_web_model/model.json`, {
+      const yolo = await tf.loadGraphModel(`animal2_web_model/model.json`, {
         onProgress: (val) => {
           setLoading({ loading: true, progress: val });
         },

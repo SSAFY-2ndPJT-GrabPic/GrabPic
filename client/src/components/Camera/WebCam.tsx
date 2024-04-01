@@ -1,3 +1,15 @@
+const conatiner = {
+  audio: false,
+  video: {
+    width: { min: window.innerWidth, ideal: window.innerWidth, max: window.innerWidth },
+    height: { min: window.innerHeight, ideal: window.innerHeight, max: window.innerHeight },
+    frameRate: {
+      ideal: 60,
+      min: 30
+    }
+  },
+};
+
 export class WebCam {
   open = (videoRef: HTMLVideoElement | null) => {
     if (
@@ -7,14 +19,10 @@ export class WebCam {
     ) {
       // console.log("camera open");
       navigator.mediaDevices
-        .getUserMedia({
-          video: { facingMode: "environment" },
-        })
+        .getUserMedia(conatiner)
         .then((stream) => {
           videoRef.srcObject = stream;
         });
-    } else {
-      // console.log("error");
     }
   };
 
