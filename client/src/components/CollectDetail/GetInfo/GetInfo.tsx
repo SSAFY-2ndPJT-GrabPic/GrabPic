@@ -36,7 +36,7 @@ const GetInfo: React.FC<GetInfoProps> = ({ getInfo }) => {
 
       <G.Wrap>
         <G.Title>수집 날짜</G.Title>
-        <G.Context>{getInfo.registDate}</G.Context>
+        <G.Context>{getInfo.registDateTime?.split('T')[0]}</G.Context>
       </G.Wrap>
 
       <G.Wrap>

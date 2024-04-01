@@ -4,6 +4,11 @@ import cytoscape, { CytoscapeOptions } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { getChartList } from '../../../api/encyclopedia';
 import { ChartList } from '../../../type/ChartType';
+import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../../../api/user';
+import { useSetRecoilState } from 'recoil';
+import { tabState } from '../../../recoil/atoms/CollectDetailState';
+import { headerState } from '../../../recoil/atoms/EncyHeaderState';
 cytoscape.use(coseBilkent);
 
 interface data {
@@ -24,6 +29,8 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);  // <C.Chart> 컴포넌트 참조
   const data: data[] = [];   // node + edge 데이터 담을 리스트
   const [chartList, setChartList] = useState<ChartList>()
+  const navigate = useNavigate();
+  const [userNickname, setUserNickname] = useState<string>('')
 
   // Chart데이터 받아오기
   useEffect(() => {
@@ -35,6 +42,12 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
         console.log(res.data)
       },
       (err) => { console.error(err) }
+    )
+
+    getUserInfo(
+      userId,
+      (res) => {setUserNickname(res.data.nickname)},
+      (err) => console.error(err)
     )
   }, [])
   
@@ -57,9 +70,12 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
     }
   }
 
+  const setEncyTabState = useSetRecoilState(headerState)
   // Chart 노드 클릭 시 컬렉션 페이지 이동 + 해당 노드 기준 필터링 데이터만 노출
   const clickEventHandler = (target: string) => {
     console.log(target, 'click해따!')
+    setEncyTabState('collection')
+    navigate(`/encyclopedia/${userNickname}`, {state: {userId: userId}})
   }
 
   // cytoscape 라이브러리 사용

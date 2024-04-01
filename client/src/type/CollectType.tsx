@@ -1,18 +1,24 @@
 export interface CollectDetailType {
+  address: string;
+  content1?: string;
+  content2?: string;
+  content3?: string;
   encyclopediaId: number;
-  name: string;
-  species: string;
-  genus: string;
   familia: string;
-  ordo: string;
-  content: string;
-  registDate: string;
-  memo: string;
+  genus: string;
+  imageUrl: string;
   latitude: number;
   longitude: number;
-  address: string;
-  imageUrl: string;
+  memo: string;
+  name: string;
+  ordo: string;
+  registDateTime: string;
   shortsVideoUrl: string;
+  species: string;
+  summury: string;
+  title1: string;
+  title2: string;
+  title3: string;
 }
 
 export interface CollectItem {
