@@ -14,6 +14,8 @@ import myLocateMarker from '../../assets/Map/myLocateMarker.png';
 import myPositionImg from '../../assets/Map/gps.png';
 import reLoadImg from '../../assets/Map/magnifier.png';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { backState } from '../../recoil/atoms/DetailBackState';
 
 
 
@@ -162,8 +164,11 @@ const CustomMap: React.FC = () => {
     loadPinData(mapCenter, loadDist, pageRef.current, filterRef.current);
   };
 
+  const setBackWhereState = useSetRecoilState(backState);
+  
   const goDetail = (name: string, userId: number, ency: number) => {
     navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
+    setBackWhereState('map')
   }
 
   useEffect(() => {
