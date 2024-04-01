@@ -17,6 +17,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
   const navigate = useNavigate();
 
   const backHandler = (isGuestBook: string) => {
+    console.log(isGuestBook)
     if (isGuestBook) {
       navigate(`/encyclopedia/${userInfo.nickname}`, {
         state: { userId: userInfo.userId }
@@ -49,7 +50,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
         </U.UserTxtWrap>
       </U.InfoWrap>
 
-      <U.BackBtn onClick={() => backHandler()}>뒤로가기</U.BackBtn>
+      <U.BackBtn onClick={() => backHandler('')}>뒤로가기</U.BackBtn>
     </U.Container> 
   );
 };
