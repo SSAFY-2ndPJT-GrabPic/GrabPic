@@ -98,7 +98,7 @@ public class MailServiceImpl implements MailService {
                 // 코드 일치
                 int type = dto.getType();
                 if(type == 2) {
-                    jwtUtil.createJwt("access", "email", null, -1, 300L);
+                    response.setHeader("access", jwtUtil.createJwt("access", "email", null, -1, 300L));
                 }
                 return 1;
             } else {
