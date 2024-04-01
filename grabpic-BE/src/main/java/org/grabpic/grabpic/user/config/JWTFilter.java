@@ -5,8 +5,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.grabpic.grabpic.user.db.dto.CustomUserDetails;
-import org.grabpic.grabpic.user.db.entity.User;
+import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,14 +16,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
-
-    public JWTFilter(JWTUtil jwtUtil) {
-
-        this.jwtUtil = jwtUtil;
-    }
 
 
     @Override
@@ -31,13 +28,27 @@ public class JWTFilter extends OncePerRequestFilter {
         System.out.println(request.getHeader("access"));
         //request에서 access 헤더를 찾음
         String accessToken = request.getHeader("access");
+        String refreshToken = request.getHeader("refresh");
+
+        if(refreshToken != null) {
+            try {
+                jwtUtil.isExpired(refreshToken);
+            } catch (ExpiredJwtException e) {
+                //response body
+                PrintWriter writer = response.getWriter();
+                writer.print("refresh token expired");
+
+                //response status code
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+        }
 
         //access 헤더 검증
-        if (accessToken == null ) {
-
+        if ( accessToken == null ) {
+            setContext(null, null);
             System.out.println("token null");
             filterChain.doFilter(request, response);
-
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
@@ -60,7 +71,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(accessToken);
-        System.out.println("확인2");
         if (!category.equals("access")) {
 
             //response body
@@ -71,17 +81,16 @@ public class JWTFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        System.out.println("확인3");
         //토큰에서 email과 role 획득
-        String email = jwtUtil.getEmail(accessToken);
-        String role = jwtUtil.getRole(accessToken);
+        setContext(jwtUtil.getEmail(accessToken), jwtUtil.getRole(accessToken));
+        filterChain.doFilter(request, response);
+    }
 
-        //userEntity를 생성하여 값 set
-        User userEntity = new User();
-        userEntity.setEmail(email);
-        userEntity.setPassword("temppassword");
-        userEntity.setRole(role);
-        System.out.println("확인4");
+    private void setContext(String email, String role) {
+        UserEntity userEntity = UserEntity.builder()
+                .email(email)
+                .role(role)
+                .build();
         //UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 
@@ -89,9 +98,5 @@ public class JWTFilter extends OncePerRequestFilter {
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        System.out.println("확인5");
-
-        filterChain.doFilter(request, response);
-        System.out.println("확인6");
     }
 }

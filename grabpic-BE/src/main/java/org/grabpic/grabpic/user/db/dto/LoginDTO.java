@@ -11,4 +11,5 @@ public class LoginDTO {
 
     private String email;
     private String password;
+    private boolean autoLoginInfo;
 }
