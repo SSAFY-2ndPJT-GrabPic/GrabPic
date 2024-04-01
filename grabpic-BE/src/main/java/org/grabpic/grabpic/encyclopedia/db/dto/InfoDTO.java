@@ -21,7 +21,13 @@ public class InfoDTO {
     private String ordo;
 
     //상세 설명
-    private String content;
+    private String summary;
+    private String title1;
+    private String content1;
+    private String title2;
+    private String content2;
+    private String title3;
+    private String content3;
 
 
     //수집정보

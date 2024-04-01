@@ -26,7 +26,12 @@ public class BiologyListServiceImpl implements BiologyListService {
         registInfoDTO.setSpecies(biologyList.getSpecies());
         registInfoDTO.setName(biologyList.getName());
         registInfoDTO.setSummary(biologyList.getSummary());
-        registInfoDTO.setContent(biologyList.getContent());
+        registInfoDTO.setTitle1(biologyList.getTitle1());
+        registInfoDTO.setContent1(biologyList.getContent1());
+        registInfoDTO.setTitle2(biologyList.getTitle2());
+        registInfoDTO.setContent2(biologyList.getContent2());
+        registInfoDTO.setTitle3(biologyList.getTitle3());
+        registInfoDTO.setContent3(biologyList.getContent3());
         registInfoDTO.setImageDetail(biologyList.getImageDetail());
 
         return registInfoDTO;

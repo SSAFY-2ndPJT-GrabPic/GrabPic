@@ -134,7 +134,13 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         infoDTO.setOrdo(encyclopedia.getBiologyList().getOrdo());
 
         //개체 정보
-        infoDTO.setContent(encyclopedia.getBiologyList().getContent());
+        infoDTO.setSummary(encyclopedia.getBiologyList().getSummary());
+        infoDTO.setTitle1(encyclopedia.getBiologyList().getTitle1());
+        infoDTO.setContent1(encyclopedia.getBiologyList().getContent1());
+        infoDTO.setTitle2(encyclopedia.getBiologyList().getTitle2());
+        infoDTO.setContent2(encyclopedia.getBiologyList().getContent2());
+        infoDTO.setTitle3(encyclopedia.getBiologyList().getTitle3());
+        infoDTO.setContent3(encyclopedia.getBiologyList().getContent3());
 
         //개체 등록일자
         infoDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
