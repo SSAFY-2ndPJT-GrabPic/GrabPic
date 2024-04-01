@@ -1,7 +1,9 @@
 import React from 'react';
 import * as G from './GalleryUserInfo.style'
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GalleryItemType } from '../../type/GalleryType';
+import { useSetRecoilState } from 'recoil';
+import { headerState } from '../../recoil/atoms/EncyHeaderState';
 
 interface GalleryUserInfoProps {
   galleryItem : GalleryItemType
@@ -35,15 +37,25 @@ const GalleryUserInfo: React.FC<GalleryUserInfoProps> = ({ galleryItem }) => {
     }
   }
   
+  const setEncyLocate = useSetRecoilState(headerState);
+  const navigate = useNavigate();
+
+  const navigateHandler = () => {
+    navigate(`/encyclopedia/${galleryItem.writerNickName}`, {
+      state: { userId: galleryItem.writerId }
+    });
+    setEncyLocate('guestBook');
+  }
+
   return (
     <G.Container>
-      <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}>
-        <G.UserProfileImg src={galleryItem.profileImage} />
-      </Link>
+      {/* <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}> */}
+        <G.UserProfileImg src={galleryItem.profileImage} onClick={() => navigateHandler()} />
+      {/* </Link> */}
       <G.UserTxt>
-        <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}>
-          <G.NickTxt>{galleryItem.writerNickName}</G.NickTxt>
-        </Link>
+        {/* <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}> */}
+          <G.NickTxt onClick={() => navigateHandler()}>{galleryItem.writerNickName}</G.NickTxt>
+        {/* </Link> */}
         <G.DateTxt>{timeTransHandler(galleryItem.registDateTime)}</G.DateTxt>
       </G.UserTxt>
     </G.Container>

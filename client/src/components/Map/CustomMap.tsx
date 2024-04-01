@@ -344,16 +344,16 @@ const CustomMap: React.FC = () => {
         <M.PinList ref={listRef}>
           {isPrevRefreshing && <G.LoadingGif src={loadingGif}/>}
           {pinLists.map((pin, index) => (
-            <M.ItemContainer key={index}>
-            <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
-            <M.ItemDataContainer>
-              <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
-              <M.ItemInfoContainer>
-                <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
-                <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
-              </M.ItemInfoContainer>
-            </M.ItemDataContainer>
-          </M.ItemContainer>
+            <M.ItemContainer key={index} onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>
+              <M.ItemImg src={pin.thumnailImage} alt=""/>
+              <M.ItemDataContainer>
+                <M.ItemNameSpan>{pin.name}</M.ItemNameSpan>
+                <M.ItemInfoContainer>
+                  <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
+                  <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
+                </M.ItemInfoContainer>
+              </M.ItemDataContainer>
+            </M.ItemContainer>
           ))}
           {isNextRefreshing && <G.LoadingGif src={loadingGif}/>}
         </M.PinList>
