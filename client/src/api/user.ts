@@ -86,7 +86,6 @@ export const passwordChange = async (
   Response: (Response: AxiosResponse<MyResponseData>) => void,
   Error: (Error: AxiosResponse<MyResponseData>) => void
 ) => {
-  console.log(params);
   await privateApi
     .post(`/${url}/password/change`, params)
     .then(Response)
