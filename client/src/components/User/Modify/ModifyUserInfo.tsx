@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useState } from 'react';
 import * as M from './ModifyUserInfo.style';
 
-// import { changeProfileImg } from '../../api/user';
+// import { changeProfileImg } from '../../../api/user';
 
 
 import { useRecoilValue } from 'recoil';
@@ -26,7 +26,7 @@ export const ModifyUserInfo: React.FC = () => {
   const imageChange =  async (e : React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(file){
-
+      // console.log(file);
       // const formData = new FormData();
       // formData.append('image', file);
 

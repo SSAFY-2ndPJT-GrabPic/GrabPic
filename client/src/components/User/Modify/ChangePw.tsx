@@ -86,8 +86,7 @@ export default function ChangePw() {
 
   return (
     <div className="flex flex-col">
-      <R.VerificationTitle className='mt-5'>비밀번호 재설정</R.VerificationTitle>
-      <div className="flex flex-col mt-3">
+      <div className="flex flex-col mt-7">
         <R.VerificationText>
           새롭게 설정할 비밀번호를 입력해주세요.
         </R.VerificationText>
