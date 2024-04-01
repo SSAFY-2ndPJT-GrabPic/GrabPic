@@ -3,7 +3,7 @@ import * as R from '../../EmailVerification/Verification.style';
 import * as G from '../../../styles/globalCSS';
 import {  useState } from 'react';
 
-// import { passwordChange } from '../../../api/user';
+import { passwordChange } from '../../../api/user';
 
 import { useRecoilState } from 'recoil';
 import * as S from '../../../recoil/atoms/SettingState';
@@ -65,23 +65,22 @@ export default function ChangePw() {
     if (!isPw || !isCheckPw) {
       return;
     }
-    setIsModalNo(7);
-    setIsModal(true);
-    navigate(-1);
+    // setIsModalNo(7);
+    // setIsModal(true);
+    // navigate(-1);
 
-    // 회원가입, 비밀번호 재설정 페이지에 따라 이동이 다름.
-    // await passwordChange(
-    //   pw,
-    //   () => {
-    //     setIsModalNo(7);
-    //     setIsModal(true);
-    //     navigate(-1);
-    //   },
-    //   () => {
-    //     setIsModalNo(4);
-    //     setIsModal(true);
-    //   }
-    // );
+    await passwordChange(
+      pw,
+      () => {
+        setIsModalNo(7);
+        setIsModal(true);
+        navigate(-1);
+      },
+      () => {
+        setIsModalNo(4);
+        setIsModal(true);
+      }
+    );
   };
 
   return (

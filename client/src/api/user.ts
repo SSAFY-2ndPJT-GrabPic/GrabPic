@@ -119,9 +119,27 @@ export const getUserInfo = async(
 
 export const changeProfileImg = async (
   params:FormData,
-  Response : (Response : AxiosResponse<OwnerInfoType>) => void, 
+  Response : (Response : AxiosResponse<MyResponseData>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-    await formDataApi.post(`/fileupload/profileimage`,params)
+    
+    await formDataApi.post('fileupload/profileimage',params)
+    .then(Response)
+    .catch(Error);
+}
+
+export const userDelete = async (
+  Response : (Response : AxiosResponse<MyResponseData>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+    await privateApi.post(`${url}/validate`)
+    .then(Response)
+    .catch(Error)
+}
+
+export const userChange = async (
+  params : {nickname : string},
+  Response : (Response : AxiosResponse<MyResponseData>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+    await privateApi.post(`${url}/myinfochange`,params)
     .then(Response)
     .catch(Error);
 }
