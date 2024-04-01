@@ -346,7 +346,7 @@ const CustomMap: React.FC = () => {
           {isPrevRefreshing && <G.LoadingGif src={loadingGif}/>}
           {pinLists.map((pin, index) => (
             <M.ItemContainer key={index} onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>
-              <M.ItemImg src={pin.thumnailImage} alt=""/>
+              <M.ItemImg src={pin.thumbnailImage} alt=""/>
               <M.ItemDataContainer>
                 <M.ItemNameSpan>{pin.name}</M.ItemNameSpan>
                 <M.ItemInfoContainer>
