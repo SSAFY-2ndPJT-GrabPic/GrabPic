@@ -1,7 +1,7 @@
 import React from 'react';
 import * as G from './GalleryImg.style';
 import { GalleryItemType } from '../../type/GalleryType';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { backState } from '../../recoil/atoms/DetailBackState';
 
