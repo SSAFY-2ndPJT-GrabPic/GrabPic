@@ -22,6 +22,7 @@
     "react-dom": "^18.2.0",
     "react-kakao-maps-sdk": "^1.1.26",
     "react-loader-spinner": "^6.1.6",
+    "react-player": "^2.15.1",
     "react-queue": "^0.6.1",
     "react-router-dom": "^6.22.3",
     "recoil": "^0.7.7",

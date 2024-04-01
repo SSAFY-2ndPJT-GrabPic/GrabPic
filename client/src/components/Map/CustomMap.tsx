@@ -14,6 +14,8 @@ import myLocateMarker from '../../assets/Map/myLocateMarker.png';
 import myPositionImg from '../../assets/Map/gps.png';
 import reLoadImg from '../../assets/Map/magnifier.png';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { backState } from '../../recoil/atoms/DetailBackState';
 
 
 
@@ -163,8 +165,11 @@ const CustomMap: React.FC = () => {
     loadPinData(mapCenter, loadDist, pageRef.current, filterRef.current);
   };
 
+  const setBackWhereState = useSetRecoilState(backState);
+  
   const goDetail = (name: string, userId: number, ency: number) => {
     navigate(`/detail/${name}`, {state:{encyclopediaId: ency,userId: userId,}})
+    setBackWhereState('map')
   }
 
   useEffect(() => {
@@ -340,16 +345,16 @@ const CustomMap: React.FC = () => {
         <M.PinList ref={listRef}>
           {isPrevRefreshing && <G.LoadingGif src={loadingGif}/>}
           {pinLists.map((pin, index) => (
-            <M.ItemContainer key={index}>
-            <M.ItemImg src={pin.thumbnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
-            <M.ItemDataContainer>
-              <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
-              <M.ItemInfoContainer>
-                <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
-                <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
-              </M.ItemInfoContainer>
-            </M.ItemDataContainer>
-          </M.ItemContainer>
+            <M.ItemContainer key={index} onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>
+              <M.ItemImg src={pin.thumnailImage} alt=""/>
+              <M.ItemDataContainer>
+                <M.ItemNameSpan>{pin.name}</M.ItemNameSpan>
+                <M.ItemInfoContainer>
+                  <M.ItemInfoSpan>{pin.registDateTime}</M.ItemInfoSpan>
+                  <M.ItemInfoSpan>{pin.address}</M.ItemInfoSpan>
+                </M.ItemInfoContainer>
+              </M.ItemDataContainer>
+            </M.ItemContainer>
           ))}
           {isNextRefreshing && <G.LoadingGif src={loadingGif}/>}
         </M.PinList>

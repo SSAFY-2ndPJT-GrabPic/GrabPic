@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as U from './UserInfo.style'
 import subImg from '../../../assets/CollectDetail/subIcon.png'
 import { OwnerInfoType } from '../../../type/UserType';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { headerState } from '../../../recoil/atoms/EncyHeaderState';
+import { backState } from '../../../recoil/atoms/DetailBackState';
 
 interface UserInfoProps {
   userInfo: OwnerInfoType
@@ -12,15 +13,27 @@ interface UserInfoProps {
 
 const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
   const setEncyLocate = useSetRecoilState(headerState)
+  const backWhereState = useRecoilValue(backState)
+  const navigate = useNavigate();
+
+  const backHandler = () => {
+    if (backWhereState === 'collect') {
+      navigate(`/encyclopedia/${userInfo.nickname}`, {state:{ userId: userInfo.userId}})
+      setEncyLocate('collection')
+    } else if (backWhereState === 'gallery') {
+      navigate('/gallery')
+    } else if (backWhereState === 'map') {
+      navigate('/map')
+    }
+  }
 
   return (
     <U.Container>
       <U.InfoWrap>
-        <Link to={`/encyclopedia/${userInfo.nickname}`} state={{ userId: userInfo.userId}} onClick={() => setEncyLocate('collection')}>
-          <U.UserImg src={userInfo.profileImage} />
-        </Link>
+        <U.UserImg src={userInfo.profileImage} onClick={() => backHandler()} />
+
         <U.UserTxtWrap>
-          <U.nickName to={`/encyclopedia/${userInfo.nickname}`} state={{ userId: userInfo.userId}} onClick={() => setEncyLocate('collection')}>
+          <U.nickName onClick={() => backHandler()}>
             {userInfo.nickname}
           </U.nickName>
 
@@ -31,7 +44,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
         </U.UserTxtWrap>
       </U.InfoWrap>
 
-      <U.BackBtn to={`/encyclopedia/${userInfo.nickname}`} state={{ userId: userInfo.userId}} onClick={() => setEncyLocate('collection')}>뒤로가기</U.BackBtn>
+      <U.BackBtn onClick={() => backHandler()}>뒤로가기</U.BackBtn>
     </U.Container> 
   );
 };

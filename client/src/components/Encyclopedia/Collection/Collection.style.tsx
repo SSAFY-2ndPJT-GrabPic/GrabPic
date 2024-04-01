@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import defaultImg from '../../../assets/Encyclopedia/defaultCollectImg.png'
-import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   width: 100%;
@@ -64,7 +63,7 @@ export const CollectContainer = styled.div`
   }
 `
 
-export const CollectItem = styled(Link)`
+export const CollectItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;

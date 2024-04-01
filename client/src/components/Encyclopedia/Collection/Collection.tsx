@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as C from './Collection.style';
 import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { filterState, wantState } from '../../../recoil/atoms/CollectFilterState';
 import Filter from './Filter';
 import { getCollectList } from '../../../api/encyclopedia';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CollectItem } from '../../../type/CollectType';
+import { backState } from '../../../recoil/atoms/DetailBackState';
 
 interface CollectionProps {
   userId: number;
@@ -20,6 +21,8 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
   let userIdData = userId;
 
   const [collectList, setCollectList] = useState<CollectItem[]>([]);
+  const navigate = useNavigate();
+  const setBackState = useSetRecoilState(backState);
 
   useEffect(() => {
     if (location.state) {
@@ -34,6 +37,14 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
     )
   }, []);
 
+  const navigateHandler = (name: string, encyId: number) => {
+    navigate(`/detail/${name}`, {state:{
+      encyclopediaId: encyId,
+      userId: userId,
+    }})
+    setBackState('collect')
+  }
+
   return (
     <>
       {isOpen && <Filter />}
@@ -47,13 +58,9 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
 
         <C.CollectContainer className="grid gird-cols-3">
           {collectList.map((collectItem, index) => (
-            <C.CollectItem
-              key={index}
-              to={`/detail/${collectItem.name}`}
-              state={{
-                encyclopediaId: collectItem.encyclopediaId,
-                userId: userId,
-              }}
+            <C.CollectItem 
+              key={index} 
+              onClick={() => navigateHandler(collectItem.name, collectItem.encyclopediaId)}
             >
               <C.ItemImg src={collectItem.thumbnailImageUrl} />
               <C.ItemName>{collectItem.name}</C.ItemName>
