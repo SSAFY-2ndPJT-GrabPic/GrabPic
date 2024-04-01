@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changePassword(String password, String token, HttpServletResponse response) throws IOException {
         System.out.println("비밀번호 변경요청 : " + password);
+        String custom = password.substring(1, password.length() - 1);
         try {
             jwtUtil.isExpired(token);
         } catch (ExpiredJwtException e) {
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
         }
         System.out.println("이메일 확인 : " + jwtUtil.getEmail(token));
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(bCryptPasswordEncoder.encode(custom));
         userRepository.save(user);
         return true;
     }
