@@ -93,9 +93,10 @@ export default function ResetPwSet() {
         pw,
         () => { 
           navigate('/login');
+          setIsModalNo(7);
+          setIsModal(true);
          },
-        (error) => { 
-          console.log(error); 
+        () => { 
           setIsModalNo(4);
           setIsModal(true);
         }

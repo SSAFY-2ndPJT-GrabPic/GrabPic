@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useSetRecoilState } from 'recoil';
 import * as R from '../../../recoil/atoms/UserState';
+import * as S from '../../../recoil/atoms/SettingState'
 
 import { userLogin, userInfo } from '../../../api/user';
 
@@ -11,7 +12,6 @@ import * as G from '../../../styles/globalCSS';
 
 import { httpStatusCode } from '../../../utils/http-status';
 
-import * as S from '../../../recoil/atoms/SettingState'
 
 export const BasicLogin: React.FC = () => {
   const setIsModal = useSetRecoilState<boolean>(S.isModalState);
@@ -83,11 +83,14 @@ export const BasicLogin: React.FC = () => {
             await userInfo(
               (response) => {
                 setUserInfoState(response);
+                setIsLogin(true);
               },
               () => {
+                localStorage.clear();
+                setIsModal(true);
+                setIsModalNo(0);
               }
             );
-            setIsLogin(true);
             navigate('/');
           } else if (response.status === httpStatusCode.fail) {
             // 회원정보 불일치
