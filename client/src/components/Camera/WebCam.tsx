@@ -3,14 +3,14 @@ const conatiner = {
   video: {
     facingMode: "environment",
     width: {
-      min: window.innerWidth,
-      ideal: window.innerWidth,
-      max: window.innerWidth,
+      min: document.documentElement.clientWidth,
+      ideal: document.documentElement.clientWidth,
+      max: document.documentElement.clientWidth,
     },
     height: {
-      min: window.innerHeight,
-      ideal: window.innerHeight,
-      max: window.innerHeight,
+      min: document.documentElement.clientHeight,
+      ideal: document.documentElement.clientHeight,
+      max: document.documentElement.clientHeight,
     },
     frameRate: {
       ideal: 60,
@@ -32,6 +32,8 @@ export class WebCam {
         // // 트랙 설정 확인
         // console.log(window.innerWidth);
         // console.log(window.innerHeight);
+        // console.log(document.documentElement.clientWidth)
+        // console.log(document.documentElement.clientHeight);
         // const settings = videoTrack.getSettings();
         // console.log('폭 (width):', settings.width);
         // console.log('높이 (height):', settings.height);
