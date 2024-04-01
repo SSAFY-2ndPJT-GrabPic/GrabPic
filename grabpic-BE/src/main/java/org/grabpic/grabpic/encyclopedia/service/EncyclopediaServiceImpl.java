@@ -13,6 +13,7 @@ import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaSpecification;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -212,7 +213,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 
     //컬랙션 조회 서비스 다중 조건 검색
     @Override
-    public List<InfoPreviewDTO> searchEncyclopedia(long user, String ordo, String familia, String genus, String species){
+    public List<InfoPreviewDTO> searchEncyclopedia(long user, String ordo, String familia, String genus, String species, int page, int limit){
 
         Specification<EncyclopediaEntity> spec = (root, query, criteriaBuilder) -> null;
 
@@ -226,7 +227,8 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         if (species != null)
             spec = spec.and(EncyclopediaSpecification.equalSpecies(species));
 
-        List<EncyclopediaEntity> encyclopediaList = encyclopediaRepository.findAll(spec);
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<EncyclopediaEntity> encyclopediaList = encyclopediaRepository.findAll(spec, pageable);
 
         List<InfoPreviewDTO> infoPreviewDTOList = new ArrayList<>();
         for (EncyclopediaEntity encyclopedia : encyclopediaList) {

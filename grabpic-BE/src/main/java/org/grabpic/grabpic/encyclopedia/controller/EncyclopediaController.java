@@ -94,9 +94,9 @@ public class EncyclopediaController {
 
     //컬랙션 조회 api 유저 아이디는 필수 이후 파라미터는 옵션
     @GetMapping("/search/{userId}")
-    public ResponseEntity<List<InfoPreviewDTO>> searchEncyclopedia(@PathVariable long userId, @RequestParam(required = false) String ordo, @RequestParam(required = false) String familia, @RequestParam(required = false) String genus, @RequestParam(required = false) String species ){
+    public ResponseEntity<List<InfoPreviewDTO>> searchEncyclopedia(@PathVariable long userId, @RequestParam(required = false) String ordo, @RequestParam(required = false) String familia, @RequestParam(required = false) String genus, @RequestParam(required = false) String species, @RequestParam int page, @RequestParam int limit ){
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(encyclopediaService.searchEncyclopedia(userId, ordo, familia, genus, species));
+            return ResponseEntity.status(HttpStatus.OK).body(encyclopediaService.searchEncyclopedia(userId, ordo, familia, genus, species, page, limit));
         }catch (Exception e){
             log.error(e. getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

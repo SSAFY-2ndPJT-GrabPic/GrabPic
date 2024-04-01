@@ -17,5 +17,4 @@ public interface EncyclopediaService {
     public List<GalleryPostDTO> galleryList(String token, int page, int limit);
     public void addChartData(CollectionRegistDTO collectionRegistDTO, String token);
     public ChartDataEntity getChartData(long userId);
-    public List<InfoPreviewDTO> searchEncyclopedia(long user, String ordo, String familia, String genus, String species);
-}
+    public List<InfoPreviewDTO> searchEncyclopedia(long user, String ordo, String familia, String genus, String species, int page, int limit);}
