@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { privateApi,formDataApi } from '../utils/http-commons';
-import { CollectDetailType, CollectItem, RegistType } from '../type/CollectType';
+import { CollectDetailType, CollectItem, RegistType, chartParamType } from '../type/CollectType';
 import { MyResponseData } from '../type/ApiResponseType';
 import { GalleryItemType } from '../type/GalleryType';
 import { ChartList } from '../type/ChartType';
@@ -51,3 +51,23 @@ export const getChartList = async(
   .then(Response)
   .catch(Error)
 }
+
+export const getFilterList = async(
+  param: chartParamType,
+  userId: number,
+  Response : (Response : AxiosResponse<ChartList>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.get(`/${url}/search/${userId}`, {params: {...param, 'limit': 20}})
+  .then(Response)
+  .catch(Error)
+}
+
+// export const getFilterList = async(
+//   param: string,
+//   userId: number,
+//   Response : (Response : AxiosResponse<ChartList>) => void, 
+//   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+//   await privateApi.get(`/${url}/${userId}`)
+//   .then(Response)
+//   .catch(Error)
+// }

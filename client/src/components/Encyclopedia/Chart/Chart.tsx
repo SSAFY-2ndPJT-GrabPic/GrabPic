@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as C from './Chart.style';
 import cytoscape, { CytoscapeOptions } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
-import { getChartList } from '../../../api/encyclopedia';
+import { getChartList, getFilterList } from '../../../api/encyclopedia';
 import { ChartList } from '../../../type/ChartType';
 import { useNavigate } from 'react-router-dom';
 import { getUserInfo } from '../../../api/user';
 import { useSetRecoilState } from 'recoil';
 import { tabState } from '../../../recoil/atoms/CollectDetailState';
 import { headerState } from '../../../recoil/atoms/EncyHeaderState';
+import { chartParamType } from '../../../type/CollectType';
 cytoscape.use(coseBilkent);
 
 interface data {
@@ -71,11 +72,57 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
   }
 
   const setEncyTabState = useSetRecoilState(headerState)
+
+  const [param, setParam] = useState<chartParamType>({
+    // ordo: '',     // 목
+    // familia: '',  // 과
+    // species: '',  // 종
+    // genus: '',    // 속
+    page: 1,
+  })
+
+  
   // Chart 노드 클릭 시 컬렉션 페이지 이동 + 해당 노드 기준 필터링 데이터만 노출
-  const clickEventHandler = (target: string) => {
-    console.log(target, 'click해따!')
-    setEncyTabState('collection')
-    navigate(`/encyclopedia/${userNickname}`, {state: {userId: userId}})
+  const setParamHandler = async (target: string) => {
+    let key = ''
+    let value = ''
+    if (target.endsWith('목')) {
+      key = 'ordo';
+    } else if (target.endsWith('과')) {
+      key = 'familia';
+    } else if (target.endsWith('속')) {
+      key = 'genus';
+    } else {
+      key = 'species';
+    }
+    value = target;
+    setParam({[key]: value, ...param})
+    setIsCall(true)
+  }
+
+  const [isCall, setIsCall] = useState<boolean>(false)
+  // param이 변경되면 필터링 api 호출
+  useEffect(() => {
+    if (isCall) {
+      callApi();
+      setIsCall(false)
+    }
+  }, [isCall])
+
+  const callApi = async () => {
+    await getFilterList(
+      param,
+      userId,
+      (res) => { console.log(res.data)},
+      (err) => console.error(err)
+    )
+      
+    setParam({
+      page: 0,
+    })
+
+  // setEncyTabState('collection')
+  // navigate(`/encyclopedia/${userNickname}`, {state: {userId: userId}})
   }
 
   // cytoscape 라이브러리 사용
@@ -165,7 +212,7 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
       const cy = cytoscape(options);
   
       cy.on('tap', function (e) {
-        clickEventHandler(e.target.id())
+        setParamHandler(e.target.id())
       });
     }
   }

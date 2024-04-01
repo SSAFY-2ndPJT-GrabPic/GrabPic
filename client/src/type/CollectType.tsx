@@ -15,7 +15,7 @@ export interface CollectDetailType {
   registDateTime: string;
   shortsVideoUrl: string;
   species: string;
-  summury: string;
+  summary: string;
   title1: string;
   title2: string;
   title3: string;
@@ -35,4 +35,12 @@ export interface RegistType {
   address : string;
   content : string;
   imageUrl : string;
+}
+
+export interface chartParamType {
+  ordo?:string;
+  familia?:string;
+  species?:string;
+  genus?:string;
+  page:number;
 }

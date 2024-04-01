@@ -41,7 +41,7 @@ const Gallery: React.FC<GalleryProps> = () => {
       setTimeout(() => {
         setPage((page) => page + 1);
         fetchDataHandler();
-      }, 1000)
+      }, 100)
     }
   }, [isLoading])
 

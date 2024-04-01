@@ -11,10 +11,10 @@ const IndivInfo: React.FC<IndivInfoProps> = ({ indivInfo }) => {
     <I.Container>
 
       {
-        indivInfo.summury ?
+        indivInfo.summary ?
         <I.Wrap>
           <I.Title>요약</I.Title>
-          <I.Context>{indivInfo.summury}</I.Context>
+          <I.Context>{indivInfo.summary}</I.Context>
         </I.Wrap>
         : null
       }
@@ -45,7 +45,7 @@ const IndivInfo: React.FC<IndivInfoProps> = ({ indivInfo }) => {
         </I.Wrap>
         : null
       }
-      
+
     </I.Container>
   );
 };
