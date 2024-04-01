@@ -4,7 +4,7 @@ import EncyIconUrl from '../../assets/NavigationBar/encyIcon.png'
 import MapIconUrl from '../../assets/NavigationBar/mapIcon.png'
 import CameraIconUrl from '../../assets/NavigationBar/cameraIcon.png'
 import GalleryIconUrl from '../../assets/NavigationBar/galleryIcon.png'
-import SettingIconUrl from '../../assets/NavigationBar/settingIcon.png'
+import HomeIconUrl from '../../assets/NavigationBar/homeIcon.png'
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/UserState';
 
@@ -17,10 +17,9 @@ const Header: React.FC<HeaderProps> = () => {
   
   return (
     <N.Container>
-      <N.NavCol to={`/encyclopedia/${myInfo.nickname}`}>
-        <img src={EncyIconUrl} alt="" />
+      <N.NavCol to="/">
+        <img src={HomeIconUrl} alt="" style={{height:'22px', width: '22px'}}/>
       </N.NavCol>
-
 
       <N.NavCol to="/map">
         <img src={MapIconUrl} alt="" />
@@ -30,12 +29,12 @@ const Header: React.FC<HeaderProps> = () => {
         <img id='camIcon' src={CameraIconUrl} alt="" />
       </N.NavCol>
 
-      <N.NavCol to="/gallery">
-        <img src={GalleryIconUrl} alt="" />
+      <N.NavCol to={`/encyclopedia/${myInfo.nickname}`}>
+        <img src={EncyIconUrl} alt="" />
       </N.NavCol>
 
-      <N.NavCol to="/setting">
-        <img src={SettingIconUrl} alt="" />
+      <N.NavCol to="/gallery">
+        <img src={GalleryIconUrl} alt="" />
       </N.NavCol>
     </N.Container>
   );
