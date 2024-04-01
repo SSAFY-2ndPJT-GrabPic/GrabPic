@@ -14,6 +14,7 @@ import { detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
+
   let interval: string | number | NodeJS.Timeout | undefined;
 
   // 로딩
@@ -173,7 +174,8 @@ export const LivePage: React.FC = () => {
     if(model.net)
       model.net.dispose();
 
-    navigate(-1);
+    navigate('/')
+
   };
 
   return (

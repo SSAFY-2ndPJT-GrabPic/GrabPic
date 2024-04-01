@@ -10,8 +10,8 @@ const Header: React.FC<HeaderProps> = () => {
       <Link to="/">
         <H.Logo />
       </Link>
-      <Link to="/chatbot">
-        <H.ChatBot />
+      <Link to="/setting">
+        <H.SettingBtn />
       </Link>
     </H.Container>
   );

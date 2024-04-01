@@ -94,6 +94,7 @@ const CustomMap: React.FC = () => {
         console.log(pageRef.current)
         if (respones.data.length < 20) setMoreData(false);
         setpinLists(respones.data);
+        console.log(respones.data)
       },
       (error) => {
         console.log(error);
@@ -277,7 +278,7 @@ const CustomMap: React.FC = () => {
           {pinLists.map((pin, index) => (
             <CustomOverlayMap key={index} position={{ lat: pin.latitude, lng: pin.longitude }} clickable={true}>
               <M.PinDataContainer onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>
-                <M.PinImg src={pin.thumnailImage} />
+                <M.PinImg src={pin.thumbnailImage} />
               </M.PinDataContainer>
             </CustomOverlayMap>
             ))
@@ -340,7 +341,7 @@ const CustomMap: React.FC = () => {
           {isPrevRefreshing && <G.LoadingGif src={loadingGif}/>}
           {pinLists.map((pin, index) => (
             <M.ItemContainer key={index}>
-            <M.ItemImg src={pin.thumnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
+            <M.ItemImg src={pin.thumbnailImage} alt="" onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}/>
             <M.ItemDataContainer>
               <M.ItemNameSpan onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>{pin.name}</M.ItemNameSpan>
               <M.ItemInfoContainer>
