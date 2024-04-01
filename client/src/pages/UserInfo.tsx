@@ -6,11 +6,24 @@ import ChangeNick from '../components/User/Modify/ChangeNick';
 
 import closeIcon from '../assets/icon/close.png';
 import * as R from './ResetPw.style';
+import { useEffect, useState } from 'react';
 
 export default function UserInfo() {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [title,setTitle] = useState('회원정보 수정');
+
+  useEffect(() => {
+    if(location.pathname === '/userinfo'){
+      setTitle('회원정보 수정')
+    }else if(location.pathname === '/userinfo/pw'){
+      setTitle('비밀번호 재설정')
+    }else{
+      setTitle('닉네임 재설정')
+    }
+  },[location.pathname])
 
   const backCheck = () => {
     if(location.pathname === '/userinfo'){
@@ -26,7 +39,7 @@ export default function UserInfo() {
         <R.CloseBtn onClick={backCheck}>
           <img src={closeIcon} alt="" />
         </R.CloseBtn>
-        <R.ResetPwText>회원정보 수정</R.ResetPwText>
+        <R.ResetPwText>{title}</R.ResetPwText>
       </div>
       <Routes>
         <Route index element={<ModifyUserInfo />} />

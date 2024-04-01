@@ -17,7 +17,7 @@ export interface PinData {
     name: string;
     rareCount: 0;
     registDateTime: string;
-    thumnailImage: string;
+    thumbnailImage: string;
 }
 
 export interface RequestData {

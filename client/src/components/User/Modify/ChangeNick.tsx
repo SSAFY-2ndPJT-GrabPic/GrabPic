@@ -94,10 +94,7 @@ export default function ChangeNick() {
 
   return (
     <div className="flex flex-col">
-      <R.VerificationTitle className="mt-5">
-        닉네임 재설정
-      </R.VerificationTitle>
-      <R.VerificationText className="mt-3">
+      <R.VerificationText className="mt-7">
         새롭게 설정할 닉네임을 입력해주세요.
       </R.VerificationText>
       <G.InputContainer className="mt-10">

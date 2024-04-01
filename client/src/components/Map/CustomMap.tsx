@@ -96,6 +96,7 @@ const CustomMap: React.FC = () => {
         console.log(pageRef.current)
         if (respones.data.length < 20) setMoreData(false);
         setpinLists(respones.data);
+        console.log(respones.data)
       },
       (error) => {
         console.log(error);
@@ -282,7 +283,7 @@ const CustomMap: React.FC = () => {
           {pinLists.map((pin, index) => (
             <CustomOverlayMap key={index} position={{ lat: pin.latitude, lng: pin.longitude }} clickable={true}>
               <M.PinDataContainer onClick={() => goDetail(pin.name, pin.userId, pin.encyclopedia)}>
-                <M.PinImg src={pin.thumnailImage} />
+                <M.PinImg src={pin.thumbnailImage} />
               </M.PinDataContainer>
             </CustomOverlayMap>
             ))
