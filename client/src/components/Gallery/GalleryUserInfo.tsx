@@ -49,13 +49,9 @@ const GalleryUserInfo: React.FC<GalleryUserInfoProps> = ({ galleryItem }) => {
 
   return (
     <G.Container>
-      {/* <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}> */}
-        <G.UserProfileImg src={galleryItem.profileImage} onClick={() => navigateHandler()} />
-      {/* </Link> */}
+      <G.UserProfileImg src={galleryItem.profileImage} onClick={() => navigateHandler()} />
       <G.UserTxt>
-        {/* <Link to={`/encyclopedia/${galleryItem.writerNickName}`} state={{userId: galleryItem.writerId}}> */}
-          <G.NickTxt onClick={() => navigateHandler()}>{galleryItem.writerNickName}</G.NickTxt>
-        {/* </Link> */}
+        <G.NickTxt onClick={() => navigateHandler()}>{galleryItem.writerNickName}</G.NickTxt>
         <G.DateTxt>{timeTransHandler(galleryItem.registDateTime)}</G.DateTxt>
       </G.UserTxt>
     </G.Container>
