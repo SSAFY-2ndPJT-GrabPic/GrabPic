@@ -28,6 +28,7 @@ export class WebCam {
       videoRef
     ) {
       // console.log("camera open");
+      console.log(conatiner);
       navigator.mediaDevices.getUserMedia(conatiner).then((stream) => {
         const videoTrack = stream.getVideoTracks()[0];
         // // 트랙 설정 확인
