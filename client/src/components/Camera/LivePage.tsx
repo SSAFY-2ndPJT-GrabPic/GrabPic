@@ -46,7 +46,11 @@ export const LivePage: React.FC = () => {
     // webCam
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
-    webCam.open(currentVideoRef);
+    
+    const videoWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    const videoHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+    webCam.open(currentVideoRef,videoWidth,videoHeight);
 
     // AI 모델 불러오기
     tf.ready().then(async () => {
