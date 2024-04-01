@@ -44,8 +44,7 @@ export const RepresentImg = styled.img.attrs(({ src }) => ({
 
 export const AIVideo = styled.video`
   width: 100%;
-  height: 250px;
-  object-fit: cover;
+  object-fit: contain;
   object-position: 50% 50%;
 `
 

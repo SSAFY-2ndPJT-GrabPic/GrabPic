@@ -16,8 +16,14 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
   const backWhereState = useRecoilValue(backState)
   const navigate = useNavigate();
 
-  const backHandler = () => {
-    if (backWhereState === 'collect') {
+  const backHandler = (isGuestBook: string) => {
+    console.log(isGuestBook)
+    if (isGuestBook) {
+      navigate(`/encyclopedia/${userInfo.nickname}`, {
+        state: { userId: userInfo.userId }
+      });
+      setEncyLocate('guestBook');
+    } else if (backWhereState === 'collect') {
       navigate(`/encyclopedia/${userInfo.nickname}`, {state:{ userId: userInfo.userId}})
       setEncyLocate('collection')
     } else if (backWhereState === 'gallery') {
@@ -30,10 +36,10 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
   return (
     <U.Container>
       <U.InfoWrap>
-        <U.UserImg src={userInfo.profileImage} onClick={() => backHandler()} />
+        <U.UserImg src={userInfo.profileImage} onClick={() => backHandler('guestBook')} />
 
         <U.UserTxtWrap>
-          <U.nickName onClick={() => backHandler()}>
+          <U.nickName onClick={() => backHandler('guestBook')}>
             {userInfo.nickname}
           </U.nickName>
 
@@ -44,7 +50,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo }) => {
         </U.UserTxtWrap>
       </U.InfoWrap>
 
-      <U.BackBtn onClick={() => backHandler()}>뒤로가기</U.BackBtn>
+      <U.BackBtn onClick={() => backHandler('')}>뒤로가기</U.BackBtn>
     </U.Container> 
   );
 };

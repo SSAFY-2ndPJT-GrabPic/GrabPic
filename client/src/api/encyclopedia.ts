@@ -1,20 +1,20 @@
 import { AxiosResponse } from 'axios';
 import { privateApi,formDataApi } from '../utils/http-commons';
-import { CollectDetailType, CollectItem, RegistType } from '../type/CollectType';
+import { CollectDetailType, CollectItem, RegistType, chartParamType } from '../type/CollectType';
 import { MyResponseData } from '../type/ApiResponseType';
 import { GalleryItemType } from '../type/GalleryType';
 import { ChartList } from '../type/ChartType';
 
 const url = 'encyclopedia';
 
-export const getCollectList = async(
-  userId : number,
-  Response : (Response : AxiosResponse<CollectItem[]>) => void, 
-  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-  await privateApi.get(`/${url}/preview/${userId}`)
-  .then(Response)
-  .catch(Error)
-}
+// export const getCollectList = async(
+//   userId : number,
+//   Response : (Response : AxiosResponse<CollectItem[]>) => void, 
+//   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+//   await privateApi.get(`/${url}/preview/${userId}`)
+//   .then(Response)
+//   .catch(Error)
+// }
 
 export const getCollectDetail = async(
   encyclopediaId : number,
@@ -48,6 +48,17 @@ export const getChartList = async(
   Response : (Response : AxiosResponse<ChartList>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
   await privateApi.get(`/${url}/chart/${userId}`)
+  .then(Response)
+  .catch(Error)
+}
+
+export const getFilterList = async(
+  param: chartParamType,
+  page: number,
+  userId: number,
+  Response : (Response : AxiosResponse<CollectItem[]>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.get(`/${url}/search/${userId}`, {params: {...param, 'page': page, 'limit': 40}})
   .then(Response)
   .catch(Error)
 }
