@@ -78,8 +78,7 @@ export const BasicLogin: React.FC = () => {
         params,
         async (response) => {
           if (response.status === httpStatusCode.OK) {
-            // localStorage.setItem('accessToken', response.headers.access);
-            localStorage.setItem('accessToken','eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsImVtYWlsIjoidjAwNDE3QG5hdmVyLmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJ1c2VySWQiOjUsImlhdCI6MTcxMTk0MzUxOSwiZXhwIjoxNzExOTQ1MzE5fQ.NXVzTm1mrc8Sy7AXwRGoR-Q1QlI5-WMyedyX8zovrGc')
+            localStorage.setItem('accessToken', response.headers.access);
             localStorage.setItem('isLogin','true');
             await userInfo(
               (response) => {
