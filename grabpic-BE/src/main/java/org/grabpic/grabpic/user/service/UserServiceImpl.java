@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
+        System.out.println("이메일 확인 : " + jwtUtil.getEmail(token));
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         user.setPassword(bCryptPasswordEncoder.encode(password));
         userRepository.save(user);
