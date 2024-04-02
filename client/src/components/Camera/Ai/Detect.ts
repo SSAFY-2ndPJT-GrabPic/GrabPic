@@ -11,7 +11,7 @@ const numClass: number = 25;
  * @param modelHeight 모델의 높이
  * @returns 입력 텐서, xRatio 및 yRatio
  */
-const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: number, modelHeight: number): [tf.Tensor4D, number, number] => {
+const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: number, modelHeight: number): [tf.Tensor3D, number, number] => {
     let xRatio: number = 0, yRatio: number = 0; // 상자에 대한 비율
 
     const input = tf.tidy(() => {
@@ -30,12 +30,12 @@ const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: num
         yRatio = maxSize / h; // yRatio 업데이트
 
         return tf.image
-            .resizeBilinear(imgPadded as tf.Tensor4D, [modelWidth, modelHeight]) // 프레임 크기 조정
+            .resizeBilinear(imgPadded as tf.Tensor3D, [modelWidth, modelHeight]) // 프레임 크기 조정
             .div(255.0) // 정규화
             .expandDims(0); // 배치 추가
     });
 
-    return [input as tf.Tensor4D, xRatio, yRatio];
+    return [input as tf.Tensor3D, xRatio, yRatio];
 };
 
 /**
@@ -54,7 +54,7 @@ export const detect = async (source: HTMLImageElement | HTMLVideoElement, model:
     const [input, xRatio, yRatio] = preprocess(source, modelWidth, modelHeight); // 이미지 전처리
 
 
-    const res = model.net.execute(input) as tf.Tensor4D; // 모델 추론
+    const res = model.net.execute(input) as tf.Tensor3D; // 모델 추론
     const transRes = res.transpose([0, 2, 1]); // 결과 전치 [b, det, n] => [b, n, det]
     const boxes = tf.tidy(() => {
         const w = transRes.slice([0, 0, 2], [-1, -1, 1]); // 너비 가져오기
