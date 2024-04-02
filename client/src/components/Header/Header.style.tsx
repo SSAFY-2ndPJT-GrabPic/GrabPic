@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import LogoImg from "../../assets/Header/GrabPicLogo.png"
-import ChatBotImg from "../../assets/Header/chatBotIcon.png"
+import settingIconImg from "../../assets/Header/settingIcon.png"
 
 export const Container = styled.div`
   position: fixed;
@@ -22,10 +22,10 @@ export const Logo = styled.div`
   background-image: url(${LogoImg});
 `
 
-export const ChatBot = styled.div`
+export const SettingBtn = styled.div`
   width: 25px;
   height: 25px;
   background-size: contain;
-  background-image: url(${ChatBotImg});
+  background-image: url(${settingIconImg});
 `
 

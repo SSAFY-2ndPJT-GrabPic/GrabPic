@@ -7,6 +7,10 @@ import * as A from '../../api/user';
 import * as R from '../EmailVerification/Verification.style';
 import * as G from '../../styles/globalCSS';
 
+import { useSetRecoilState } from 'recoil';
+import * as S from '../../recoil/atoms/SettingState';
+
+
 export const JoinUserInfo: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -28,6 +32,10 @@ export const JoinUserInfo: React.FC = () => {
 
   const nickRegex = /^[a-zA-Z0-9가-힣]{2,10}$/;
   const nameRegex = /^[a-zA-Z가-힣]{2,10}$/;
+
+  const setIsModal = useSetRecoilState<boolean>(S.isModalState);
+  const setIsModalNo = useSetRecoilState<number>(S.isModalNo);
+
 
   const nickNameCheck = async (s: string) => {
     setNickName(s);
@@ -140,8 +148,15 @@ export const JoinUserInfo: React.FC = () => {
       await A.userJoin(
         params,
         () => { 
-          navigate('/') },
-        (error) => {console.log(error)}
+          navigate('/')
+          setIsModalNo(12);
+          setIsModal(true);
+        },
+        () => {
+          navigate('/')
+          setIsModalNo(9);
+          setIsModal(true);
+        }
       )
 
     }

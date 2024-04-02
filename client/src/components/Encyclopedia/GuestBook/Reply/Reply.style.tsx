@@ -10,10 +10,23 @@ export const Container = styled.div`
   flex-direction: column;
   padding-left: 16px;
   padding-right: 16px;
+  margin-bottom: 10px;
   overflow: scroll;
   ::-webkit-scrollbar{
     display: none;
   }
+`
+export const ObserverContainer = styled.div`
+  height: 30px;
+  background-color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  z-index: 1px;
+`
+
+export const LoadingGif = styled.img`
+  height: 60px;
+  object-fit: cover;
 `
 
 export const InputContainer = styled.div`

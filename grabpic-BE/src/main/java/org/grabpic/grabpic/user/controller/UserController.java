@@ -10,6 +10,7 @@ import org.grabpic.grabpic.errors.exception.RestApiException;
 import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
+import org.grabpic.grabpic.user.db.dto.LoginDTO;
 import org.grabpic.grabpic.user.service.MailService;
 import org.grabpic.grabpic.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -117,7 +118,7 @@ public class UserController {
     public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto, HttpServletResponse response) {
         try {
             // 1 성공, 2코드불일치, 3만료
-            int authResult = mailService.verificationCode(emailAuthDto);
+            int authResult = mailService.verificationCode(emailAuthDto, response);
             if (authResult == 1) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
@@ -198,9 +199,15 @@ public class UserController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<?> userValidate(HttpServletRequest request) {
-        userService.userValidate(request.getHeader("access"));
+    public ResponseEntity<?> userValidate(HttpServletRequest request, HttpServletResponse response) {
+        userService.userValidate(request.getHeader("access"), response);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/checkpassword")
+    public ResponseEntity<?> checkpassword(HttpServletRequest request, @RequestBody LoginDTO loginDTO) {
+        boolean result = userService.checkPassword(request.getHeader("access"), loginDTO.getPassword());
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     //테스트용 코드

@@ -5,11 +5,19 @@ import * as G from '../../styles/globalCSS';
 
 import { emailVerification, emailDuplicationCheck } from '../../api/user';
 
+import { useSetRecoilState } from 'recoil';
+import * as S from '../../recoil/atoms/SettingState'
+
 const ResetPwEmail: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isJoinPage, setIsJoinPage] = useState(false);
   const [emailText, setEmailText] = useState('가입한 이메일을 입력해주세요.');
+
+  const setIsModal = useSetRecoilState<boolean>(S.isModalState);
+  const setIsModalNo = useSetRecoilState<number>(S.isModalNo);
+  const setIsLoading = useSetRecoilState(S.isLoadingState);
+  const setIsLoadingNo = useSetRecoilState<number>(S.isLoadingNo);
 
   const emailReg =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
@@ -68,6 +76,9 @@ const ResetPwEmail: React.FC = () => {
 
     if(!isEmailValid) return;
 
+    setIsLoading({loading : true , progress : 0});
+    setIsLoadingNo(2);
+
     // 요청에 필요한 파라미터 설정
     const params = { email: email, type: isJoinPage ? 1 : 2 };
 
@@ -75,13 +86,15 @@ const ResetPwEmail: React.FC = () => {
     await emailVerification(
       params,
       () => {
+        setIsLoading({loading : false , progress : 0});
+        setIsLoadingNo(1);
         // 성공 시 처리하는 로직 작성
         const newState = { ...state, email: email };
         navigate(`/${state.page}/code`, { state: newState });
       },
-      (error) => {
-        // 에러 시 처리하는 로직 작성
-        console.error('에러:', error);
+      () => {
+        setIsModal(true);
+        setIsModalNo(9);
       }
     );
   };

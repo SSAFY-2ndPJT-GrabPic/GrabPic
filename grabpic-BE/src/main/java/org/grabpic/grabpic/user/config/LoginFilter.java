@@ -81,8 +81,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         } else {
 
             //토큰 생성
-            String access = jwtUtil.createJwt("access", email, role, userId, 1800000L);
-            String refresh = jwtUtil.createJwt("refresh", email, role, userId, 3600000L);
+            String access = jwtUtil.createJwt("access", email, role, userId, 18000000L);
+            String refresh = jwtUtil.createJwt("refresh", email, role, userId, 36000000L);
 
             //응답 설정
             response.setHeader("access", access);

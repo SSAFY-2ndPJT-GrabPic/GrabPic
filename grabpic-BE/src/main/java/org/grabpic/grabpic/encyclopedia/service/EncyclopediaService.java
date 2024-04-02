@@ -1,9 +1,6 @@
 package org.grabpic.grabpic.encyclopedia.service;
 
-import org.grabpic.grabpic.encyclopedia.db.dto.CollectionRegistDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.GalleryPostDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.InfoDTO;
-import org.grabpic.grabpic.encyclopedia.db.dto.InfoPreviewDTO;
+import org.grabpic.grabpic.encyclopedia.db.dto.*;
 import org.grabpic.grabpic.encyclopedia.db.entity.ChartDataEntity;
 import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
 
@@ -17,4 +14,6 @@ public interface EncyclopediaService {
     public List<GalleryPostDTO> galleryList(String token, int page, int limit);
     public void addChartData(CollectionRegistDTO collectionRegistDTO, String token);
     public ChartDataEntity getChartData(long userId);
+    public List<InfoPreviewDTO> searchEncyclopedia(long user, String ordo, String familia, String genus, String species, int page, int limit);
+    public CategoryDto category(long userId, String ordo, String familia, String genus, String species);
 }

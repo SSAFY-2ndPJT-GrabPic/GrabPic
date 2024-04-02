@@ -26,6 +26,7 @@ public class UserEntity {
     @Setter
     private String password;
     private String provider;
+    private String providerId;
     @Setter
     private String nickname;
     @Setter

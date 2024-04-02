@@ -1,20 +1,23 @@
 import styled from "styled-components";
+import galleryDefault from '../../assets/Gallery/galleryDefaultImg.png'
 
 export const Container = styled.div`
   position: relative;
   width: 100%;
-  /* height: 360px; */
   background-color: #f4f4f4;
   display: flex;
   align-items: center;
 `
 
 export const ItemImg = styled.img.attrs(({ src }) => ({
-  src: src, alt: 'indivImg'
+  src: src === "tmp" || src === null ? galleryDefault : src, alt: 'indivImg'
 }))`
   width: 100%;
-  /* height: 360px; */
-  object-fit: contain;
+  object-fit: cover;
+
+  ${props => (props.src === 'tmp' || props.src === null) &&`
+    height: 360px;
+  `}
 `
 
 export const NameTag = styled.div`
@@ -25,11 +28,11 @@ export const NameTag = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 85px;
+  /* width: 85px; */
+  padding: 0px 12px;
   height: 30px;
   border-radius: 5px;
-  background-color: #E0E0E0;
-  opacity: 0.5;
+  background-color: rgba(224, 224, 224, 0.5);
   font-family: 'BMJUA';
   font-size: 18px;
   color: #363636;

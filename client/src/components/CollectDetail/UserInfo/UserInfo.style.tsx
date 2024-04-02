@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import defaultImg from '../../../assets/Home/Profile.png'
-import { Link } from 'react-router-dom'
 
 export const Container = styled.div`
   display: flex;
@@ -59,7 +58,7 @@ export const subNum = styled.div`
   color: #363636;
 `
 
-export const BackBtn = styled(Link)`
+export const BackBtn = styled.div`
   font-family: 'BMJUA';
   font-size: 14px;
   color: #363636;

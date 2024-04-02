@@ -9,20 +9,23 @@ import org.grabpic.grabpic.encyclopedia.db.entity.ChartDataEntity;
 import org.grabpic.grabpic.encyclopedia.db.entity.EncyclopediaEntity;
 import org.grabpic.grabpic.encyclopedia.db.repository.ChartDataRepository;
 import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaRepository;
+import org.grabpic.grabpic.encyclopedia.db.repository.EncyclopediaSpecification;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -76,7 +79,7 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         nodeMap.put(entity.getSpecies(), new NodeDto(entity.getSpecies(), entity.getSpecies()));
         edgeMap.put(entity.getSpecies()+"간선", new EdgeDto(entity.getSpecies()+"간선", entity.getSpecies(), entity.getGenus()));
         edgeMap.put(entity.getGenus()+"간선", new EdgeDto(entity.getGenus()+"간선", entity.getGenus(), entity.getFamilia()));
-        edgeMap.put(entity.getFamilia()+"간선", new EdgeDto(entity.getFamilia()+"간선", entity.getFamilia(), entity.getFamilia()));
+        edgeMap.put(entity.getFamilia()+"간선", new EdgeDto(entity.getFamilia()+"간선", entity.getFamilia(), entity.getOrdo()));
 
         data.setNodeData(nodeMap);
         data.setEdgeData(edgeMap);
@@ -134,7 +137,13 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
         infoDTO.setOrdo(encyclopedia.getBiologyList().getOrdo());
 
         //개체 정보
-        infoDTO.setContent(encyclopedia.getBiologyList().getContent());
+        infoDTO.setSummary(encyclopedia.getBiologyList().getSummary());
+        infoDTO.setTitle1(encyclopedia.getBiologyList().getTitle1());
+        infoDTO.setContent1(encyclopedia.getBiologyList().getContent1());
+        infoDTO.setTitle2(encyclopedia.getBiologyList().getTitle2());
+        infoDTO.setContent2(encyclopedia.getBiologyList().getContent2());
+        infoDTO.setTitle3(encyclopedia.getBiologyList().getTitle3());
+        infoDTO.setContent3(encyclopedia.getBiologyList().getContent3());
 
         //개체 등록일자
         infoDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
@@ -200,5 +209,70 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
             }
         }
         return galleryPostDTOList;
+    }
+
+    //컬랙션 조회 서비스 다중 조건 검색
+    @Override
+    public List<InfoPreviewDTO> searchEncyclopedia(long user, String ordo, String familia, String genus, String species, int page, int limit){
+
+        Specification<EncyclopediaEntity> spec = (root, query, criteriaBuilder) -> null;
+
+        spec = spec.and(EncyclopediaSpecification.equalUserId(user));
+        if (ordo != null)
+            spec = spec.and(EncyclopediaSpecification.equalOrdo(ordo));
+        if (familia != null)
+            spec = spec.and(EncyclopediaSpecification.equalFamilia(familia));
+        if (genus != null)
+            spec = spec.and(EncyclopediaSpecification.equalGenus(genus));
+        if (species != null)
+            spec = spec.and(EncyclopediaSpecification.equalSpecies(species));
+
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<EncyclopediaEntity> encyclopediaList = encyclopediaRepository.findAll(spec, pageable);
+
+        List<InfoPreviewDTO> infoPreviewDTOList = new ArrayList<>();
+        for (EncyclopediaEntity encyclopedia : encyclopediaList) {
+            InfoPreviewDTO infoPreviewDTO = new InfoPreviewDTO();
+            infoPreviewDTO.setEncyclopediaId(encyclopedia.getEncyclopediaId());
+            infoPreviewDTO.setName(encyclopedia.getBiologyList().getName());
+            infoPreviewDTO.setThumbnailImageUrl(encyclopedia.getThumbnailImageUrl());
+
+            infoPreviewDTOList.add(infoPreviewDTO);
+        }
+
+        return infoPreviewDTOList;
+
+//        return null;
+//        return encyclopediaRepository.findByBiologyList_OrdoAndBiologyList_FamiliaAndBiologyList_GenusAndBiologyList_Species(ordo, familia, genus, species);
+//        return encyclopediaRepository.findByUser_UserId(1l);
+    }
+
+    @Override
+    public CategoryDto category(long userId, String ordo, String familia, String genus, String species){
+        Specification<EncyclopediaEntity> spec = (root, query, criteriaBuilder) -> null;
+
+        spec = spec.and(EncyclopediaSpecification.equalUserId(userId));
+        if (ordo != null)
+            spec = spec.and(EncyclopediaSpecification.equalOrdo(ordo));
+        if (familia != null)
+            spec = spec.and(EncyclopediaSpecification.equalFamilia(familia));
+        if (genus != null)
+            spec = spec.and(EncyclopediaSpecification.equalGenus(genus));
+        if (species != null)
+            spec = spec.and(EncyclopediaSpecification.equalSpecies(species));
+
+        List<EncyclopediaEntity> encyclopediaList = encyclopediaRepository.findAll(spec);
+
+        CategoryDto dto = new CategoryDto();
+
+        for(EncyclopediaEntity entity : encyclopediaList){
+            dto.getOrdo().add(entity.getBiologyList().getOrdo());
+            dto.getFamilia().add(entity.getBiologyList().getFamilia());
+            dto.getGenus().add(entity.getBiologyList().getGenus());
+            dto.getSpecies().add(entity.getBiologyList().getSpecies());
+            dto.getName().add(entity.getBiologyList().getName());
+        }
+
+        return dto;
     }
 }

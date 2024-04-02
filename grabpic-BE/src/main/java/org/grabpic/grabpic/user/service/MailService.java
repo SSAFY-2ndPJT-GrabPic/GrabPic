@@ -7,6 +7,6 @@ public interface MailService {
 
     public int sendEmail(String email, int type);
 
-    public int verificationCode(EmailAuthDto code);
+    public int verificationCode(EmailAuthDto code, HttpServletResponse response);
 
 }
