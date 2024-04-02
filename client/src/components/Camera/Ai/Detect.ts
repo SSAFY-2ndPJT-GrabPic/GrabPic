@@ -115,7 +115,7 @@ export const detectVideo = (vidSource: HTMLVideoElement, model: { net: tf.GraphM
             return; // 소스가 닫혔을 때 처리
         }
 
-        detect(vidSource, model, canvasRef, () => {
+        await detect(vidSource, model, canvasRef, () => {
             requestAnimationFrame(detectFrame); // 다른 프레임 가져오기
         });
     };
