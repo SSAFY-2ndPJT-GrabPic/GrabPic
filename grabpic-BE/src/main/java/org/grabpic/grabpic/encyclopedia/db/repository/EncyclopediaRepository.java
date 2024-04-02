@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,9 @@ public interface EncyclopediaRepository extends JpaRepository<EncyclopediaEntity
 
     @Query("SELECT e FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId != :id and e.user.userId != :id")
     List<EncyclopediaEntity> findEncyclopediaDetailsOthers(@Param("id") Long id, Pageable pageable);
+
+    @Query("SELECT e FROM encyclopedia e where e.user.userId != :userId ORDER BY RAND()")
+    List<EncyclopediaEntity> randomEncy(@Param("userId") long userId, Pageable pageable);
 
     Page<EncyclopediaEntity> findAll(Specification<EncyclopediaEntity> spec, Pageable pageable);
 //    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumbnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
