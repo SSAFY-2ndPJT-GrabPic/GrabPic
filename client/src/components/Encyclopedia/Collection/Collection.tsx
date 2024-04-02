@@ -1,69 +1,158 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
 import * as C from './Collection.style';
-import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png'
-// import Img1 from '../../../assets/Encyclopedia/dummy/Ellipse 21.png'
-import Img2 from '../../../assets/Encyclopedia/dummy/Ellipse 21-1.png'
-import Img3 from '../../../assets/Encyclopedia/dummy/Ellipse 21-2.png'
-import Img4 from '../../../assets/Encyclopedia/dummy/Ellipse 21-3.png'
-import Img5 from '../../../assets/Encyclopedia/dummy/Ellipse 22.png'
-import Img6 from '../../../assets/Encyclopedia/dummy/Ellipse 22-1.png'
-import Img7 from '../../../assets/Encyclopedia/dummy/Ellipse 22-2.png'
-import Img8 from '../../../assets/Encyclopedia/dummy/Ellipse 22-3.png'
-import Img9 from '../../../assets/Encyclopedia/dummy/Ellipse 23.png'
-import Img10 from '../../../assets/Encyclopedia/dummy/Ellipse 23-1.png'
-import Img11 from '../../../assets/Encyclopedia/dummy/Ellipse 23-2.png'
-import Img12 from '../../../assets/Encyclopedia/dummy/Ellipse 23-3.png'
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { filterState, wantState } from '../../../recoil/atoms/CollectFilterState';
+import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { catecoryState, filterDoneState, filterState } from '../../../recoil/atoms/CollectFilterState';
 import Filter from './Filter';
+import { getFilterList } from '../../../api/encyclopedia';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { CollectItem, chartParamType } from '../../../type/CollectType';
+import { backState } from '../../../recoil/atoms/DetailBackState';
+import loadingGif from '../../../assets/Gallery/loadingGif.gif'
 
-interface CollectItem {
-  name: string;
-  url: string;
+interface CollectionProps {
+  userId: number;
 }
 
-const collectList: CollectItem[] = [
-  // {name: '앵무새', url: Img1},
-  {name: '토끼', url: Img2},
-  {name: '햄스터', url: Img3},
-  {name: '리트리버', url: Img4},
-  {name: '해파리', url: Img5},
-  {name: '북극 곰', url: Img6},
-  {name: '기린', url: Img7},
-  {name: '바다 거북', url: Img8},
-  {name: '닭', url: Img9},
-  {name: '독수리', url: Img10},
-  {name: '금붕어', url: Img11},
-  {name: '다람쥐', url: Img12},
-]
+const Collection: React.FC<CollectionProps> = ({ userId }) => {
+  const [isOpen, setIsOpenState] = useRecoilState(filterState);
+  const [isFilterDone, setIsFilterDone] = useRecoilState(filterDoneState)
+  const [categoryInfo, setCategoryInfo] = useRecoilState<chartParamType>(catecoryState)
 
-interface CollectionProps {}
+  const location = useLocation();
+  const userIdData = location.state ? location.state.userId : userId
 
-const Collection: React.FC<CollectionProps> = () => {
-  const [isOpen, setIsOpenState] = useRecoilState(filterState)
-  const want = useRecoilValue(wantState)
+  const [collectList, setCollectList] = useState<CollectItem[]>([]);
+  const navigate = useNavigate();
+  const setBackState = useSetRecoilState(backState);
+
+  const [param, setParam] = useState<chartParamType>({})
+
+  useEffect(() => {
+    setParam(location.state ? location.state.param : {})
+  }, [location.state]);
+
+  useEffect(() => {
+    if (isFilterDone) {
+      console.log('필터완료')
+      setPage(0)
+      setParam(categoryInfo)
+      setIsLoading(true)
+    }
+  }, [isFilterDone]);
+
+  const navigateHandler = (name: string, encyId: number) => {
+    navigate(`/detail/${name}`, {state:{
+      encyclopediaId: encyId,
+      userId: userId,
+    }})
+    setBackState('collect')
+  }
+
+  // 무한스크롤
+  const [page, setPage] = useState<number>(0)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  // observer 컴포넌트 만나면 발생하는 콜백 함수 -> loading중 표시
+  const handleObserver = (entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+
+    if (target.isIntersecting && !isLoading) {
+      setIsLoading(true)
+    }
+  };
+
+  // threshold : 0일 때는 교차점이 한 번만 발생해도 실행, 1은 모든 영역이 교차해야 콜백 함수가 실행
+  const observer = new IntersectionObserver(handleObserver, { threshold: 0 });
+
+  useEffect(() => {
+    const observerTarget = document.getElementById("observer");
+    // 관찰 시작
+    if (observerTarget) {
+      observer.observe(observerTarget);
+    }
+
+    return () => {
+      setParam({})
+      setCategoryInfo({})
+      setIsFilterDone(false)
+    }
+  }, [])
+
+  // 로딩중이면 페이지 상승 + api 요청
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout(() => {
+        setPage((page) => page + 1);
+        fetchDataHandler();
+      }, 100)
+    }
+  }, [isLoading])
+
+  // 데이터 추가 및 loading상태 변경
+  const fetchDataHandler = async () => {
+    console.log(param)
+    await getFilterList(
+      param,
+      page,
+      userIdData,
+      (res) => { 
+        if (isFilterDone) {
+          console.log(res)
+          setCollectList(res.data)
+          setIsFilterDone(false)
+          setCategoryInfo({})
+        } else {
+          setCollectList(prevList => prevList.concat(res.data)) 
+        }
+      },
+      (err) => { console.error(err) }
+    )
+    setIsLoading(false)
+  }
+
+  const getAllData = () => {
+    setPage(0)
+    getFilterList(
+      {},
+      0,
+      userIdData,
+      (res) => { 
+        setCollectList(res.data)
+      },
+      (err) => { console.error(err) }
+    )
+    setParam({})
+    setCategoryInfo({})
+    setIsFilterDone(false)
+  }
 
   return (
     <>
-      {isOpen && <Filter />}
+      {isOpen && <Filter userId={userIdData} />}
       <C.Container>
         <C.BtnAlign>
           <C.FilterBtn onClick={() => setIsOpenState(true)}>
-            <C.FilterImg src={ filterBtnImg } />
-            <C.FilterTxt>{want}</C.FilterTxt>
+            <C.FilterImg src={filterBtnImg} />
+            <C.FilterTxt>필터</C.FilterTxt>
           </C.FilterBtn>
+          <C.TotalBtn onClick={() => getAllData()}>전체 보기</C.TotalBtn>
         </C.BtnAlign>
 
-        <C.CollectContainer className='grid gird-cols-3'>
+        <C.CollectContainer className="grid gird-cols-3">
           {collectList.map((collectItem, index) => (
-            <Link to={`/detail/${collectItem.name}`} key={index}>
-              <C.CollectItem>
-                <C.ItemImg src={collectItem.url} />
-                <C.ItemName>{collectItem.name}</C.ItemName>
-              </C.CollectItem>
-            </Link>
+            <C.CollectItem 
+              key={index} 
+              onClick={() => navigateHandler(collectItem.name, collectItem.encyclopediaId)}
+            >
+              <C.ItemImg src={collectItem.thumbnailImageUrl} />
+              <C.ItemName>{collectItem.name}</C.ItemName>
+            </C.CollectItem>
           ))}
+
+          <C.ObserverContainer id="observer">
+            {isLoading && <C.LoadingGif src={loadingGif} />}
+          </C.ObserverContainer>
         </C.CollectContainer>
       </C.Container>
     </>

@@ -2,15 +2,10 @@ import React from 'react';
 import GalleryUserInfo from './GalleryUserInfo';
 import GalleryImg from './GalleryImg';
 import * as G from './GalleryItem.style'
+import { GalleryItemType } from '../../type/GalleryType';
 
 interface GalleryItemProps {
-  galleryItem : {
-    userNickname: string;
-    userProfileImg: string;
-    getDate: number[];
-    indivImgUrl: string;
-    indivName: string;
-  }
+  galleryItem : GalleryItemType
 }
 
 const GalleryItem: React.FC<GalleryItemProps> = ({ galleryItem }) => {

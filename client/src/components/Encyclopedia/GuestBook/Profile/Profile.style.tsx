@@ -16,7 +16,7 @@ export const Container = styled.div`
 `
 
 export const UserContainer = styled.div`
-  width: 85px;
+  width: 118px;
   height: 100%;
   display: flex;
   gap: 10px;
@@ -33,7 +33,7 @@ export const ProfileImg = styled.img.attrs(({ src }) => ({
 `
 
 export const NickName = styled.div`
-  width: 85px;
+  width: 118px;
   font-family: 'BMJUA';
   font-size: 16px;
   color: #363636;
@@ -53,8 +53,8 @@ export const TxtContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 15%;
-  padding-right: 15%;
+  padding-left: 10%;
+  padding-right: 10%;
 `
 
 export const NumTxt = styled.div`

@@ -42,3 +42,25 @@ export const modalYesBtn = styled.button`
   font-family: 'TmoneyEB';
   color: #50940c;
 `;
+
+export const modalDeleteTest = styled.span`
+  margin-top: 10px;
+  font-size: 12px;
+  color: red;
+`;
+
+export const modalDeleteInput = styled.input`
+  margin-top: 10px;
+  width: 80%;
+  height: 30px;
+  background-color: #F3F3F3;
+  border-radius: 10px;
+  padding-left: 10px;
+  color: red;
+  font-size: 12px;
+`
+
+export const modalMsg = styled.span`
+  font-size: 10px;
+  color: red;
+`

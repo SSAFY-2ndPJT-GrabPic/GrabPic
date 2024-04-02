@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-// 맵 컨테이너
 export const MapContainer = styled.div`
   position:relative;
   width: 100%;
@@ -8,7 +7,6 @@ export const MapContainer = styled.div`
   overflow: hidden;
 `;
 
-// 리스트 컨테이너
 export const ListContainer = styled.div<{ active:boolean }>`
   position: absolute;
   bottom: 0;
@@ -49,7 +47,7 @@ export const FilterContainer = styled.div`
   align-items: center;
   position: relative; /* FilterContainer를 기준으로 손잡이를 위치시킬 수 있도록 설정 */
   gap: 20px;
-`
+`;
 
 export const FilterButton = styled.button<{ clickActive: boolean }>`
   width: 88px;
@@ -62,7 +60,6 @@ export const FilterButton = styled.button<{ clickActive: boolean }>`
   background-color: ${props => props.clickActive ? '#B2EB78' : ''}; 
 `;
 
-// 핀 리스트
 export const PinList = styled.div`
   margin-top: 5px;
   padding-top: 10px;
@@ -75,8 +72,27 @@ export const PinList = styled.div`
   padding-bottom: 10px;
 `;
 
-// 핀 아이템 컨테이너
-export const PinItemContainer = styled.div`
+export const PinDataContainer = styled.div`
+  display: flex;
+  width: 40px;
+  max-height: 40px;
+  min-height: 40px;
+`;
+
+export const PinImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 2px solid #67b816;
+`;
+
+export const PinSpan = styled.span`
+  font-size: 16px;
+  color: #001ba7;
+  text-align: center;
+`;
+
+export const ItemContainer = styled.div`
   width: 90%;
   min-height: 100px;
   max-height: 100px;
@@ -85,15 +101,13 @@ export const PinItemContainer = styled.div`
   gap: 20px;
 `;
 
-// 핀 이미지 컨테이너
-export const PinImgContainer = styled.img`
+export const ItemImg = styled.img`
   width: 80px;
   height: 80px;
   border-radius: 20px;
 `;
 
-// 핀 데이터 컨테이너
-export const PinDataContainer = styled.div`
+export const ItemDataContainer = styled.div`
   font-family: 'BMJUA';
   width: calc(100% - 100px);
   height: 100%;
@@ -103,19 +117,19 @@ export const PinDataContainer = styled.div`
   border-bottom: 1px solid #e0e0e0;
 `;
 
-export const PinNameSpan = styled.span`
+export const ItemNameSpan = styled.span`
   font-size: 16px;
-  color: #001ba7;
+  color: #3bc600;
   margin-bottom: 7px;
 `;
 
-export const PinInfoContainer = styled.div`
+export const ItemInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3px;
 `;
 
-export const PinInfoSpan = styled.span`
+export const ItemInfoSpan = styled.span`
   font-family: 'TmoneyR';
   font-size: 12px;
   color: #363636;
@@ -135,7 +149,6 @@ export const LocationBtn_Container = styled.div`
   align-items: center;
 `;
 
-// 줌 버튼
 export const LocationBtn = styled.button`
   display: flex; 
   justify-content: center; 
@@ -191,3 +204,15 @@ export const ZoomImg = styled.img`
   width: 18px;
   border:none;
 `;
+
+export const Loader = styled.div`
+  &.loader {
+  opacity: 1;
+  transition: opacity 0.3s ease; /* 투명도에 대한 transition 적용 */
+  }
+
+  &.loader.hidden {
+    opacity: 0; /* 숨겨진 상태일 때 투명도 조정 */
+    pointer-events: none; /* 숨겨진 상태일 때 이벤트 차단 */
+  }
+`

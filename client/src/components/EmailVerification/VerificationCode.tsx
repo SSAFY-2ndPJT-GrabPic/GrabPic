@@ -6,10 +6,16 @@ import { useEffect, useState } from 'react';
 
 import { emailCodeVerification,emailVerification } from '../../api/user';
 
+import { useSetRecoilState } from 'recoil';
+import * as S from '../../recoil/atoms/SettingState'
+
 export default function ResetPwCode() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isJoinPage,setIsJoinPage] = useState(false);
+
+  const setIsModal = useSetRecoilState<boolean>(S.isModalState);
+  const setIsModalNo = useSetRecoilState<number>(S.isModalNo);
 
   const [code,setCode] = useState<number>(0);
 
@@ -29,8 +35,14 @@ export default function ResetPwCode() {
 
     await emailVerification(
       params,
-      (Response) => {console.log(Response)},
-      (error) => {console.log(error)}
+      () => {
+        setIsModal(true);
+        setIsModalNo(11);
+      },
+      () => {
+        setIsModal(true);
+        setIsModalNo(9);
+      }
     )
 
   }
@@ -66,7 +78,10 @@ export default function ResetPwCode() {
         }
         navigate(`/${state.page}/pwset`, {state : state}); 
       },
-      (error) => {console.log(error)}
+      () => {
+          setIsModal(true);
+          setIsModalNo(9);
+        }
     )
 
   };
