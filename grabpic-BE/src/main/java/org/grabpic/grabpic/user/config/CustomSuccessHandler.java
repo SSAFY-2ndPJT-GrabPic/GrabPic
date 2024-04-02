@@ -55,12 +55,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //토큰 생성
         String access = jwtUtil.createJwt("access", email, role, userId, accessTime);
         String refresh = jwtUtil.createJwt("refresh", email, role, userId, refreshTime);
-
-        response.setHeader("access", access);
+        
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("https://j10d104.p.ssafy.io/");
+        response.sendRedirect("https://j10d104.p.ssafy.io/social");
     }
 
     private Cookie createCookie(String key, String value) {
