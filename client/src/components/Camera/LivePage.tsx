@@ -46,11 +46,17 @@ export const LivePage: React.FC = () => {
     // webCam
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
-    
-    const videoWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-    const videoHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
-    webCam.open(currentVideoRef,videoWidth,videoHeight);
+    const videoWidth = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+    const videoHeight = Math.max(
+      document.documentElement.clientHeight || 0,
+      window.innerHeight || 0
+    );
+
+    webCam.open(currentVideoRef, videoWidth, videoHeight);
 
     // AI 모델 불러오기
     tf.ready().then(async () => {
@@ -86,16 +92,49 @@ export const LivePage: React.FC = () => {
       webCam.close(currentVideoRef);
 
       // 메모리 해제
-      if(model.net)
-        model.net.dispose();
+      if (model.net) model.net.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (modelLoaded) {
-      detectVideo(videoRef.current!, model, canvasRef.current!);
+    let interval: NodeJS.Timeout;
+  
+    const runDetection = async () => {
+      if (modelLoaded && videoRef.current) {
+        const canvas = document.createElement('canvas');
+        if (modelLoaded && videoRef.current) {
+          canvas.width = videoRef.current.videoWidth;
+          canvas.height = videoRef.current.videoHeight;
+          const context = canvas.getContext('2d');
+  
+          if (context) {
+            context.drawImage(
+              videoRef.current,
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+            const imageData = context.getImageData(
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+  
+            // detect 함수에 캡처된 이미지 전달
+            await detectVideo(imageData, model, canvasRef.current!);
+          }
+        }
+      }
+    };
+  
+    if (modelLoaded && videoRef.current) {
+      interval = setInterval(runDetection, 1000);
     }
+  
+    return () => clearInterval(interval);
   }, [model, modelLoaded]);
 
   const autoSave = () => {
@@ -117,6 +156,7 @@ export const LivePage: React.FC = () => {
             canvas.width,
             canvas.height
           );
+          
           const dataURL = canvas.toDataURL('image/jpeg');
 
           if (capturedLen.current >= 20) {
@@ -153,16 +193,18 @@ export const LivePage: React.FC = () => {
         clearInterval(interval);
 
         const dataURL = canvas.toDataURL('image/png');
-        const {geolocation} = navigator;
+        const { geolocation } = navigator;
 
         // 현재 위치
-        geolocation.getCurrentPosition((params) => { 
-          const location = {latitude : params.coords.latitude, longitude : params.coords.longitude};
-          localStorage.setItem('location', JSON.stringify(location))
+        geolocation.getCurrentPosition((params) => {
+          const location = {
+            latitude: params.coords.latitude,
+            longitude: params.coords.longitude,
+          };
+          localStorage.setItem('location', JSON.stringify(location));
         });
 
-        if(model.net)
-        model.net.dispose();
+        if (model.net) model.net.dispose();
 
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
         // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
@@ -175,11 +217,9 @@ export const LivePage: React.FC = () => {
 
   // 닫기 버튼 이전 페이지로 돌아간다.
   const closeBtnClick = () => {
-    if(model.net)
-      model.net.dispose();
+    if (model.net) model.net.dispose();
 
-    navigate('/')
-
+    navigate('/');
   };
 
   return (
@@ -191,9 +231,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        onPlay={() => {
-          detectVideo(videoRef.current!, model, canvasRef.current!);
-        }}
+        // onPlay={() => {
+        //   detectVideo(videoRef.current!, model, canvasRef.current!);
+        // }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
