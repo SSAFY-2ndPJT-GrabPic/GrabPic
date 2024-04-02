@@ -8,11 +8,14 @@ import org.grabpic.grabpic.guestbook.db.repository.GuestBookRepository;
 import org.grabpic.grabpic.user.config.JWTUtil;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 import org.grabpic.grabpic.user.db.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,34 +31,19 @@ public class GuestBookServiceImpl implements GuestBookService {
     @Override
     public List<LoadBookDTO> loadBookList(long ownerId, int page, int limit) {
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "registDateTime");
-        List<GuestBookEntity> guestBookEntityList = guestBookRepository.findByOwner_UserId(ownerId, sort);
+        Pageable pageable = PageRequest.of(page-1, limit, Sort.by(Sort.Direction.DESC, "registDateTime"));
+        List<GuestBookEntity> guestBookEntityList = guestBookRepository.findByOwner_UserId(ownerId, pageable);
         List<LoadBookDTO> loadBookDTOList = new ArrayList<>();
 
-        // 마지막 페이지 호출시
-        if( guestBookEntityList.size() < limit*page ) {
-            for (int i = 0; i < guestBookEntityList.size()%limit; i++) {
-                LoadBookDTO loadBookDTO = new LoadBookDTO();
-                GuestBookEntity guestBookEntity =guestBookEntityList.get((page - 1) * limit + i);
+        for (GuestBookEntity guestBookEntity : guestBookEntityList) {
+            LoadBookDTO loadBookDTO = new LoadBookDTO();
+            loadBookDTO.setWriterId(guestBookEntity.getWriter().getUserId());
+            loadBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
+            loadBookDTO.setWriterNickName(guestBookEntity.getWriter().getNickname());
+            loadBookDTO.setContent(guestBookEntity.getContent());
+            loadBookDTO.setRegistDateTime(guestBookEntity.getRegistDateTime());
 
-                loadBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
-                loadBookDTO.setWriterNickName(guestBookEntity.getWriter().getNickname());
-                loadBookDTO.setContent(guestBookEntity.getContent());
-                loadBookDTO.setRegistDateTime(guestBookEntity.getRegistDateTime());
-
-                loadBookDTOList.add(loadBookDTO);
-            }
-        } else {
-            for (int i = 0; i < limit; i++) {
-                GuestBookEntity guestBookEntity =guestBookEntityList.get((page - 1) * limit + i);
-                LoadBookDTO loadBookDTO = new LoadBookDTO();
-                loadBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
-                loadBookDTO.setWriterNickName(guestBookEntity.getWriter().getNickname());
-                loadBookDTO.setContent(guestBookEntity.getContent());
-                loadBookDTO.setRegistDateTime(guestBookEntity.getRegistDateTime());
-
-                loadBookDTOList.add(loadBookDTO);
-            }
+            loadBookDTOList.add(loadBookDTO);
         }
         return loadBookDTOList;
     }
@@ -67,35 +55,47 @@ public class GuestBookServiceImpl implements GuestBookService {
 
     //방명록 등록하기
     @Override
-    public void registBook(SaveBookDTO saveBookDTO, String token) {
+    public SaveBookDTO registBook(SaveBookDTO saveBookDTO, String token) {
 
+        saveBookDTO.setRegistDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         GuestBookEntity guestBookEntity = GuestBookEntity.builder()
                 .owner(UserEntity.builder().userId(saveBookDTO.getOwnerId()).build())
                 .writer(UserEntity.builder().userId(user.getUserId()).build())
                 .content(saveBookDTO.getContent())
-                .registDateTime(LocalDateTime.now())
+                .registDateTime(saveBookDTO.getRegistDateTime())
                 .build();
-        guestBookRepository.save(guestBookEntity);
+        guestBookEntity = guestBookRepository.save(guestBookEntity);
+        saveBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
+        saveBookDTO.setWriterId(user.getUserId());
+        saveBookDTO.setWriterNickName(user.getNickname());
+        return saveBookDTO;
     }
 
     @Override
-    public void modifyBook(SaveBookDTO saveBookDTO, String token) {
+    public SaveBookDTO modifyBook(SaveBookDTO saveBookDTO, String token) {
 
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         if( user.getUserId() != saveBookDTO.getWriterId() ) {
             //작성자와 로그인유저가 불일치한 상황
-            return;
+            return null;
         }
+        saveBookDTO.setRegistDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        // 수정이기 때문에 존재하는 id임이 보장되어있음
+        GuestBookEntity guestBookEntity = guestBookRepository.findByGuestBookId(saveBookDTO.getGuestBookId());
 
-        GuestBookEntity guestBookEntity = GuestBookEntity.builder()
-                .guestBookId(saveBookDTO.getGuestBookId())
+        GuestBookEntity modifyResult = GuestBookEntity.builder()
+                .guestBookId(guestBookEntity.getGuestBookId())
                 .owner(UserEntity.builder().userId(saveBookDTO.getOwnerId()).build())
                 .writer(UserEntity.builder().userId(saveBookDTO.getWriterId()).build())
                 .content(saveBookDTO.getContent())
-                .registDateTime(LocalDateTime.now())
+                .registDateTime(saveBookDTO.getRegistDateTime())
                 .build();
-        guestBookRepository.save(guestBookEntity);
+        guestBookRepository.save(modifyResult);
+        saveBookDTO.setGuestBookId(guestBookEntity.getGuestBookId());
+        saveBookDTO.setWriterId(user.getUserId());
+        saveBookDTO.setWriterNickName(user.getNickname());
+        return saveBookDTO;
     }
 
     @Override

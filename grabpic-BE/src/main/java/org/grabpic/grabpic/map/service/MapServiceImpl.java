@@ -24,12 +24,12 @@ public class MapServiceImpl implements MapService{
     @Override
     public List<AroundInfoDTO> aroundInfo(AroundCheckDTO aroundCheckDTO) {
 
-        Pageable pageable = PageRequest.of(aroundCheckDTO.getPage()-1, aroundCheckDTO.getLimit(), Sort.by(Sort.Direction.DESC, "registDate"));
+        Pageable pageable = PageRequest.of(aroundCheckDTO.getPage()-1, aroundCheckDTO.getLimit(), Sort.by(Sort.Direction.DESC, "registDateTime"));
         if(aroundCheckDTO.getSort() == 1) {
             // 등록 날짜 기준 최신순 정렬, 최초 선언된 그대로 쓰면 되서 내용이 없음
         } else if(aroundCheckDTO.getSort() == 2) {
             // 등록 날짜 기준 오래된 순 정렬
-            pageable = PageRequest.of(aroundCheckDTO.getPage()-1, aroundCheckDTO.getLimit(), Sort.by(Sort.Direction.ASC, "registDate"));
+            pageable = PageRequest.of(aroundCheckDTO.getPage()-1, aroundCheckDTO.getLimit(), Sort.by(Sort.Direction.ASC, "registDateTime"));
         } else if(aroundCheckDTO.getSort() == 3) {
             //희귀도순 정렬 기준 정립 필요 아래 코드는 임시내용
             //sort = Sort.by(Sort.Direction.ASC, "registDate");
@@ -40,10 +40,12 @@ public class MapServiceImpl implements MapService{
         List<AroundInfoDTO> aroundInfoDTOList = new ArrayList<>();
         for(EncyclopediaEntity encyclopedia : aroundList) {
             AroundInfoDTO aroundInfoDTO = new AroundInfoDTO();
+            aroundInfoDTO.setUserId(encyclopedia.getUser().getUserId());
             aroundInfoDTO.setEncyclopedia(encyclopedia.getEncyclopediaId());
             aroundInfoDTO.setName(encyclopedia.getBiologyList().getName());
-            aroundInfoDTO.setRegistDate(encyclopedia.getRegistDate());
+            aroundInfoDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
             aroundInfoDTO.setAddress(encyclopedia.getAddress());
+            aroundInfoDTO.setThumbnailImage(encyclopedia.getThumbnailImageUrl());
             aroundInfoDTO.setLatitude(encyclopedia.getLatitude());
             aroundInfoDTO.setLongitude(encyclopedia.getLongitude());
 

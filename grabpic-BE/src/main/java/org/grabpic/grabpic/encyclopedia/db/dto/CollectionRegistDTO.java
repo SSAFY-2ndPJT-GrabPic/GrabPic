@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,10 +13,8 @@ import java.time.LocalDate;
 public class CollectionRegistDTO {
 
     private long biologyId;
-    private LocalDate registDate;
     private double latitude;
     private double longitude;
     private String address;
     private String content;
-    private String imageUrl;
 }

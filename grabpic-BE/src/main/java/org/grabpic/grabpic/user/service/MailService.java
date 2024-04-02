@@ -6,5 +6,7 @@ import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
 public interface MailService {
 
     public int sendEmail(String email, int type);
-    public boolean verificationCode(EmailAuthDto emailAuthDto, HttpServletResponse response);
+
+    public int verificationCode(EmailAuthDto code, HttpServletResponse response);
+
 }

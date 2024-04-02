@@ -16,14 +16,20 @@ public class BiologyListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // PK
-    private long BiologyListId;
-    private String species;
-    private String genus;
-    private String familia;
+    private long biologyListId;
     private String ordo;
+    private String familia;
+    private String genus;
+    private String species;
     private String name;
-    private String content;
-    private String imageThumnail;
+    private String summary;
+    private String title1;
+    private String content1;
+    private String title2;
+    private String content2;
+    private String title3;
+    private String content3;
+    private String imageThumbnail;
     private String imageDetail;
 
 }

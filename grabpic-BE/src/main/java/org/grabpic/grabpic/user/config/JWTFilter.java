@@ -46,10 +46,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //access 헤더 검증
         if ( accessToken == null ) {
-
+            setContext(null, null);
             System.out.println("token null");
             filterChain.doFilter(request, response);
-
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
@@ -83,14 +82,14 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
         //토큰에서 email과 role 획득
-        String email = jwtUtil.getEmail(accessToken);
-        String role = jwtUtil.getRole(accessToken);
+        setContext(jwtUtil.getEmail(accessToken), jwtUtil.getRole(accessToken));
+        filterChain.doFilter(request, response);
+    }
 
-        //userEntity를 생성하여 값 set
+    private void setContext(String email, String role) {
         UserEntity userEntity = UserEntity.builder()
                 .email(email)
                 .role(role)
-                //.password("temppassword")
                 .build();
         //UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
@@ -99,6 +98,5 @@ public class JWTFilter extends OncePerRequestFilter {
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        filterChain.doFilter(request, response);
     }
 }

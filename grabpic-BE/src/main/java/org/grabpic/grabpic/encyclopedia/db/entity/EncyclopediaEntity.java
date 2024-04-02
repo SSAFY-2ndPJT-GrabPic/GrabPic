@@ -6,6 +6,7 @@ import org.grabpic.grabpic.biologyList.db.entity.BiologyListEntity;
 import org.grabpic.grabpic.user.db.entity.UserEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity( name = "encyclopedia" )
 @Getter
@@ -19,21 +20,24 @@ public class EncyclopediaEntity {
     // PK
     private long encyclopediaId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "BIOLOGY_LIST_ID")
     private BiologyListEntity biologyList;
 
-    private LocalDate registDate;
+    private LocalDateTime registDateTime;
     private String content;
     private double latitude;
     private double longitude;
     private String address;
+    @Setter
     private String imageUrl;
+    @Setter
     private String thumbnailImageUrl;
+    @Setter
     private String shortsVideoUrl;
 
 }

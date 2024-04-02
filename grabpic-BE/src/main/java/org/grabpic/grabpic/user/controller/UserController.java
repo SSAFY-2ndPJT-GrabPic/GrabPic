@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.grabpic.grabpic.errors.errorcode.UserError;
+import org.grabpic.grabpic.errors.exception.RestApiException;
 import org.grabpic.grabpic.user.db.dto.EmailAuthDto;
 import org.grabpic.grabpic.user.db.dto.InfoDTO;
 import org.grabpic.grabpic.user.db.dto.JoinDTO;
@@ -14,8 +16,6 @@ import org.grabpic.grabpic.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -117,10 +117,11 @@ public class UserController {
     @PostMapping("/auth/emails/verification")
     public ResponseEntity<?> verificationCode(@RequestBody EmailAuthDto emailAuthDto, HttpServletResponse response) {
         try {
-            boolean authResult = mailService.verificationCode(emailAuthDto, response);
-            if(authResult) {
+            // 1 성공, 2코드불일치, 3만료
+            int authResult = mailService.verificationCode(emailAuthDto, response);
+            if (authResult == 1) {
                 return new ResponseEntity<>(HttpStatus.OK);
-            } else  {
+            } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
@@ -169,6 +170,44 @@ public class UserController {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/myinfochange")
+    public ResponseEntity<?> myInfoChange(HttpServletRequest request, @RequestBody InfoDTO infoDTO) {
+        try {
+            userService.changeMyInfo(infoDTO, request.getHeader("access"));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            boolean result = userService.logout(request, response);
+            if(result) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> userValidate(HttpServletRequest request, HttpServletResponse response) {
+        userService.userValidate(request.getHeader("access"), response);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/checkpassword")
+    public ResponseEntity<?> checkpassword(HttpServletRequest request, @RequestBody LoginDTO loginDTO) {
+        boolean result = userService.checkPassword(request.getHeader("access"), loginDTO.getPassword());
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     //테스트용 코드
