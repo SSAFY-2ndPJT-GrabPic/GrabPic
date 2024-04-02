@@ -1,86 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as F from './Filter.style';
 import { useSetRecoilState } from 'recoil';
-import { filterState, wantState } from '../../../recoil/atoms/CollectFilterState';
+import { filterDoneState, filterState } from '../../../recoil/atoms/CollectFilterState';
+import DropDown from './DropDown';
 
-const filterList = {
-  '오목': {
-    '치과': {
-      '숲속': {
-        '시종': ['시종은', '노예다'],
-        '수종': ['최수종', '스윗가이'],
-        '세종': ['세종이다', '정종이다']
-      }
-    },
-    '소아과': {
-      '마음속': {
-        '시종': ['시종은', '노예다'],
-        '수종': ['최수종', '스윗가이'],
-        '세종': ['세종이다', '정종이다']
-      }
-    }
-  },
-  '거북목': {
-    '수정과': {
-      '과속': {
-        '시종': ['시종은', '노예다'],
-        '수종': ['최수종', '스윗가이'],
-        '세종': ['세종이다', '정종이다']
-      }
-    },
-    '안녕하수과': {
-      '긴급구속': {
-        '시종': ['시종은', '노예다'],
-        '수종': ['최수종', '스윗가이'],
-        '세종': ['세종이다', '정종이다']
-      }
-    }
-  }
+interface CollectionProps {
+  userId: number;
 }
 
-interface CollectionProps {}
-
-const Collection: React.FC<CollectionProps> = () => {
+const Collection: React.FC<CollectionProps> = ({ userId }) => {
   const setIsOpenState = useSetRecoilState(filterState)
-  const setWantState = useSetRecoilState(wantState)
-
-  const [title, setTitle] = useState('필터 선택')
-  const [list, setList] = useState<any>(filterList)
-  const [depth, setDepth] = useState(0)
-
-  const filterHandler = (item: any) => {
-    setDepth(depth + 1)
-    setTitle(item[0])
-    setList(item[1])
-  }
-
-  const wantHandler = (where: string) => {
-    setWantState(where)
+  const setIsDone = useSetRecoilState(filterDoneState)
+  const DoneHandler = () => {
     setIsOpenState(false)
+    setIsDone(true)
   }
 
   return (
     <F.Container >
-      <F.BackDrop  onClick={() => setIsOpenState(false)} />
+      <F.BackDrop onClick={() => setIsOpenState(false)} />
       <F.FilterBox>
-        <F.TitleBox>{title}</F.TitleBox>
-        <F.ListBox>
-          {depth === 4 ?
-              list.map((item: string, idx: number) => (
-                <F.ListItem key={idx} onClick={() => wantHandler(item)}>
-                  {item}
-                </F.ListItem>
-              ))
-            :
-            Object.entries(list).map((item, idx) => (
-              <F.ListItem key={idx} onClick={() => filterHandler(item)}>
-                {item[0]}
-              </F.ListItem>
-            ))
-          }
+        <F.TitleBox>개체 찾기</F.TitleBox>
 
-          
+        <F.ListBox>
+          <DropDown userId={userId} depth={1} />
+          <DropDown userId={userId} depth={2} />
+          <DropDown userId={userId} depth={3} />
+          <DropDown userId={userId} depth={4} />
+          {/* <DropDown userId={userId} depth={5} /> */}
         </F.ListBox>
+
+        <F.DoneBtn onClick={() => DoneHandler()}>완료</F.DoneBtn>
       </F.FilterBox>
     </F.Container>
   );

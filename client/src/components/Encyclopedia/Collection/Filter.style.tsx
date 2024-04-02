@@ -25,11 +25,8 @@ export const BackDrop = styled.div`
 
 export const FilterBox = styled.div`
   width: 314px;
-  height: 230px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  /* height: 320px; */
+  padding: 15px 20px 15px 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,6 +34,7 @@ export const FilterBox = styled.div`
   background-color: #FFFFFF;
   border-radius: 10px;
   z-index: 1;
+  row-gap: 15px;
 `
 
 export const TitleBox = styled.div`
@@ -44,16 +42,19 @@ export const TitleBox = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 50px;
+  /* height: 50px; */
   color: #50940C;
   font-family: 'BMJUA';
   font-size: 20px;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 `
 
 export const ListBox = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
+  gap: 5px;
 `
 
 export const ListItem = styled.div`
@@ -66,4 +67,16 @@ export const ListItem = styled.div`
   font-family: 'TmoneyR';
   font-size: 16px;
   color: #363636;
+`
+
+export const DoneBtn = styled.button`
+  width: 75px;
+  height: 30px;
+  border-radius: 30px;
+  padding: 4px 12px 5px;
+  background-color: #5eb606;
+  font-family: 'BMJUA';
+  font-size: 16px;
+  text-align: center;
+  color: #FFFFFF;
 `
