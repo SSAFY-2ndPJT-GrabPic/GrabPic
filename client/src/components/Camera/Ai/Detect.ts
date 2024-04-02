@@ -11,11 +11,11 @@ const numClass: number = 25;
  * @param modelHeight 모델의 높이
  * @returns 입력 텐서, xRatio 및 yRatio
  */
-const preprocess = (img: tf.Tensor3D, modelWidth: number, modelHeight: number): [tf.Tensor3D, number, number] => {
+const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: number, modelHeight: number): [tf.Tensor3D, number, number] => {
     let xRatio: number = 0, yRatio: number = 0; // 상자에 대한 비율
 
     const input = tf.tidy(() => {
-        // const img = tf.browser.fromPixels(source);
+        const img = tf.browser.fromPixels(source);
 
         // 이미지를 정사각형으로 패딩합니다 => [n, m]에서 [n, n]으로, n > m
         const [h, w] = img.shape.slice(0, 2); // 소스의 너비와 높이 가져오기
@@ -45,8 +45,8 @@ const preprocess = (img: tf.Tensor3D, modelWidth: number, modelHeight: number): 
  * @param canvasRef 캔버스 참조
  * @param callback 감지 프로세스 이후 실행할 함수
  */
-export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement, callback: () => void = () => { }): Promise<void> => {
-    if (!model.net) return;
+export const detect = async (source: HTMLImageElement | HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement, callback: () => void = () => { }): Promise<void> => {
+    if(!model.net)  return;
 
     const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // 모델 너비 및 높이 가져오기
 
@@ -94,42 +94,31 @@ export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | 
     tf.engine().endScope(); // 스코핑 종료
 };
 
-// /**
-//  * 비디오에서 각 소스를 감지하는 함수입니다.
-//  * @param vidSource 비디오 소스
-//  * @param model 로드된 YOLOv8 TensorFlow.js 모델
-//  * @param canvasRef 캔버스 참조
-//  */
-// export const detectVideo = (vidSource: HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement): void => {
-//     /**
-//      * 비디오에서 각 프레임을 감지하는 함수입니다.
-//      */
+/**
+ * 비디오에서 각 소스를 감지하는 함수입니다.
+ * @param vidSource 비디오 소스
+ * @param model 로드된 YOLOv8 TensorFlow.js 모델
+ * @param canvasRef 캔버스 참조
+ */
+export const detectVideo = (vidSource: HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement): void => {
+    /**
+     * 비디오에서 각 프레임을 감지하는 함수입니다.
+     */
+    
+    const detectFrame = async (): Promise<void> => {
+        if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
+            const ctx = canvasRef.getContext("2d");
 
-//     const detectFrame = async (): Promise<void> => {
-//         if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
-//             const ctx = canvasRef.getContext("2d");
+            if(!ctx)    return;
 
-//             if(!ctx)    return;
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 캔버스 지우기
+            return; // 소스가 닫혔을 때 처리
+        }
 
-//             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 캔버스 지우기
-//             return; // 소스가 닫혔을 때 처리
-//         }
+        detect(vidSource, model, canvasRef, () => {
+            requestAnimationFrame(detectFrame); // 다른 프레임 가져오기
+        });
+    };
 
-//         detect(vidSource, model, canvasRef, () => {
-//             requestAnimationFrame(detectFrame); // 다른 프레임 가져오기
-//         });
-//     };
-
-//     detectFrame(); // 모든 프레임을 감지하도록 초기화
-// };
-
-
-export const detectVideo = (imageData: HTMLCanvasElement | tf.PixelData | ImageData | HTMLImageElement | HTMLVideoElement | ImageBitmap, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement): void => {
-
-    // 비디오에서 이미지를 캡처
-        const capturedImage = tf.browser.fromPixels(imageData);
-
-            // detect 함수에 캡처된 이미지 전달
-            detect(capturedImage, model, canvasRef);
-
+    detectFrame(); // 모든 프레임을 감지하도록 초기화
 };
