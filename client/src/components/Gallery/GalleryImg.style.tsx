@@ -13,7 +13,7 @@ export const ItemImg = styled.img.attrs(({ src }) => ({
   src: src === "tmp" || src === null ? galleryDefault : src, alt: 'indivImg'
 }))`
   width: 100%;
-  object-fit: contain;
+  object-fit: cover;
 
   ${props => (props.src === 'tmp' || props.src === null) &&`
     height: 360px;
@@ -28,7 +28,8 @@ export const NameTag = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 85px;
+  /* width: 85px; */
+  padding: 0px 12px;
   height: 30px;
   border-radius: 5px;
   background-color: rgba(224, 224, 224, 0.5);

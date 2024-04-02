@@ -10,7 +10,6 @@ export const SocailLogin: React.FC = () => {
   const url = 'https://j10d104.p.ssafy.io/api';
 
   const loginClick = (e : number) => {
-    console.log(e);
     if(e === 1) 
       window.location.href = url + '/oauth2/authorization/google';
     else if(e === 2)

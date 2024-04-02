@@ -28,7 +28,6 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
   const [param, setParam] = useState<chartParamType>({})
 
   useEffect(() => {
-    console.log(location)
     setParam(location.state ? location.state.param : {})
   }, [location.state]);
 
@@ -78,13 +77,11 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
 
   // 데이터 추가 및 loading상태 변경
   const fetchDataHandler = async () => {
-    // console.log('param이담',param)
     await getFilterList(
       param,
       page,
       userIdData,
       (res) => { 
-        // console.log(res)
         setCollectList(prevList => prevList.concat(res.data)) 
       },
       (err) => { console.error(err) }
