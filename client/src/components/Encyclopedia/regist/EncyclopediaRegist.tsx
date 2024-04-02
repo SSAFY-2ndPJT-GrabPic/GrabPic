@@ -82,7 +82,6 @@ export const EncyclopediaResgist: React.FC = () => {
       address: address,
       content: inputData,
     };
-    console.log(infoData);
     // type을 변경.
     const infoBlob = new Blob([JSON.stringify(infoData)], {
       type: 'application/json',

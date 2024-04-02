@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import GalleryItem from "../components/Gallery/GalleryItem";
 import { GalleryItemType } from "../type/GalleryType";
-import { getGalleryList } from "../api/encyclopedia";
+import { getGalleryList } from "../api/gallery";
 import loadingGif from '../assets/Gallery/loadingGif.gif'
 import * as G from './Gallery.style'
 

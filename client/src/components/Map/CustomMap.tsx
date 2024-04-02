@@ -93,13 +93,11 @@ const CustomMap: React.FC = () => {
     await dataLoad(
       params,
       (respones) => {
-        console.log(pageRef.current)
         if (respones.data.length < 20) setMoreData(false);
         setpinLists(respones.data);
-        console.log(respones.data)
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       }
     );
   };
@@ -188,7 +186,6 @@ const CustomMap: React.FC = () => {
     };
 
     const handleTouchEnd = () => {
-      console.log(startY, currentY)
       if (isDragging && currentY - startY > 200 && startY > 400 && pageRef.current > 1) {
         setIsPrevRefreshing(true);
       }
@@ -215,7 +212,6 @@ const CustomMap: React.FC = () => {
       setStartY(0);
       setCurrentY(0);
     } else {
-      console.log(isPrevRefreshing)
       setTimeout(()=>{
         setIsPrevRefreshing(false)
         if (isPinActive && pageRef.current > 1) {
@@ -233,11 +229,9 @@ const CustomMap: React.FC = () => {
       setStartY(0);
       setCurrentY(0);
     } else {
-      console.log(isNextRefreshing)
       setTimeout(()=>{
         setIsNextRefreshing(false)
         if (isPinActive && moreData) {
-          console.log('동작')
           pageRef.current += 1;
           reLoad();
         }

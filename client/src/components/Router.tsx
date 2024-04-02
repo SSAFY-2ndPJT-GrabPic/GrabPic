@@ -11,7 +11,6 @@ import ResetPw from '../pages/ResetPw';
 import Join from '../pages/Join';
 import Encyclopedia from '../pages/Encyclopedia';
 import CollectDetail from '../pages/CollectDetail';
-import ChatBot from '../pages/ChatBot';
 import Map from '../pages/Map';
 import Camera from '../pages/Camera';
 import { EncyclopediaResgist } from './Encyclopedia/regist/EncyclopediaRegist';
@@ -38,7 +37,6 @@ export default function Router() {
       {/* 헤더 & 네브를 넣을 페이지 */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/chatbot" element={<ChatBot />} />
         <Route path="/encyclopedia/:nickname" element={<Encyclopedia userId={userInfo.userId} />} />
         <Route path="/detail/:collectName" element={<CollectDetail />} />
         <Route path="/map" element={<Map />} />

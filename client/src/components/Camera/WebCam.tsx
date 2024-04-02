@@ -22,7 +22,6 @@ export class WebCam {
 
   close = (videoRef: HTMLVideoElement | null) => {
     if (videoRef) {
-      // console.log("camera close");
       const stream = videoRef.srcObject as MediaStream;
 
       if (stream) {

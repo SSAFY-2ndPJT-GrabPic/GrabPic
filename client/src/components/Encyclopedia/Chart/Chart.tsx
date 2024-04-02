@@ -34,7 +34,6 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
 
   // Chart데이터 받아오기
   useEffect(() => {
-    console.log(userId)
     getChartList(
       userId,
       (res) => {
@@ -74,7 +73,6 @@ const Chart: React.FC<ChartProps> = ({ userId }) => {
   const [encyLocate, setEncyLocate] = useRecoilState(headerState)
   
   const routHandler = (lookWhere: string) => {
-    // console.log(lookWhere)
     const beforeBtn = document.getElementById(encyLocate)
     if (beforeBtn) {
       beforeBtn.style.backgroundColor = '#E1E1E1';

@@ -29,7 +29,6 @@ export const ModifyUserInfo: React.FC = () => {
   const imageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // console.log(file);
       const formData = new FormData();
       formData.append('image', file);
 

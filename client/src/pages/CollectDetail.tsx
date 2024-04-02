@@ -40,7 +40,6 @@ const CollectDetail: React.FC<CollectDetailProps> = () => {
       encyclopediaId,
       (res) => {
         setEncyDetailInfo(res.data);
-        console.log(res.data)
       },
       (err) => {
         console.error(err);

@@ -2,19 +2,9 @@ import { AxiosResponse } from 'axios';
 import { privateApi,formDataApi } from '../utils/http-commons';
 import { CollectDetailType, CollectItem, RegistType, chartParamType } from '../type/CollectType';
 import { MyResponseData } from '../type/ApiResponseType';
-import { GalleryItemType } from '../type/GalleryType';
 import { ChartList } from '../type/ChartType';
 
 const url = 'encyclopedia';
-
-// export const getCollectList = async(
-//   userId : number,
-//   Response : (Response : AxiosResponse<CollectItem[]>) => void, 
-//   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-//   await privateApi.get(`/${url}/preview/${userId}`)
-//   .then(Response)
-//   .catch(Error)
-// }
 
 export const getCollectDetail = async(
   encyclopediaId : number,
@@ -30,15 +20,6 @@ export const registEncy = async(
   Response : (Response : AxiosResponse<RegistType>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
   await formDataApi.post(`/${url}/add`, params)
-  .then(Response)
-  .catch(Error)
-}
-
-export const getGalleryList = async(
-  page: number,
-  Response : (Response : AxiosResponse<GalleryItemType[]>) => void, 
-  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
-  await privateApi.get(`/${url}/gallery/list`, {params:{'page': page, 'limit': 20}})
   .then(Response)
   .catch(Error)
 }
