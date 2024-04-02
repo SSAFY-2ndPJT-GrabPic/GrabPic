@@ -85,7 +85,7 @@ public class GalleryServiceImpl implements GalleryService {
         galleryPostDTO.setWriterNickName(encyclopedia.getUser().getNickname());
         galleryPostDTO.setProfileImage(encyclopedia.getUser().getProfileImage());
         galleryPostDTO.setRegistDateTime(encyclopedia.getRegistDateTime());
-        galleryPostDTO.setThumbnailImageUrl(encyclopedia.getThumbnailImageUrl());
+        galleryPostDTO.setThumbnailImageUrl(encyclopedia.getImageUrl());
         return  galleryPostDTO;
     }
 
