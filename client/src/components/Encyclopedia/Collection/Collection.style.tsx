@@ -7,24 +7,21 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: end;
   margin-top: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 0px 16px;
 `
 
 export const BtnAlign = styled.div`
   display: flex;
   justify-content: end;
+  gap: 10px;
 `
 
 export const FilterBtn = styled.div`
-  /* width: 90px; */
+  /* width: 83px; */
   height: 30px;
   border: 1px solid #5C5C5C;
   border-radius: 30px;
-  padding-left: 14px;
-  padding-right: 14px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding: 5px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -33,12 +30,25 @@ export const FilterBtn = styled.div`
 
 export const FilterImg = styled.img`
   height: 10px;
+  transform: scale(0.7);
 `
 
 export const FilterTxt = styled.div`
   font-family: 'BMJUA';
   font-size: 16px;
   color: #5C5C5C;
+`
+
+export const TotalBtn = styled.button`
+  display: flex;
+  align-items: center;
+  height: 30px;
+  border-radius: 30px;
+  padding: 5px 12px;
+  background-color: #5eb606;
+  font-family: 'BMJUA';
+  font-size: 16px;
+  color: #FFFFFF;
 `
 
 export const CollectContainer = styled.div`
@@ -67,9 +77,7 @@ export const CollectItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-left: 8px;
-  margin-right: 8px;
-  margin-bottom: 16px;
+  margin: 0px 8px 16px 8px;
   justify-content: center;
   align-items: center;
 `

@@ -3,6 +3,7 @@ import { privateApi,formDataApi } from '../utils/http-commons';
 import { CollectDetailType, CollectItem, RegistType, chartParamType } from '../type/CollectType';
 import { MyResponseData } from '../type/ApiResponseType';
 import { ChartList } from '../type/ChartType';
+import { CategoryType } from '../type/CategoryType';
 
 const url = 'encyclopedia';
 
@@ -40,6 +41,16 @@ export const getFilterList = async(
   Response : (Response : AxiosResponse<CollectItem[]>) => void, 
   Error : (Error : AxiosResponse<MyResponseData>) => void) => {
   await privateApi.get(`/${url}/search/${userId}`, {params: {...param, 'page': page, 'limit': 40}})
+  .then(Response)
+  .catch(Error)
+}
+
+export const categoryFilter = async(
+  param: chartParamType,
+  userId: number,
+  Response : (Response : AxiosResponse<CategoryType>) => void, 
+  Error : (Error : AxiosResponse<MyResponseData>) => void) => {
+  await privateApi.get(`/${url}/category/${userId}`, {params: param})
   .then(Response)
   .catch(Error)
 }

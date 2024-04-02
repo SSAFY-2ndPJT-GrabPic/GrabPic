@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as C from './Collection.style';
 import filterBtnImg from '../../../assets/Encyclopedia/filterBtn.png';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { filterState, wantState } from '../../../recoil/atoms/CollectFilterState';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { catecoryState, filterDoneState, filterState } from '../../../recoil/atoms/CollectFilterState';
 import Filter from './Filter';
 import { getFilterList } from '../../../api/encyclopedia';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -16,7 +16,8 @@ interface CollectionProps {
 
 const Collection: React.FC<CollectionProps> = ({ userId }) => {
   const [isOpen, setIsOpenState] = useRecoilState(filterState);
-  const want = useRecoilValue(wantState);
+  const [isFilterDone, setIsFilterDone] = useRecoilState(filterDoneState)
+  const [categoryInfo, setCategoryInfo] = useRecoilState<chartParamType>(catecoryState)
 
   const location = useLocation();
   const userIdData = location.state ? location.state.userId : userId
@@ -30,6 +31,15 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
   useEffect(() => {
     setParam(location.state ? location.state.param : {})
   }, [location.state]);
+
+  useEffect(() => {
+    if (isFilterDone) {
+      console.log('필터완료')
+      setPage(0)
+      setParam(categoryInfo)
+      setIsLoading(true)
+    }
+  }, [isFilterDone]);
 
   const navigateHandler = (name: string, encyId: number) => {
     navigate(`/detail/${name}`, {state:{
@@ -62,7 +72,11 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
       observer.observe(observerTarget);
     }
 
-    return setParam({})
+    return () => {
+      setParam({})
+      setCategoryInfo({})
+      setIsFilterDone(false)
+    }
   }, [])
 
   // 로딩중이면 페이지 상승 + api 요청
@@ -77,27 +91,52 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
 
   // 데이터 추가 및 loading상태 변경
   const fetchDataHandler = async () => {
+    console.log(param)
     await getFilterList(
       param,
       page,
       userIdData,
       (res) => { 
-        setCollectList(prevList => prevList.concat(res.data)) 
+        if (isFilterDone) {
+          console.log(res)
+          setCollectList(res.data)
+          setIsFilterDone(false)
+          setCategoryInfo({})
+        } else {
+          setCollectList(prevList => prevList.concat(res.data)) 
+        }
       },
       (err) => { console.error(err) }
     )
     setIsLoading(false)
   }
 
+  const getAllData = () => {
+    setPage(0)
+    getFilterList(
+      {},
+      0,
+      userIdData,
+      (res) => { 
+        setCollectList(res.data)
+      },
+      (err) => { console.error(err) }
+    )
+    setParam({})
+    setCategoryInfo({})
+    setIsFilterDone(false)
+  }
+
   return (
     <>
-      {isOpen && <Filter />}
+      {isOpen && <Filter userId={userIdData} />}
       <C.Container>
         <C.BtnAlign>
           <C.FilterBtn onClick={() => setIsOpenState(true)}>
             <C.FilterImg src={filterBtnImg} />
-            <C.FilterTxt>{want}</C.FilterTxt>
+            <C.FilterTxt>필터</C.FilterTxt>
           </C.FilterBtn>
+          <C.TotalBtn onClick={() => getAllData()}>전체 보기</C.TotalBtn>
         </C.BtnAlign>
 
         <C.CollectContainer className="grid gird-cols-3">
