@@ -103,4 +103,9 @@ public class EncyclopediaController {
         }
     }
 
+    @GetMapping("/category/{userId}")
+    public ResponseEntity<CategoryDto> category(@PathVariable long userId, @RequestParam(required = false) String ordo, @RequestParam(required = false) String familia, @RequestParam(required = false) String genus, @RequestParam(required = false) String species){
+
+        return ResponseEntity.status(HttpStatus.OK).body(encyclopediaService.category(userId, ordo, familia, genus, species));
+    }
 }

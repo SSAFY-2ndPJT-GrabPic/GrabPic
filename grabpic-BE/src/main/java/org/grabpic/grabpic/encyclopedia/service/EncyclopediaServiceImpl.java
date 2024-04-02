@@ -246,4 +246,33 @@ public class EncyclopediaServiceImpl implements EncyclopediaService{
 //        return encyclopediaRepository.findByBiologyList_OrdoAndBiologyList_FamiliaAndBiologyList_GenusAndBiologyList_Species(ordo, familia, genus, species);
 //        return encyclopediaRepository.findByUser_UserId(1l);
     }
+
+    @Override
+    public CategoryDto category(long userId, String ordo, String familia, String genus, String species){
+        Specification<EncyclopediaEntity> spec = (root, query, criteriaBuilder) -> null;
+
+        spec = spec.and(EncyclopediaSpecification.equalUserId(userId));
+        if (ordo != null)
+            spec = spec.and(EncyclopediaSpecification.equalOrdo(ordo));
+        if (familia != null)
+            spec = spec.and(EncyclopediaSpecification.equalFamilia(familia));
+        if (genus != null)
+            spec = spec.and(EncyclopediaSpecification.equalGenus(genus));
+        if (species != null)
+            spec = spec.and(EncyclopediaSpecification.equalSpecies(species));
+
+        List<EncyclopediaEntity> encyclopediaList = encyclopediaRepository.findAll(spec);
+
+        CategoryDto dto = new CategoryDto();
+
+        for(EncyclopediaEntity entity : encyclopediaList){
+            dto.getOrdo().add(entity.getBiologyList().getOrdo());
+            dto.getFamilia().add(entity.getBiologyList().getFamilia());
+            dto.getGenus().add(entity.getBiologyList().getGenus());
+            dto.getSpecies().add(entity.getBiologyList().getSpecies());
+            dto.getName().add(entity.getBiologyList().getName());
+        }
+
+        return dto;
+    }
 }

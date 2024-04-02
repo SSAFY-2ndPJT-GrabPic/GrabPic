@@ -39,6 +39,8 @@ public interface EncyclopediaRepository extends JpaRepository<EncyclopediaEntity
     List<EncyclopediaEntity> randomEncy(@Param("userId") long userId, Pageable pageable);
 
     Page<EncyclopediaEntity> findAll(Specification<EncyclopediaEntity> spec, Pageable pageable);
+
+    List<EncyclopediaEntity> findAll(Specification<EncyclopediaEntity> spec);
 //    @Query("SELECT e.encyclopediaId as encyclopediaId, e.user.nickname as writerNickName, e.registDateTime as registDateTime, e.thumbnailImageUrl as thumbnailImageUrl, e.biologyList.name as name FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
 //    List<GalleryPostDTO> findEncyclopediaDetailsBySubscriberId(@Param("id") Long id, Pageable pageable);
 //
