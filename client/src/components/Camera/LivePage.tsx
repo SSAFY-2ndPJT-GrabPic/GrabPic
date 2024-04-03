@@ -20,6 +20,8 @@ export const LivePage: React.FC = () => {
   // 로딩
   const setLoading = useSetRecoilState(isLoadingState);
 
+  // 모델이 로드되었음을 나타내는 상태 추가
+  const [modelLoaded, setModelLoaded] = useState(false);
   // 모델
   const [model, setModel] = useState<{
     net: tf.GraphModel | null;
@@ -40,10 +42,8 @@ export const LivePage: React.FC = () => {
 
   // webCam을 가져와서 오픈한다.
   useEffect(() => {
+
     setLoading({ loading: true, progress: 0 });
-
-    tf.setBackend('webgl');
-
     // webCam
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
@@ -76,10 +76,19 @@ export const LivePage: React.FC = () => {
   }, []);
 
 
-  const loadModel = async () => {
+  useEffect(() => {
+    if (modelLoaded) {
+      detectVideo(videoRef.current!, model, canvasRef.current!);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [model, modelLoaded]);
+
+
+  const loadModel = () => {
+    tf.setBackend('webgl')
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`animal2_web_model/model.json`, {
+      const yolo = await tf.loadGraphModel(`yolov8n_web_model/model.json`, {
         onProgress: (val) => {
           setLoading({ loading: true, progress: val });
         },
@@ -98,8 +107,9 @@ export const LivePage: React.FC = () => {
       });
 
       tf.dispose([warmupResults, dummyInput]);
+
+      setModelLoaded(true);
     });
-    await detectVideo(videoRef.current!, model, canvasRef.current!);
   };
 
   const autoSave = () => {
