@@ -13,7 +13,9 @@ export class WebCam {
         frameRate: {
           ideal: 60,
           min: 30,
-        },}
+        },
+        }
+        
       }).then((stream) => {
         videoRef.srcObject = stream;
       });
