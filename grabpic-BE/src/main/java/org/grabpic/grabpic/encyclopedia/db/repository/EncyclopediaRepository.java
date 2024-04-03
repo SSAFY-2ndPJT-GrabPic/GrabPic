@@ -26,6 +26,20 @@ public interface EncyclopediaRepository extends JpaRepository<EncyclopediaEntity
             "FUNCTION('sin', FUNCTION('radians', :latitude)) * FUNCTION('sin', FUNCTION('radians', e.latitude)))) < :range")
     Page<EncyclopediaEntity> findAround(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("range") double range, Pageable pageable);
 
+
+    @Query(value = "SELECT a.encyclopedia_id, a.user_id, a.biology_list_id, a.regist_date_time, a.content, a.latitude, a.longitude, a.address, a.image_url, a.thumbnail_image_url, a.shorts_video_url " +
+            "FROM " +
+            "(SELECT * FROM grabpic.encyclopedia e " +
+            "WHERE (6371*acos(cos(radians(:latitude))*cos(radians(e.latitude))*cos(radians(e.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(e.latitude)))) < :range) a " +
+            "JOIN " +
+            "(SELECT biology_list_id, COUNT(*) as cnt FROM grabpic.encyclopedia e " +
+            "WHERE (6371*acos(cos(radians(:latitude))*cos(radians(e.latitude))*cos(radians(e.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(e.latitude)))) < :range GROUP BY e.biology_list_id) b " +
+            "ON a.biology_list_id = b.biology_list_id"
+            , countQuery = "SELECT COUNT(*) FROM grabpic.encyclopedia e WHERE (6371*acos(cos(radians(:latitude))*cos(radians(e.latitude))*cos(radians(e.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(e.latitude)))) < :range"
+            , nativeQuery = true
+    )
+    Page<EncyclopediaEntity> findAroundOrderByRare(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("range") double range, Pageable pageable);
+
     @Query("SELECT COUNT(*) FROM encyclopedia e JOIN subscribe s ON e.user.userId = s.owner.userId WHERE s.subscribeUser.userId = :id")
     long countByEncyclopediaDetail(@Param("id") Long id);
 
