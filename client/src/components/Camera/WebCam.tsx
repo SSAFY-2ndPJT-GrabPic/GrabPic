@@ -8,7 +8,7 @@ export class WebCam {
     ) {
 
       navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: videoHeight, height:videoWidth,
+        video: { width: videoHeight, height:videoWidth,
         // video: { facingMode: "environment", width: videoWidth, height:videoHeight,
         frameRate: {
           ideal: 60,
