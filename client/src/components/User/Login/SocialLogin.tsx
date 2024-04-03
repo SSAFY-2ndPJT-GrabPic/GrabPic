@@ -23,11 +23,7 @@ export const SocailLogin: React.FC = () => {
       <L.AnothLogin onClick={() => {loginClick(1)}}>
         <img src={googleIconUrl} className="mr-3" />
         구글 로그인
-      </L.AnothLogin>
-      <L.AnothLogin onClick={() => {loginClick(2)}}>
-        <img src={naverIconUrl} className="mr-3" />
-        네이버 로그인
-      </L.AnothLogin>
+      </L.AnothLogin> 
       <L.AnothLogin onClick={() => {loginClick(3)}}>
         <img src={kakaoIconUrl} className="mr-3" />
         카카오 로그인
