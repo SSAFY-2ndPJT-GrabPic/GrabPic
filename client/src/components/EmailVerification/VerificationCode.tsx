@@ -104,7 +104,7 @@ export default function ResetPwCode() {
       <G.InputContainer className="mt-20">
         <span>인증코드</span>
         <div className="flex flex-row">
-          <G.InputBox type='number' placeholder="인증코드" className='grow' onChange={(e) => codeCheck(parseInt(e.target.value))}/>
+          <G.InputBoxSmall type='number' placeholder="인증코드" className='grow' onChange={(e) => codeCheck(parseInt(e.target.value))}/>
           <G.InputButtonSmall onClick={emailAgain}>재전송</G.InputButtonSmall>
         </div>
         <G.InputError>{codeMsg}</G.InputError>
