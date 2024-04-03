@@ -34,7 +34,6 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
 
   useEffect(() => {
     if (isFilterDone) {
-      console.log('필터완료')
       setPage(0)
       setParam(categoryInfo)
       setIsLoading(true)
@@ -91,14 +90,12 @@ const Collection: React.FC<CollectionProps> = ({ userId }) => {
 
   // 데이터 추가 및 loading상태 변경
   const fetchDataHandler = async () => {
-    console.log(param)
     await getFilterList(
       param,
       page,
       userIdData,
       (res) => { 
         if (isFilterDone) {
-          console.log(res)
           setCollectList(res.data)
           setIsFilterDone(false)
           setCategoryInfo({})
