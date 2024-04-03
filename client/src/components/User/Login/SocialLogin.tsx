@@ -1,5 +1,4 @@
 import googleIconUrl from '../../../assets/Login/google.png';
-import naverIconUrl from '../../../assets/Login/naver.png';
 import kakaoIconUrl from '../../../assets/Login/kakao.png';
 
 import * as L from './Login.style';
