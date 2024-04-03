@@ -107,7 +107,7 @@ export const detectVideo = async (vidSource: ImageData, model: { net: tf.GraphMo
      */
     
     const img = tf.browser.fromPixels(vidSource);
-    await detect(img,model,canvasRef);
+    detect(img,model,canvasRef);
 
     // const detectFrame = async (): Promise<void> => {
     //     if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
