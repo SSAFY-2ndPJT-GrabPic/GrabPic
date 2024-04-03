@@ -82,7 +82,6 @@ export const BasicLogin: React.FC = () => {
             localStorage.setItem('isLogin','true');
             await userInfo(
               (response) => {
-                console.log(response);
                 setUserInfoState(response);
                 setIsLogin(true);
               },
