@@ -89,7 +89,7 @@ export const LivePage: React.FC = () => {
     tf.setBackend('webgl')
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`animal_n2_web_model/model.json`, {
+      const yolo = await tf.loadGraphModel(`animal_n_web_model/model.json`, {
         onProgress: (val) => {
           setLoading({ loading: true, progress: val });
         },
