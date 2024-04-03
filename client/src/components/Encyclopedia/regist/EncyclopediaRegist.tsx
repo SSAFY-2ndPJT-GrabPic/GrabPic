@@ -189,7 +189,7 @@ export const EncyclopediaResgist: React.FC = () => {
         </div>
         <E.ObjectInfoContainer className="mt-5">
           <E.ObjectTitle>개체설명</E.ObjectTitle>
-          <E.ObjectContent>{info.content}</E.ObjectContent>
+          <E.ObjectContent>{info.summary}</E.ObjectContent>
           <E.ObjectLine></E.ObjectLine>
         </E.ObjectInfoContainer>
         <E.ObjectInfoContainer className="mt-5">
