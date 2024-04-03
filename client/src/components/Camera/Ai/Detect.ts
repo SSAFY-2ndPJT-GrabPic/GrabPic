@@ -11,7 +11,7 @@ const numClass: number = 25;
  * @param modelHeight 모델의 높이
  * @returns 입력 텐서, xRatio 및 yRatio
  */
-const preprocess = (img: tf.Tensor3D, modelWidth: number, modelHeight: number): [tf.Tensor3D, number, number] => {
+const preprocess = async (img: tf.Tensor3D, modelWidth: number, modelHeight: number): Promise<[tf.Tensor3D, number, number]> => {
     let xRatio: number = 0, yRatio: number = 0; // 상자에 대한 비율
 
     const input = tf.tidy(() => {
@@ -52,7 +52,7 @@ export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | 
     const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // 모델 너비 및 높이 가져오기
 
     tf.engine().startScope(); // TF 엔진 스코핑 시작
-    const [input, xRatio, yRatio] = preprocess(source, modelWidth, modelHeight); // 이미지 전처리
+    const [input, xRatio, yRatio] = await preprocess(source, modelWidth, modelHeight); // 이미지 전처리
 
     const res = model.net.execute(input) as tf.Tensor3D; // 모델 추론
     const transRes = res.transpose([0, 2, 1]); // 결과 전치 [b, det, n] => [b, n, det]
@@ -107,7 +107,7 @@ export const detectVideo = async (vidSource: ImageData, model: { net: tf.GraphMo
      */
     
     const img = tf.browser.fromPixels(vidSource);
-    detect(img,model,canvasRef);
+    await detect(img,model,canvasRef);
 
     // const detectFrame = async (): Promise<void> => {
     //     if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
