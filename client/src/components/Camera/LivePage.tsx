@@ -94,13 +94,46 @@ export const LivePage: React.FC = () => {
 
   useEffect(() => {
     if (modelLoaded) {
-      detectVideo(videoRef.current!, model, canvasRef.current!);
+      // detectVideo(videoRef.current!, model, canvasRef.current!);
+      test();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model, modelLoaded]);
 
+  const test = () => {
+    interval = setInterval(async () => {
+      if (videoRef.current && videoRef.current.videoWidth > 0) {
+        // canvas 생성.
+        const canvas = document.createElement('canvas');
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
+        const context = canvas.getContext('2d');
+
+        // canvas를 생성하였다면
+        if (context) {
+          // 그린다.
+          context.drawImage(
+            videoRef.current,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+
+          if(modelLoaded){
+            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
+            await detectVideo(imgData, model, canvasRef.current!);
+          }
+
+          
+        }
+      }
+    }, 300);
+  }
+
   const autoSave = () => {
-    interval = setInterval(() => {
-      if (videoRef.current) {
+    interval = setInterval(async () => {
+      if (videoRef.current && videoRef.current.videoWidth > 0) {
         // canvas 생성.
         const canvas = document.createElement('canvas');
         canvas.width = videoRef.current.videoWidth;
@@ -118,6 +151,11 @@ export const LivePage: React.FC = () => {
             canvas.height
           );
           const dataURL = canvas.toDataURL('image/jpeg');
+
+          if(modelLoaded){
+            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
+            detectVideo(imgData, model, canvas);
+          }
 
           if (capturedLen.current >= 20) {
             setCapturedImages((prevImages) => [
@@ -191,9 +229,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        onPlay={() => {
-          detectVideo(videoRef.current!, model, canvasRef.current!);
-        }}
+        // onPlay={() => {
+        //   detectVideo(videoRef.current!, model, canvasRef.current!);
+        // }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
