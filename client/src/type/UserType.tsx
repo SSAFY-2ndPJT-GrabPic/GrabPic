@@ -9,6 +9,7 @@ export type UserInfoType = {
   profileImage: string;
   subsCount: number;
   collectCount: number;
+  provider: string | null,
 };
 
 export interface OwnerInfoType {
