@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
                         .name(joinDTO.getName())
                         .birth(joinDTO.getBirth())
                         .role("ROLE_USER")
+                        .gender(joinDTO.getGender())
                         .build();
 
         userRepository.save(data);
