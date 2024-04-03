@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as P from './Profile.style';
 import { getUserInfo } from '../../../../api/user';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
 import { cancelSubscribe, checkIsSub, getSubEncys, wantSubscribe } from '../../../../api/subscribe';
 import { OwnerInfoType } from '../../../../type/UserType';
