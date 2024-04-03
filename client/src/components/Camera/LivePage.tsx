@@ -59,6 +59,7 @@ export const LivePage: React.FC = () => {
 
     webCam.open(currentVideoRef, videoWidth, videoHeight);
 
+    // 모델 불러오기
     loadModel();
 
     // 0.1초 간격 저장.
@@ -76,11 +77,11 @@ export const LivePage: React.FC = () => {
   }, []);
 
 
+  // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
     if (modelLoaded) {
       detectVideo(videoRef.current!, model, canvasRef.current!);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model, modelLoaded]);
 
 
@@ -181,7 +182,6 @@ export const LivePage: React.FC = () => {
         if (model.net) model.net.dispose();
 
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
-        // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
         navigate(`/camera/check`, {
           state: { image: dataURL, autoSave: capturedImages },
         });
