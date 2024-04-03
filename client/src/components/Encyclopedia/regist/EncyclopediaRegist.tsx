@@ -8,6 +8,7 @@ import { UserInfoType } from '../../../type/UserType';
 import { userInfoState } from '../../../recoil/atoms/UserState';
 import { headerState } from '../../../recoil/atoms/EncyHeaderState';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { registState } from '../../../recoil/atoms/RegistState';
 
 
 
@@ -41,6 +42,7 @@ export const EncyclopediaResgist: React.FC = () => {
   const setIsLoadingState = useSetRecoilState(R.isLoadingState);
   const setIsLoadingNo = useSetRecoilState(R.isLoadingNo);
 
+  const setRegistState = useSetRecoilState(registState)
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -114,6 +116,7 @@ export const EncyclopediaResgist: React.FC = () => {
         localStorage.removeItem('biologyId')
         localStorage.removeItem('boxXY')
         // 성공 시 로딩 해제, 페이지 넘김.
+        setRegistState(true)
         setEncyLocate('collection');
         setIsLoadingState({ loading: false, progress: 0 });
         setIsLoadingNo(0);
