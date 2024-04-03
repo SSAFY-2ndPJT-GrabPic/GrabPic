@@ -12,14 +12,14 @@
 
 ## 🔗 목차
 
-- [서비스 개요](#1)
-- [팀원 소개](#2)
-- [기술 스택](#3)
-- [주요 기능](#4)
-- [명세서](#5)
-- [시스템 아키텍처](#6)
-- [ERD](#7)
-- [서비스 실사용 화면](#8)
+- [서비스 개요](#서비스-개요)
+- [팀원 소개](#팀원-소개)
+- [기술 스택](#기술-스택)
+- [주요 기능](#주요-기능)
+- [명세서](#명세서)
+- [시스템 아키텍처](#시스템-아키텍처)
+- [ERD](#erd)
+- [서비스 실사용 화면](#서비스-실사용-화면)
 
 <br/>
 
@@ -163,53 +163,53 @@
 ## 💎 주요 기능
 <table>
   <tr>
-    <th align=center width="80px" height="30px">분류</th>
-    <th align=center width="80px" height="30px">기능</th>
+    <th align=center width="120px" height="30px">분류</th>
+    <th align=center width="120px" height="30px">기능</th>
     <th align=center width="700" height="30px">내용</th>
   </tr>
   <tr>
-    <td width="80px" height="60px"><b>동/식물 인식 및 정보 제공</b></td>
-    <td width="80px" height="60px">실시간 인식 및 표시</td>
+    <td width="120px" height="60px"><b>동/식물 인식 및 정보 제공</b></td>
+    <td width="120px" height="60px">실시간 인식 및 표시</td>
     <td width="700" height="60px">사용자가 카메라로 촬영 중인 동물이나 식물을 실시간으로 인식하며, 화면에는 인식된 대상의 윤곽선과 이름을 동시에 표시합니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"></td>
-    <td width="80px" height="60px">정보 제공</td>
+    <td width="120px" height="60px"></td>
+    <td width="120px" height="60px">정보 제공</td>
     <td width="700" height="60px">인식된 동물 또는 식물에 대해 상세한 정보를 사용자에게 제공합니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"><b>도감</b></td>
-    <td width="80px" height="60px">도감 등록</td>
+    <td width="120px" height="60px"><b>도감</b></td>
+    <td width="120px" height="60px">도감 등록</td>
     <td width="700" height="60px">사용자가 촬영한 동물 또는 식물의 사진을 개인 도감에 저장하고, 해당 생물에 대한 메모, 수집날짜, 수집 위치를 함께 등록합니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"></td>
-    <td width="80px" height="60px">차트</td>
+    <td width="120px" height="60px"></td>
+    <td width="120px" height="60px">차트</td>
     <td width="700" height="60px">사용자가 촬영한 생물들을 종류별로 분류하여, Cytoscape 라이브러리 기반의 차트 형태로 표현함으로써 생물의 다양성을 시각적으로 보여줍니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"></td>
-    <td width="80px" height="60px">	그리드뷰</td>
+    <td width="120px" height="60px"></td>
+    <td width="120px" height="60px">	그리드뷰</td>
     <td width="700" height="60px">촬영한 사진들을 반응형 그리드 형태로 표시, 사용자가 수집한 생물 사진을 시각적으로 쉽게 탐색하고 감상할 수 있도록 합니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"></td>
-    <td width="80px" height="60px">보간 동영상 제공</td>
+    <td width="120px" height="60px"></td>
+    <td width="120px" height="60px">보간 동영상 제공</td>
     <td width="700" height="60px">사용자가 촬영한 사진들을 이용하여 보간 처리를 거친 동영상을 생성, 촬영한 순간들을 연속적으로 보여주어 생생한 경험을 제공합니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"><b>커뮤니티</b></td>
-    <td width="80px" height="60px">구독</td>
+    <td width="120px" height="60px"><b>커뮤니티</b></td>
+    <td width="120px" height="60px">구독</td>
     <td width="700" height="60px">사용자는 다른 사용자를 구독할 수 있으며, 이를 통해 구독 대상의 도감을 확인할 수 있습니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"></td>
-    <td width="80px" height="60px">방명록 작성</td>
+    <td width="120px" height="60px"></td>
+    <td width="120px" height="60px">방명록 작성</td>
     <td width="700" height="60px">구독한 사용자의 프로필에 방명록을 작성할 수 있습니다.</td>
   </tr>
   <tr>
-    <td width="80px" height="60px"></td>
-    <td width="80px" height="60px">갤러리</td>
+    <td width="120px" height="60px"></td>
+    <td width="120px" height="60px">갤러리</td>
     <td width="700" height="60px">다른 사용자들이 업로드한 동식물 사진을 피드 형태로 확인할 수 있습니다.</td>
   </tr>
 </table>
