@@ -59,7 +59,7 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
       })
       .catch((err) => console.error(err))
 
-    }, [userId]);
+    }, [userId, ownerInfo.collectCount]);
     
   // 내 도감 O : 회원정보 수정 버튼 컬러
   // 내 도감 X & 구독 O : 구독 중 버튼 컬러
