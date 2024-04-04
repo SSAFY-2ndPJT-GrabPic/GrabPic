@@ -42,7 +42,6 @@ export const LivePage: React.FC = () => {
   const [selectedCameraIndex, setSelectedCameraIndex] = useState<number>(0);
 
   useEffect(() => {
-    console.log(selectedCameraIndex);
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
 
@@ -204,15 +203,16 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
-  const cameraChange = (e : number) =>{
-    console.log(e);
-    setSelectedCameraIndex(e);
+  const cameraChange = () =>{
+    if(selectedCameraIndex === 0)
+      setSelectedCameraIndex(1);
+    else  
+      setSelectedCameraIndex(0);
   }
 
   return (
     <>
-      <button onClick={() => {cameraChange(0)}}>test1</button>
-      <button onClick={() => {cameraChange(1)}}>test2</button>
+      <L.TestButton onClick={cameraChange}>test1</L.TestButton>
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>

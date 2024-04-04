@@ -23,3 +23,10 @@ export const CameraCanvas = styled.canvas`
   top: 0;
   left: 0;
 `
+
+export const TestButton = styled.button`
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  background-color: white;
+`
