@@ -15,7 +15,7 @@ export class WebCam {
       const deviceId = cameras[selectedCameraIndex].deviceId
       navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: videoHeight, height:videoWidth,deviceId: { exact: deviceId},
-        // video: { facingMode: "environment", width: videoWidth, height:videoHeight,
+        // video: { facingMode: "environment", width: videoWidth, height:videoHeight,deviceId: { exact: deviceId},
         frameRate: {
           ideal: 60,
           min: 30,

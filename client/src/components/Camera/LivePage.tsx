@@ -10,7 +10,7 @@ import CloseIconUrl from '../../assets/icon/closeX2.png';
 
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
-import { detectVideo } from './Ai/Detect';
+import { detect } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
@@ -57,7 +57,6 @@ export const LivePage: React.FC = () => {
 
     webCam.open(currentVideoRef, videoWidth, videoHeight,selectedCameraIndex);
     
-    setLoading({ loading: true, progress: 0 });
     // webCam
     
     // 모델 불러오기
@@ -82,12 +81,29 @@ export const LivePage: React.FC = () => {
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
     if (modelLoaded) {
-      detectVideo(videoRef.current!, model, canvasRef.current!);
+      const detectFrame = async (): Promise<void> => {
+        if (videoRef.current && canvasRef.current && videoRef.current.videoWidth === 0 && videoRef.current.srcObject === null) {
+            const ctx = canvasRef.current.getContext("2d");
+
+            if(!ctx)    return;
+
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 캔버스 지우기
+            return; // 소스가 닫혔을 때 처리
+        }
+        if(videoRef.current && canvasRef.current){
+          await detect(videoRef.current, model, canvasRef.current, () => {
+            requestAnimationFrame(detectFrame); // 다른 프레임 가져오기
+        });
+        }
+    };
+
+    detectFrame(); // 모든 프레임을 감지하도록 초기화
     }
   }, [model, modelLoaded, videoRef]);
 
 
   const loadModel = () => {
+    setLoading({ loading: true, progress: 0 });
     tf.setBackend('webgl')
     // AI 모델 불러오기
     tf.ready().then(async () => {
@@ -215,9 +231,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        onPlay={() => {
-          detectVideo(videoRef.current!, model, canvasRef.current!);
-        }}
+        // onPlay={() => {
+        //   detectVideo(videoRef.current!, model, canvasRef.current!);
+        // }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
