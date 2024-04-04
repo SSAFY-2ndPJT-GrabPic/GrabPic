@@ -57,7 +57,6 @@ const Gallery: React.FC<GalleryProps> = () => {
       page,
       (res) => {
         setGalleryList(prevList => prevList.concat(res.data))
-        console.log(res)
         if (res.data.length < 21) {
           setPage(0)
           setIsStop(true)
