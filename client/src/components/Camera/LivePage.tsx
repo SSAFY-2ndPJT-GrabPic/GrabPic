@@ -10,10 +10,10 @@ import CloseIconUrl from '../../assets/icon/closeX2.png';
 
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
+import { detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
-  const [zoom, setZoom] = useState<number>(2);
 
   let interval: string | number | NodeJS.Timeout | undefined;
 
@@ -40,7 +40,9 @@ export const LivePage: React.FC = () => {
   // 객체 틀 박스
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // webCam을 가져와서 오픈한다.
   useEffect(() => {
+    
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
 
@@ -53,16 +55,7 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight, zoom);
-
-    return () => {
-      webCam.close(currentVideoRef);
-    }
-  },[zoom])
-
-  // webCam을 가져와서 오픈한다.
-  useEffect(() => {
-    
+    webCam.open(currentVideoRef, videoWidth, videoHeight, 4);
     // 모델 불러오기
     if (!model.net) loadModel();
 
@@ -72,6 +65,7 @@ export const LivePage: React.FC = () => {
     // webCam 닫는다.
     return () => {
       clearInterval(interval);
+      webCam.close(currentVideoRef);
 
       // 메모리 해제
       if (model.net) model.net.dispose();
@@ -81,9 +75,9 @@ export const LivePage: React.FC = () => {
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
-    // if (modelLoaded) {
-    //   detectVideo(videoRef.current!, model, canvasRef.current!);
-    // }
+    if (modelLoaded) {
+      detectVideo(videoRef.current!, model, canvasRef.current!);
+    }
   }, [model, modelLoaded]);
 
   const loadModel = () => {
@@ -201,19 +195,9 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
-  const zoomChange = (e:number) => {
-    setZoom(e);
-  }
 
   return (
     <>
-      <L.ZoomInput
-        type="range"
-        min="1"
-        max="10"
-        value={zoom}
-        onChange={(e) => zoomChange(parseInt(e.target.value))}
-      />
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
@@ -221,9 +205,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        // onPlay={() => {
-        //   detectVideo(videoRef.current!, model, canvasRef.current!);
-        // }}
+        onPlay={() => {
+          detectVideo(videoRef.current!, model, canvasRef.current!);
+        }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
