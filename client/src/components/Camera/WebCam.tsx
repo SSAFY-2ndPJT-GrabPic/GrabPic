@@ -24,6 +24,7 @@ export class WebCam {
           width: videoHeight,
           height: videoWidth,
           deviceId: { exact: deviceId },
+          zoom: true,
           frameRate: {
             ideal: 60,
             min: 30,
