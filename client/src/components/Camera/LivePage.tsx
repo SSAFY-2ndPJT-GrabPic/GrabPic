@@ -10,13 +10,13 @@ import CloseIconUrl from '../../assets/icon/closeX2.png';
 
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
+import { detectVideo } from './Ai/Detect';
 // import { detect, detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
   const [zoom, setZoom] = useState<number>(2);
   let interval: string | number | NodeJS.Timeout | undefined;
-  let interval2: string | number | NodeJS.Timeout | undefined;
 
   // 로딩
   const setLoading = useSetRecoilState(isLoadingState);
@@ -56,6 +56,11 @@ export const LivePage: React.FC = () => {
 
     webCam.open(currentVideoRef, videoWidth, videoHeight, zoom);
 
+    // autoSave();
+
+    return () => {
+      clearInterval(interval);
+    }
   },[zoom])
 
   // webCam을 가져와서 오픈한다.
@@ -70,7 +75,6 @@ export const LivePage: React.FC = () => {
     // webCam 닫는다.
     return () => {
       clearInterval(interval);
-      clearInterval(interval2);
       webCam.close(videoRef.current);
 
       // 메모리 해제
@@ -81,9 +85,10 @@ export const LivePage: React.FC = () => {
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
-    // if (modelLoaded) {
-    //   detectVideo(videoRef.current!, model, canvasRef.current!);
-    // }
+    if (modelLoaded) {
+      // detectVideo(videoRef.current!, model, canvasRef.current!);
+      autoSave();
+    }
   }, [model, modelLoaded]);
 
   // const modelDetect = () => {
@@ -144,6 +149,11 @@ export const LivePage: React.FC = () => {
             canvas.height
           );
           const dataURL = canvas.toDataURL('image/jpeg');
+          
+          if(modelLoaded){
+            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
+            detectVideo(imgData, model, canvas);
+          }
 
           if (capturedLen.current >= 20) {
             setCapturedImages((prevImages) => [
