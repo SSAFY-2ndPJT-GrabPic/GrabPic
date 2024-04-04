@@ -11,7 +11,6 @@ import CloseIconUrl from '../../assets/icon/closeX2.png';
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
 import { detectVideo } from './Ai/Detect';
-// import { detect, detectVideo } from './Ai/Detect';
 
 import plusUrl from '../../assets/Map/plus.png'
 import minusUrl from '../../assets/Map/minus.png'
@@ -251,7 +250,7 @@ export const LivePage: React.FC = () => {
   }
 
   const minusClick = () => {
-    if(zoom > 1){
+    if(zoom > 0){
       setZoom(zoom - 1);
     }
   }
