@@ -131,7 +131,7 @@ export const LivePage: React.FC = () => {
   };
 
   const test = () => {
-    interval = setInterval(async () => {
+    interval2 = setInterval(async () => {
       if (videoRef.current && videoRef.current.videoWidth > 0) {
         // canvas 생성.
         const canvas = document.createElement('canvas');
@@ -252,8 +252,8 @@ export const LivePage: React.FC = () => {
     <>
       <L.ZoomInput
         type="range"
-        min="0"
-        max="7"
+        min="1"
+        max="5"
         value={zoom}
         onChange={(e) => zoomChange(parseInt(e.target.value))}
       />

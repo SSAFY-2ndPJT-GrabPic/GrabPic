@@ -28,4 +28,5 @@ export const ZoomInput = styled.input`
   z-index: 3;
   position: fixed;
   top: 0;
+  width: 100%;
 `

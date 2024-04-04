@@ -45,7 +45,7 @@ const preprocess = async (img: tf.Tensor3D, modelWidth: number, modelHeight: num
  * @param canvasRef 캔버스 참조
  * @param callback 감지 프로세스 이후 실행할 함수
  */
-export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement, callback: () => void = () => { }): Promise<void> => {
+export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement): Promise<void> => {
     console.log(model);
     if(!model.net)  return;
 
@@ -90,8 +90,6 @@ export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | 
     console.log(scores_data);
     renderBoxes(canvasRef, boxes_data, scores_data, classes_data, [xRatio, yRatio]); // 상자 렌더링
     tf.dispose([res, transRes, boxes, scores, classes, nms]); // 메모리 해제
-
-    callback();
 
     tf.engine().endScope(); // 스코핑 종료
 };
