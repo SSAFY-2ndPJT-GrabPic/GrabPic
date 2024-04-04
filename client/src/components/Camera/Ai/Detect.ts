@@ -46,7 +46,7 @@ const preprocess = async (img: tf.Tensor3D, modelWidth: number, modelHeight: num
  * @param callback 감지 프로세스 이후 실행할 함수
  */
 export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement): Promise<void> => {
-    console.log(model);
+
     if(!model.net)  return;
 
     const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // 모델 너비 및 높이 가져오기
@@ -87,7 +87,6 @@ export const detect = async (source: tf.Tensor3D, model: { net: tf.GraphModel | 
     const scores_data = scores.gather(nms, 0).dataSync() as Int32Array; // NMS 인덱스로 점수 색인화
     const classes_data = classes.gather(nms, 0).dataSync() as Int32Array; // NMS 인덱스로 클래스 색인화
 
-    console.log(scores_data);
     renderBoxes(canvasRef, boxes_data, scores_data, classes_data, [xRatio, yRatio]); // 상자 렌더링
     tf.dispose([res, transRes, boxes, scores, classes, nms]); // 메모리 해제
 
