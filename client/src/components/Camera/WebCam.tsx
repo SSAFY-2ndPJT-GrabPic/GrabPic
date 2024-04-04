@@ -10,8 +10,8 @@ export class WebCam {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const cameras = devices.filter(device => device.kind === "videoinput" && device.label.includes("back"));
 
-      console.log(cameras[0].deviceId);
-      const deviceId = cameras[0].deviceId
+      console.log(cameras[1].deviceId);
+      const deviceId = cameras[1].deviceId
       navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: videoHeight, height:videoWidth,deviceId: { exact: deviceId},
         // video: { facingMode: "environment", width: videoWidth, height:videoHeight,
