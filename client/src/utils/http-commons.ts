@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { TokenRefresh } from "../api/user";
 import { httpStatusCode } from "./http-status";
 
+
 const baseURL = 'https://j10d104.p.ssafy.io/api';
 
 axios.defaults.withCredentials = true;
@@ -55,8 +56,8 @@ privateApi.interceptors.request.use(
               return axios(originRequest);
             }
           },
-          (err) => {
-            console.log(err);
+          () => {
+            localStorage.clear();
           }
         )
       }
@@ -101,8 +102,8 @@ formDataApi.interceptors.request.use(
               return axios(originRequest);
             }
           },
-          (err) => {
-            console.log(err);
+          () => {
+            localStorage.clear();
           }
         )
       }

@@ -2,7 +2,7 @@ import * as tf from "@tensorflow/tfjs";
 import { renderBoxes } from "./RenderBox";
 
 // 클래스의 개수
-const numClass: number = 25;
+const numClass: number = 20;
 
 /**
  * 모델에 전달되기 전 이미지/프레임을 전처리합니다.
@@ -11,7 +11,7 @@ const numClass: number = 25;
  * @param modelHeight 모델의 높이
  * @returns 입력 텐서, xRatio 및 yRatio
  */
-const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: number, modelHeight: number): [tf.Tensor3D, number, number] => {
+const preprocess = async (source: HTMLVideoElement, modelWidth: number, modelHeight: number): Promise<[tf.Tensor3D, number, number]> => {
     let xRatio: number = 0, yRatio: number = 0; // 상자에 대한 비율
 
     const input = tf.tidy(() => {
@@ -45,14 +45,13 @@ const preprocess = (source: HTMLVideoElement | HTMLImageElement, modelWidth: num
  * @param canvasRef 캔버스 참조
  * @param callback 감지 프로세스 이후 실행할 함수
  */
-export const detect = async (source: HTMLImageElement | HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement, callback: () => void = () => { }): Promise<void> => {
+export const detect = async (source: HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement, callback: () => void = () => { }): Promise<void> => {
     if(!model.net)  return;
 
     const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // 모델 너비 및 높이 가져오기
 
     tf.engine().startScope(); // TF 엔진 스코핑 시작
-    const [input, xRatio, yRatio] = preprocess(source, modelWidth, modelHeight); // 이미지 전처리
-
+    const [input, xRatio, yRatio] = await preprocess(source, modelWidth, modelHeight); // 이미지 전처리
 
     const res = model.net.execute(input) as tf.Tensor3D; // 모델 추론
     const transRes = res.transpose([0, 2, 1]); // 결과 전치 [b, det, n] => [b, n, det]
@@ -74,6 +73,7 @@ export const detect = async (source: HTMLImageElement | HTMLVideoElement, model:
             .squeeze();
     }); // 상자 처리 [y1, x1, y2, x2]
 
+
     const [scores, classes] = tf.tidy(() => {
         // 클래스 점수
         const rawScores = transRes.slice([0, 0, 4], [-1, -1, numClass]).squeeze([0]); // #6은 1 클래스 모델만 처리하기 위해 axis 0만 squeeze
@@ -94,17 +94,18 @@ export const detect = async (source: HTMLImageElement | HTMLVideoElement, model:
     tf.engine().endScope(); // 스코핑 종료
 };
 
-/**
- * 비디오에서 각 소스를 감지하는 함수입니다.
- * @param vidSource 비디오 소스
- * @param model 로드된 YOLOv8 TensorFlow.js 모델
- * @param canvasRef 캔버스 참조
- */
-export const detectVideo = (vidSource: HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement): void => {
+// /**
+//  * 비디오에서 각 소스를 감지하는 함수입니다.
+//  * @param vidSource 비디오 소스
+//  * @param model 로드된 YOLOv8 TensorFlow.js 모델
+//  * @param canvasRef 캔버스 참조
+//  */
+export const detectVideo = async (vidSource:  HTMLVideoElement, model: { net: tf.GraphModel | null; inputShape: number[] }, canvasRef: HTMLCanvasElement): Promise<void> => {
     /**
      * 비디오에서 각 프레임을 감지하는 함수입니다.
      */
     
+
     const detectFrame = async (): Promise<void> => {
         if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
             const ctx = canvasRef.getContext("2d");
