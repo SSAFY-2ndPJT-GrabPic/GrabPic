@@ -41,6 +41,7 @@ export const LivePage: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [selectedCameraIndex, setSelectedCameraIndex] = useState<number>(0);
 
+  // webCam을 가져와서 오픈한다.
   useEffect(() => {
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
@@ -62,7 +63,6 @@ export const LivePage: React.FC = () => {
     }
   },[selectedCameraIndex])
 
-  // webCam을 가져와서 오픈한다.
   useEffect(() => {
 
     setLoading({ loading: true, progress: 0 });
@@ -87,9 +87,9 @@ export const LivePage: React.FC = () => {
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
-    if (modelLoaded) {
-      detectVideo(videoRef.current!, model, canvasRef.current!);
-    }
+    // if (modelLoaded) {
+    //   detectVideo(videoRef.current!, model, canvasRef.current!);
+    // }
   }, [model, modelLoaded, videoRef]);
 
 
