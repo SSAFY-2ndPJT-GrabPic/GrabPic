@@ -42,6 +42,7 @@ export const LivePage: React.FC = () => {
 
   // webCam을 가져와서 오픈한다.
   useEffect(() => {
+    
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
 
@@ -54,28 +55,23 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight);
-    
-    // webCam
-    
+    webCam.open(currentVideoRef, videoWidth, videoHeight, 2);
     // 모델 불러오기
-    if(!model.net)
-      loadModel();
+    if (!model.net) loadModel();
 
     // 0.1초 간격 저장.
     autoSave();
 
     // webCam 닫는다.
     return () => {
-      webCam.close(currentVideoRef);
       clearInterval(interval);
+      webCam.close(currentVideoRef);
 
       // 메모리 해제
       if (model.net) model.net.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
@@ -84,17 +80,19 @@ export const LivePage: React.FC = () => {
     }
   }, [model, modelLoaded]);
 
-
   const loadModel = () => {
     setLoading({ loading: true, progress: 0 });
-    tf.setBackend('webgl')
+    tf.setBackend('webgl');
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`final_animal_web_model/model.json`, {
-        onProgress: (val) => {
-          setLoading({ loading: true, progress: val });
-        },
-      });
+      const yolo = await tf.loadGraphModel(
+        `final_animal_web_model/model.json`,
+        {
+          onProgress: (val) => {
+            setLoading({ loading: true, progress: val });
+          },
+        }
+      );
 
       const dummyInput = tf.ones(yolo.inputs[0].shape as number[]);
       const warmupResults = yolo.execute(dummyInput);
@@ -196,6 +194,7 @@ export const LivePage: React.FC = () => {
 
     navigate('/');
   };
+
 
   return (
     <>
