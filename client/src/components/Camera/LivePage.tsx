@@ -18,7 +18,7 @@ import minusUrl from '../../assets/Map/minus.png'
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
-  const [zoom, setZoom] = useState<number>(2);
+  const [zoom, setZoom] = useState<number>(1);
   let interval: string | number | NodeJS.Timeout | undefined;
   let interval2: string | number | NodeJS.Timeout | undefined;
 
