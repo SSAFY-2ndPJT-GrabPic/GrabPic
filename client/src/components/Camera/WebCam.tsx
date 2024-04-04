@@ -8,8 +8,7 @@ export class WebCam {
     ) {
 
       const devices = await navigator.mediaDevices.enumerateDevices();
-      console.log(devices);
-      const cameras = devices.filter(device => device.kind === "videoinput")
+      const cameras = devices.filter(device => device.kind === "videoinput" && device.label.includes("back"));
 
       console.log(cameras);
 
