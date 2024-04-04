@@ -75,6 +75,8 @@ export const LivePage: React.FC = () => {
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
+    // if(videoRef.current)
+    //   console.log(videoRef.current.srcObject);
     if (modelLoaded) {
       detectVideo(videoRef.current!, model, canvasRef.current!);
     }
