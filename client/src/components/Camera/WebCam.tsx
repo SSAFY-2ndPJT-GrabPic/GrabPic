@@ -13,7 +13,7 @@ export class WebCam {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const cameras = devices.filter(
         (device) =>
-          device.kind === 'videoinput' 
+          device.kind === 'videoinput' && device.label.includes('back')
       );
 
       const index = cameras.length - 1;
@@ -45,7 +45,17 @@ export class WebCam {
           },
         },
       };
+      const stream = videoRef.srcObject as MediaStream;
 
+      if (stream) {
+        const tracks = stream.getTracks();
+
+        tracks.forEach((track) => {
+          track.stop();
+        });
+
+        videoRef.srcObject = null;
+      }
       navigator.mediaDevices.getUserMedia(deviceId?info:info2).then((stream) => {
         videoRef.srcObject = stream;
       });

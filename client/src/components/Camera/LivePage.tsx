@@ -12,10 +12,14 @@ import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
 import { detectVideo } from './Ai/Detect';
 
+import plusUrl from '../../assets/Map/plus.png'
+import minusUrl from '../../assets/Map/minus.png'
+
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
-
+  const [zoom, setZoom] = useState<number>(1);
   let interval: string | number | NodeJS.Timeout | undefined;
+  let interval2: string | number | NodeJS.Timeout | undefined;
 
   // 로딩
   const setLoading = useSetRecoilState(isLoadingState);
@@ -40,10 +44,8 @@ export const LivePage: React.FC = () => {
   // 객체 틀 박스
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // webCam을 가져와서 오픈한다.
+  const webCam = new WebCam();
   useEffect(() => {
-    
-    const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
 
     const videoWidth = Math.max(
@@ -55,7 +57,19 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight, 2);
+    webCam.open(currentVideoRef, videoWidth, videoHeight, zoom);
+
+    // autoSave();
+      test();
+    return () => {
+      clearInterval(interval2);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[zoom])
+
+  // webCam을 가져와서 오픈한다.
+  useEffect(() => {
+    
     // 모델 불러오기
     if (!model.net) loadModel();
 
@@ -65,7 +79,8 @@ export const LivePage: React.FC = () => {
     // webCam 닫는다.
     return () => {
       clearInterval(interval);
-      webCam.close(currentVideoRef);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      webCam.close(videoRef.current);
 
       // 메모리 해제
       if (model.net) model.net.dispose();
@@ -76,8 +91,10 @@ export const LivePage: React.FC = () => {
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
     if (modelLoaded) {
-      detectVideo(videoRef.current!, model, canvasRef.current!);
+      // detectVideo(videoRef.current!, model, canvasRef.current!);
+      test();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model, modelLoaded]);
 
   const loadModel = () => {
@@ -111,6 +128,37 @@ export const LivePage: React.FC = () => {
       setModelLoaded(true);
     });
   };
+
+  const test = () => {
+    interval2 = setInterval(async () => {
+      if (videoRef.current && videoRef.current.videoWidth > 0) {
+        // canvas 생성.
+        const canvas = document.createElement('canvas');
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
+        const context = canvas.getContext('2d');
+
+        // canvas를 생성하였다면
+        if (context) {
+          // 그린다.
+          context.drawImage(
+            videoRef.current,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+
+          if(modelLoaded){
+            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
+            await detectVideo(imgData, model, canvasRef.current!);
+          }
+
+          
+        }
+      }
+    }, 300);
+  }
 
   const autoSave = () => {
     interval = setInterval(async () => {
@@ -195,9 +243,29 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
+  const plusClick = () => {
+    if(zoom < 5){
+      setZoom(zoom + 1);
+    }
+  }
+
+  const minusClick = () => {
+    if(zoom > 1){
+      setZoom(zoom - 1);
+    }
+  }
 
   return (
     <>
+      <L.ZoomBtnContainer>
+        <L.ZoomBtn onClick={plusClick}>
+          <L.ZoomImg src={plusUrl} alt="확대" />
+        </L.ZoomBtn>
+        <L.ZoomBtn onClick={minusClick}>
+          <L.ZoomImg src={minusUrl} alt="축소" />
+        </L.ZoomBtn>
+      </L.ZoomBtnContainer>
+
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
@@ -205,9 +273,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        onPlay={() => {
-          detectVideo(videoRef.current!, model, canvasRef.current!);
-        }}
+        // onPlay={() => {
+        //   detectVideo(videoRef.current!, model, canvasRef.current!);
+        // }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
