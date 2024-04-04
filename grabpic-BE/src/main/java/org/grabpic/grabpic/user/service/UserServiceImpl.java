@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
                         .name(joinDTO.getName())
                         .birth(joinDTO.getBirth())
                         .role("ROLE_USER")
+                        .gender(joinDTO.getGender())
                         .build();
 
         userRepository.save(data);
@@ -194,6 +195,8 @@ public class UserServiceImpl implements UserService {
         infoDTO.setEmail(user.getEmail());
         //닉네임
         infoDTO.setNickname(user.getNickname());
+        //로그인 출처 소셜 or 일반
+        infoDTO.setProvider(user.getProvider());
         //이름
         infoDTO.setName(user.getName());
         //생일
