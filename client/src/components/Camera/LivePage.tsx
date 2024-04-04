@@ -55,6 +55,7 @@ export const LivePage: React.FC = () => {
     );
 
     webCam.open(currentVideoRef, videoWidth, videoHeight,selectedCameraIndex);
+    
 
     return() => {
       webCam.close(currentVideoRef);
@@ -89,7 +90,7 @@ export const LivePage: React.FC = () => {
     if (modelLoaded) {
       detectVideo(videoRef.current!, model, canvasRef.current!);
     }
-  }, [model, modelLoaded]);
+  }, [model, modelLoaded, videoRef]);
 
 
   const loadModel = () => {
