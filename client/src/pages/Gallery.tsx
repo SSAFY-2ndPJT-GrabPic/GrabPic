@@ -16,7 +16,7 @@ const Gallery: React.FC<GalleryProps> = () => {
   const handleObserver = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
 
-    if (target.isIntersecting && !isLoading) {
+    if (target.isIntersecting && !isLoading && !isStop) {
       setIsLoading(true)
     }
   };
@@ -33,10 +33,16 @@ const Gallery: React.FC<GalleryProps> = () => {
     }
   }, [])
 
+  const [isStop, setIsStop] = useState<boolean>(false)
+
   // 로딩중이면 페이지 상승 + api 요청
   // useEffect가 isLoading의 상태 변화를 계속 추적하며 api 쏘므로
   // setTimeout을 통해 api 요청 한번만 갈 수 있도록 수정
   useEffect(() => {
+    if (isStop) {
+      setIsLoading(false)
+      return
+    }
     if (isLoading) {
       setTimeout(() => {
         setPage((page) => page + 1);
@@ -51,6 +57,11 @@ const Gallery: React.FC<GalleryProps> = () => {
       page,
       (res) => {
         setGalleryList(prevList => prevList.concat(res.data))
+        console.log(res)
+        if (res.data.length < 21) {
+          setPage(0)
+          setIsStop(true)
+        }
       },
       (err) => { console.error(err) }
     )
