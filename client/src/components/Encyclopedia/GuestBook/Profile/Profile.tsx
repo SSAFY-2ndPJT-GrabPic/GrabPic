@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import * as P from './Profile.style';
 import { getUserInfo } from '../../../../api/user';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../../../recoil/atoms/UserState';
 import { cancelSubscribe, checkIsSub, getSubEncys, wantSubscribe } from '../../../../api/subscribe';
 import { OwnerInfoType } from '../../../../type/UserType';
 import { useNavigate } from 'react-router-dom';
 import SubListModal from './SubListModal';
 import { guestBookModalState } from '../../../../recoil/atoms/GuestBookModalState';
+import { registState } from '../../../../recoil/atoms/RegistState';
 
 interface ProfileProps {
   userId: number;
 }
 
 const Profile: React.FC<ProfileProps> = ({ userId }) => {
-  const myInfo = useRecoilValue(userInfoState);     // 내 정보
+  const [myInfo, setMyInfo] = useRecoilState(userInfoState);     // 내 정보
   // 지금 보고 있는 도감 주인에 대한 사용자 정보
   const [ownerInfo, setOwnerInfo] = useState<OwnerInfoType>({ 
     userId: 0,
@@ -28,6 +29,24 @@ const Profile: React.FC<ProfileProps> = ({ userId }) => {
   const [isMine, setIsMine] = useState<boolean>(false);  // 내 도감인지 판별
   const [isSub, setIsSub] = useState<boolean>(false);    // 구독한 사용자인지 판별
   const [subEncyCount, setSubEncyCount] = useState<number>(0);
+
+  const [isRegist, setIsRegist] = useRecoilState(registState)
+
+  useEffect(() => {
+    if (isRegist) {
+      getUserInfo(
+        userId,
+        (res) => {
+          if (userId === myInfo.userId) {
+            setMyInfo({...myInfo, collectCount: res.data.collectCount})
+          }
+          setOwnerInfo(res.data);
+        },
+        (err) => console.error(err)
+      )
+      setIsRegist(false)
+    }
+  }, [isRegist])
 
   useEffect(() => {
     if (userId === myInfo.userId) {   // 내 도감 O -> user정보 갱신 + 내 도감임을 표시

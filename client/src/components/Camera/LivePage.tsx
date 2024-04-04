@@ -42,19 +42,55 @@ export const LivePage: React.FC = () => {
 
   // webCam을 가져와서 오픈한다.
   useEffect(() => {
-    setLoading({ loading: true, progress: 0 });
-    // webCam
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
+
+    const videoWidth = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+    const videoHeight = Math.max(
+      document.documentElement.clientHeight || 0,
+      window.innerHeight || 0
+    );
+
+    webCam.open(currentVideoRef, videoWidth, videoHeight);
     
-    const videoWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-    const videoHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    // webCam
+    
+    // 모델 불러오기
+    if(!model.net)
+      loadModel();
 
-    webCam.open(currentVideoRef,videoWidth,videoHeight);
+    // 0.1초 간격 저장.
+    autoSave();
 
+    // webCam 닫는다.
+    return () => {
+      webCam.close(currentVideoRef);
+      clearInterval(interval);
+
+      // 메모리 해제
+      if (model.net) model.net.dispose();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
+  // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
+  useEffect(() => {
+    if (modelLoaded) {
+      detectVideo(videoRef.current!, model, canvasRef.current!);
+    }
+  }, [model, modelLoaded]);
+
+
+  const loadModel = () => {
+    setLoading({ loading: true, progress: 0 });
+    tf.setBackend('webgl')
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`animal2_web_model/model.json`, {
+      const yolo = await tf.loadGraphModel(`final_animal_web_model/model.json`, {
         onProgress: (val) => {
           setLoading({ loading: true, progress: val });
         },
@@ -76,60 +112,7 @@ export const LivePage: React.FC = () => {
 
       setModelLoaded(true);
     });
-
-    // 0.1초 간격 저장.
-    autoSave();
-
-    // webCam 닫는다.
-    return () => {
-      clearInterval(interval);
-      webCam.close(currentVideoRef);
-
-      // 메모리 해제
-      if(model.net)
-        model.net.dispose();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (modelLoaded) {
-      // detectVideo(videoRef.current!, model, canvasRef.current!);
-      test();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model, modelLoaded]);
-
-  const test = () => {
-    interval = setInterval(async () => {
-      if (videoRef.current && videoRef.current.videoWidth > 0) {
-        // canvas 생성.
-        const canvas = document.createElement('canvas');
-        canvas.width = videoRef.current.videoWidth;
-        canvas.height = videoRef.current.videoHeight;
-        const context = canvas.getContext('2d');
-
-        // canvas를 생성하였다면
-        if (context) {
-          // 그린다.
-          context.drawImage(
-            videoRef.current,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
-
-          if(modelLoaded){
-            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
-            await detectVideo(imgData, model, canvasRef.current!);
-          }
-
-          
-        }
-      }
-    }, 300);
-  }
+  };
 
   const autoSave = () => {
     interval = setInterval(async () => {
@@ -151,11 +134,6 @@ export const LivePage: React.FC = () => {
             canvas.height
           );
           const dataURL = canvas.toDataURL('image/jpeg');
-
-          if(modelLoaded){
-            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
-            detectVideo(imgData, model, canvas);
-          }
 
           if (capturedLen.current >= 20) {
             setCapturedImages((prevImages) => [
@@ -191,19 +169,20 @@ export const LivePage: React.FC = () => {
         clearInterval(interval);
 
         const dataURL = canvas.toDataURL('image/png');
-        const {geolocation} = navigator;
+        const { geolocation } = navigator;
 
         // 현재 위치
-        geolocation.getCurrentPosition((params) => { 
-          const location = {latitude : params.coords.latitude, longitude : params.coords.longitude};
-          localStorage.setItem('location', JSON.stringify(location))
+        geolocation.getCurrentPosition((params) => {
+          const location = {
+            latitude: params.coords.latitude,
+            longitude: params.coords.longitude,
+          };
+          localStorage.setItem('location', JSON.stringify(location));
         });
 
-        if(model.net)
-        model.net.dispose();
+        if (model.net) model.net.dispose();
 
         // 바로 페이지를 넘기면서 이미지를 넘긴다.
-        // navigate(`/camera/check?image=${encodeURIComponent(dataURL)}`);
         navigate(`/camera/check`, {
           state: { image: dataURL, autoSave: capturedImages },
         });
@@ -213,11 +192,9 @@ export const LivePage: React.FC = () => {
 
   // 닫기 버튼 이전 페이지로 돌아간다.
   const closeBtnClick = () => {
-    if(model.net)
-      model.net.dispose();
+    if (model.net) model.net.dispose();
 
-    navigate('/')
-
+    navigate('/');
   };
 
   return (
@@ -229,9 +206,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        // onPlay={() => {
-        //   detectVideo(videoRef.current!, model, canvasRef.current!);
-        // }}
+        onPlay={() => {
+          detectVideo(videoRef.current!, model, canvasRef.current!);
+        }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}

@@ -47,6 +47,15 @@ export const InputButtonDisabled = styled.button`
     font-family: 'BMJUA';
     font-size: x-large;
 `
+
+export const InputBoxSmall = styled.input`
+    width: 70%;
+    border-radius: 5px;
+    background-color: #F3F3F3;
+    height: 50px;
+    padding-left: 15px;
+`
+
 export const InputButtonSmall = styled.button`
     width: 25%;
     height: 50px;

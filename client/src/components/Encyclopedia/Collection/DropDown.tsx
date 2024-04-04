@@ -38,12 +38,10 @@ const DropDown: React.FC<DropDownProps> = ({ depth, userId }) => {
   }, [param])
 
   const filterHandler = () => {
-    console.log(param)
     categoryFilter(
       param,
       userId,
       (res) =>{
-        console.log(res.data)
         if (depth === 1) {
           setItem(res.data.ordo ? [...res.data.ordo] : [])
         } else if (depth === 2) {
@@ -61,7 +59,6 @@ const DropDown: React.FC<DropDownProps> = ({ depth, userId }) => {
   }
 
   const clickHandler = (item: string) => {
-    console.log(item)
     setCategory(item)
     let key = ''
     if (depth === 1) {
@@ -76,7 +73,6 @@ const DropDown: React.FC<DropDownProps> = ({ depth, userId }) => {
       key = 'species';
       
     }
-    console.log(item)
     setParam({...param, [key]: item})
   }
 

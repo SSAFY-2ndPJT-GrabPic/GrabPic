@@ -17,6 +17,7 @@ public class InfoDTO {
     private String email;
     private String nickname;
     private String name;
+    private String provider;
     private LocalDate birth;
     private String gender;
     private String profileImage;
