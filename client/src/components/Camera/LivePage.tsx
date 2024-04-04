@@ -57,39 +57,33 @@ export const LivePage: React.FC = () => {
 
     webCam.open(currentVideoRef, videoWidth, videoHeight,selectedCameraIndex);
     
-
-    return() => {
-      webCam.close(currentVideoRef);
-    }
-  },[selectedCameraIndex])
-
-  useEffect(() => {
-
     setLoading({ loading: true, progress: 0 });
     // webCam
     
     // 모델 불러오기
-    loadModel();
+    if(!model.net)
+      loadModel();
 
     // 0.1초 간격 저장.
     autoSave();
 
     // webCam 닫는다.
     return () => {
+      webCam.close(currentVideoRef);
       clearInterval(interval);
 
       // 메모리 해제
       if (model.net) model.net.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedCameraIndex]);
 
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
-    // if (modelLoaded) {
-    //   detectVideo(videoRef.current!, model, canvasRef.current!);
-    // }
+    if (modelLoaded) {
+      detectVideo(videoRef.current!, model, canvasRef.current!);
+    }
   }, [model, modelLoaded, videoRef]);
 
 
