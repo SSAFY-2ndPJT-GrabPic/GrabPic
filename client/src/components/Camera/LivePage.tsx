@@ -252,7 +252,7 @@ export const LivePage: React.FC = () => {
 
   const minusClick = () => {
     if(zoom > 1){
-      setZoom(zoom + 1);
+      setZoom(zoom - 1);
     }
   }
 
