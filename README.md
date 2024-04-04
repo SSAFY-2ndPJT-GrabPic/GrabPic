@@ -306,10 +306,10 @@
   </tr>
   <tr>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/itemLabel.gif'>
     </td>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/itemSep.gif'>
     </td>
   </tr>
 </table>
@@ -357,10 +357,10 @@
   </tr>
   <tr>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/mapCollectLoc.gif'>
     </td>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/mapUserLoc.gif'>
     </td>
   </tr>
 </table>
@@ -379,13 +379,13 @@
   </tr>
   <tr>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/communSub.gif'>
     </td>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/commuGuestBook.gif'>
     </td>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/commuGallery.gif'>
     </td>
   </tr>
 </table>
