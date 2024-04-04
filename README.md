@@ -229,7 +229,7 @@
   <tr>
     <td width="120px" height="60px"></td>
     <td width="120px" height="60px">보간 동영상 제공</td>
-    <td width="700" height="60px">사용자가 촬영한 사진들을 이용하여 보간 처리를 거친 동영상을 생성, 촬영한 순간들을 연속적으로 보여주어 생생한 경험을 제공합니다.</td>
+    <td width="700" height="60px">사용자가 촬영한 사진들을 이용하여 AI 기반 프레임 보간 처리를 거친 동영상을 생성합니다. 사용자에게 촬영한 순간들을 연속적으로 보여줌으로써 생생한 경험을 제공합니다.</td>
   </tr>
   <tr>
     <td width="120px" height="60px"><b>지도</b></td>
@@ -330,16 +330,16 @@
   </tr>
   <tr>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/encyRegist.gif'>
     </td>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/encyChart.gif'>
     </td>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/encyGrid.gif'>
     </td>
     <td width="240px" height="400px">
-      움짤 넣을 곳
+      <img src='README_image/encyAIVideo.gif'>
     </td>
   </tr>
 </table>
