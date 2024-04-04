@@ -29,7 +29,6 @@ public class UserController {
     // 회원가입 API 수정 필요
     @PostMapping("/join")
     public ResponseEntity<?> joinProcess(@RequestBody JoinDTO joinDTO) {
-        System.out.println("CONTROLLER : " + joinDTO.toString());
         try {
             boolean result = userService.joinProcess(joinDTO);
             if(result) {
@@ -84,7 +83,6 @@ public class UserController {
     // access Token 재발급 API
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("만료테스트");
         Cookie[] cookies = request.getCookies();
         try {
             String answer = userService.reissue(cookies);
@@ -210,12 +208,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    //테스트용 코드
-    //    @GetMapping("/getinfo")
-//    public ResponseEntity<?> getHeader(@RequestHeader("access") String accessToken) {
-//        System.out.println("받아온 토큰 : " + accessToken);
-//
-//        LoginDTO dto = userService.getInfo(accessToken);
-//        return ResponseEntity.status(HttpStatus.OK).body(dto);
-//    }
 }

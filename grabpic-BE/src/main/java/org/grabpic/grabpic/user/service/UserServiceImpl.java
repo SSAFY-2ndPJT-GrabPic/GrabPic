@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
 
         // 2차검증
         if (isExist) {
-            System.out.println("이미 존재하는 휴먼");
             return false;
         }
 
@@ -71,7 +70,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean changePassword(String password, String token, HttpServletResponse response) throws IOException {
-        System.out.println("비밀번호 변경요청 : " + password);
         String custom = password.substring(1, password.length() - 1);
         try {
             jwtUtil.isExpired(token);
@@ -83,7 +81,6 @@ public class UserServiceImpl implements UserService {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
-        System.out.println("이메일 확인 : " + jwtUtil.getEmail(token));
         UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         user.setPassword(bCryptPasswordEncoder.encode(custom));
         userRepository.save(user);

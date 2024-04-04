@@ -43,7 +43,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         if (role.equals("ROLE_VALIDATE")) {
-            System.out.println("탈퇴한");
             response.setStatus(205);
             response.sendRedirect("https://j10d104.p.ssafy.io/login");
             return;

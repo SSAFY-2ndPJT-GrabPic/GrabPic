@@ -20,11 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         //DB에서 조회
         UserEntity userData = userRepository.findByEmail(username);
-        System.out.println("혹시 여기로 오니 ?");
         if (userData != null) {
-
-            System.out.println("유저 정보 있음" + userData.toString());
-
             //UserDetails에 담아서 return하면 AutneticationManager가 검증 함
             return new CustomUserDetails(userData);
         }

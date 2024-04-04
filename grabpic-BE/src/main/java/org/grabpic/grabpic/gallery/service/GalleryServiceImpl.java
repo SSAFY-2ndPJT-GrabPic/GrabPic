@@ -89,10 +89,5 @@ public class GalleryServiceImpl implements GalleryService {
         return  galleryPostDTO;
     }
 
-    @Override
-    public List<EncyLogCountDTO> galleryTest() {
-        Pageable logPage = PageRequest.of(0, 5);
-        List<EncyLogCountDTO> logList = galleryLogRepository.countLog(2L, logPage);
-        return logList;
-    }
+
 }
