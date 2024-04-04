@@ -13,6 +13,9 @@ import { isLoadingState } from '../../recoil/atoms/SettingState';
 import { detectVideo } from './Ai/Detect';
 // import { detect, detectVideo } from './Ai/Detect';
 
+import plusUrl from '../../assets/Map/plus.png'
+import minusUrl from '../../assets/Map/minus.png'
+
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
   const [zoom, setZoom] = useState<number>(2);
@@ -62,6 +65,7 @@ export const LivePage: React.FC = () => {
     return () => {
       clearInterval(interval2);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[zoom])
 
   // webCam을 가져와서 오픈한다.
@@ -76,6 +80,7 @@ export const LivePage: React.FC = () => {
     // webCam 닫는다.
     return () => {
       clearInterval(interval);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       webCam.close(videoRef.current);
 
       // 메모리 해제
@@ -90,13 +95,8 @@ export const LivePage: React.FC = () => {
       // detectVideo(videoRef.current!, model, canvasRef.current!);
       test();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model, modelLoaded]);
-
-  // const modelDetect = () => {
-  //   interval2 = setInterval(() => {
-  //     detect(videoRef.current!,model,canvasRef.current!)
-  //   },100)
-  // }
 
   const loadModel = () => {
     setLoading({ loading: true, progress: 0 });
@@ -244,19 +244,29 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
-  const zoomChange = async (e:number) => {
-    setZoom(e);
+  const plusClick = () => {
+    if(zoom < 5){
+      setZoom(zoom + 1);
+    }
+  }
+
+  const minusClick = () => {
+    if(zoom > 1){
+      setZoom(zoom + 1);
+    }
   }
 
   return (
     <>
-      <L.ZoomInput
-        type="range"
-        min="1"
-        max="5"
-        value={zoom}
-        onChange={(e) => zoomChange(parseInt(e.target.value))}
-      />
+      <L.ZoomBtnContainer>
+        <L.ZoomBtn onClick={plusClick}>
+          <L.ZoomImg src={plusUrl} alt="확대" />
+        </L.ZoomBtn>
+        <L.ZoomBtn onClick={minusClick}>
+          <L.ZoomImg src={minusUrl} alt="축소" />
+        </L.ZoomBtn>
+      </L.ZoomBtnContainer>
+
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
