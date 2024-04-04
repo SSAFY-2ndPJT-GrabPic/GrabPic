@@ -26,8 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println("우리집왔나");
-        System.out.println(oAuth2User.getAttributes());
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
@@ -40,7 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
             user = loginAndJoin(oAuth2Response);
         } else {
-            System.out.println("망함 큰일남 어디서오는거임;;");
+
             return null;
         }
 
@@ -52,7 +50,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private UserEntity loginAndJoin(OAuth2Response oAuth2Response) {
         String email = oAuth2Response.getEmail();
-        System.out.println("이메일 추출 확인 " + email);
         UserEntity user = userRepository.findByEmail(email);
         //소셜로그인은 되었지만, 우리 사이트에 회원등록이 안된 상태 전달
         if( user == null) {

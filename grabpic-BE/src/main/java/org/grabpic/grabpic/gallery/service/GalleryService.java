@@ -13,5 +13,5 @@ public interface GalleryService {
     public void GalleryLogAdd(String token, long encyId);
     public HashSet<GalleryPostDTO> recommendGalleryList(String token, int page, int limit);
 
-    public List<EncyLogCountDTO> galleryTest();
+
 }
