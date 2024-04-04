@@ -17,6 +17,7 @@ export const LivePage: React.FC = () => {
   const navigate = useNavigate();
   const [zoom, setZoom] = useState<number>(2);
   let interval: string | number | NodeJS.Timeout | undefined;
+  let interval2: string | number | NodeJS.Timeout | undefined;
 
   // 로딩
   const setLoading = useSetRecoilState(isLoadingState);
@@ -57,9 +58,9 @@ export const LivePage: React.FC = () => {
     webCam.open(currentVideoRef, videoWidth, videoHeight, zoom);
 
     // autoSave();
-
+      test();
     return () => {
-      clearInterval(interval);
+      clearInterval(interval2);
     }
   },[zoom])
 
@@ -87,7 +88,7 @@ export const LivePage: React.FC = () => {
   useEffect(() => {
     if (modelLoaded) {
       // detectVideo(videoRef.current!, model, canvasRef.current!);
-      autoSave();
+      test();
     }
   }, [model, modelLoaded]);
 
@@ -129,6 +130,37 @@ export const LivePage: React.FC = () => {
     });
   };
 
+  const test = () => {
+    interval = setInterval(async () => {
+      if (videoRef.current && videoRef.current.videoWidth > 0) {
+        // canvas 생성.
+        const canvas = document.createElement('canvas');
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
+        const context = canvas.getContext('2d');
+
+        // canvas를 생성하였다면
+        if (context) {
+          // 그린다.
+          context.drawImage(
+            videoRef.current,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+
+          if(modelLoaded){
+            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
+            await detectVideo(imgData, model, canvasRef.current!);
+          }
+
+          
+        }
+      }
+    }, 300);
+  }
+
   const autoSave = () => {
     interval = setInterval(async () => {
       if (videoRef.current && videoRef.current.videoWidth > 0) {
@@ -149,11 +181,6 @@ export const LivePage: React.FC = () => {
             canvas.height
           );
           const dataURL = canvas.toDataURL('image/jpeg');
-          
-          if(modelLoaded){
-            const imgData = context.getImageData(0,0,canvas.width,canvas.height);
-            detectVideo(imgData, model, canvas);
-          }
 
           if (capturedLen.current >= 20) {
             setCapturedImages((prevImages) => [
