@@ -23,3 +23,9 @@ export const CameraCanvas = styled.canvas`
   top: 0;
   left: 0;
 `
+
+export const ZoomInput = styled.input`
+  z-index: 3;
+  position: fixed;
+  top: 0;
+`

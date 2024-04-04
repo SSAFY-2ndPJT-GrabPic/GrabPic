@@ -14,6 +14,7 @@ import { detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
+  const [zoom, setZoom] = useState<number>(2);
 
   let interval: string | number | NodeJS.Timeout | undefined;
 
@@ -54,13 +55,12 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight);
-    
+    webCam.open(currentVideoRef, videoWidth, videoHeight, zoom);
+
     // webCam
-    
+
     // 모델 불러오기
-    if(!model.net)
-      loadModel();
+    if (!model.net) loadModel();
 
     // 0.1초 간격 저장.
     autoSave();
@@ -76,7 +76,6 @@ export const LivePage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
     if (modelLoaded) {
@@ -84,17 +83,19 @@ export const LivePage: React.FC = () => {
     }
   }, [model, modelLoaded]);
 
-
   const loadModel = () => {
     setLoading({ loading: true, progress: 0 });
-    tf.setBackend('webgl')
+    tf.setBackend('webgl');
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`final_animal_web_model/model.json`, {
-        onProgress: (val) => {
-          setLoading({ loading: true, progress: val });
-        },
-      });
+      const yolo = await tf.loadGraphModel(
+        `final_animal_web_model/model.json`,
+        {
+          onProgress: (val) => {
+            setLoading({ loading: true, progress: val });
+          },
+        }
+      );
 
       const dummyInput = tf.ones(yolo.inputs[0].shape as number[]);
       const warmupResults = yolo.execute(dummyInput);
@@ -197,8 +198,19 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
+  const zoomChange = (e:number) => {
+    setZoom(e);
+  }
+
   return (
     <>
+      <L.ZoomInput
+        type="range"
+        min="1"
+        max="10"
+        value={zoom}
+        onChange={(e) => zoomChange(parseInt(e.target.value))}
+      />
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>

@@ -2,7 +2,8 @@ export class WebCam {
   open = async (
     videoRef: HTMLVideoElement | null,
     videoWidth: number,
-    videoHeight: number
+    videoHeight: number,
+    zoom:number
   ) => {
     if (
       navigator.mediaDevices &&
@@ -25,7 +26,7 @@ export class WebCam {
           height: videoWidth,
           deviceId: { exact: deviceId },
           zoom: true,
-          advanced: [{ zoom: 5 }],
+          advanced: [{ zoom: zoom }],
           frameRate: {
             ideal: 60,
             min: 30,
