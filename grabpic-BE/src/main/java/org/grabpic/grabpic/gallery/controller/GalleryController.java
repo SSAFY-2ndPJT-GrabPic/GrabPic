@@ -47,8 +47,4 @@ public class GalleryController {
         }
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> galleryTest() {
-        return ResponseEntity.status(HttpStatus.OK).body(galleryService.galleryTest());
-    }
 }

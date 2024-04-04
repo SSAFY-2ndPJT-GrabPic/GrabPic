@@ -25,7 +25,6 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        System.out.println(request.getHeader("access"));
         //request에서 access 헤더를 찾음
         String accessToken = request.getHeader("access");
         String refreshToken = request.getHeader("refresh");
@@ -47,14 +46,11 @@ public class JWTFilter extends OncePerRequestFilter {
         //access 헤더 검증
         if ( accessToken == null ) {
             setContext(null, null);
-            System.out.println("token null");
             filterChain.doFilter(request, response);
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
-        System.out.println("access now");
-        System.out.println("accessToken 확인용 : " + accessToken );
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
         try {
             jwtUtil.isExpired(accessToken);
