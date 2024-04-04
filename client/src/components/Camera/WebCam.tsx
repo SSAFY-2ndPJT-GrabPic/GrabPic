@@ -21,8 +21,8 @@ export class WebCam {
       const info = {
         video: {
           facingMode: 'environment',
-          width: videoWidth,
-          height: videoHeight,
+          width: videoHeight,
+          height: videoWidth,
           deviceId: { exact: deviceId },
           zoom: true,
           advanced: [{ zoom: 5 }],
