@@ -47,7 +47,7 @@ export const ZoomBtnContainer = styled.div`
   width:36px;
   height:80px;
   overflow:hidden;
-  z-index:1;
+  z-index:3;
   background-color:#f5f5f5;
   border:1px solid #919191;
   border-radius:5px;
@@ -61,6 +61,7 @@ export const ZoomBtn = styled.button`
   width:36px;
   height:40px;
   text-align:center;
+  z-index:4;
 
   &:first-child {
     border-bottom: 1px solid #bfbfbf;
