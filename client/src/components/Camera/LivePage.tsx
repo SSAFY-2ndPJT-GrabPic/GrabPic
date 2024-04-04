@@ -42,6 +42,7 @@ export const LivePage: React.FC = () => {
   const [selectedCameraIndex, setSelectedCameraIndex] = useState<number>(0);
 
   useEffect(() => {
+    console.log(selectedCameraIndex);
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
 
@@ -204,6 +205,7 @@ export const LivePage: React.FC = () => {
   };
 
   const cameraChange = (e : number) =>{
+    console.log(e);
     setSelectedCameraIndex(e);
   }
 
