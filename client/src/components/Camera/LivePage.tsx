@@ -206,9 +206,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        // onPlay={() => {
-        //   detectVideo(videoRef.current!, model, canvasRef.current!);
-        // }}
+        onPlay={() => {
+          detectVideo(videoRef.current!, model, canvasRef.current!);
+        }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
