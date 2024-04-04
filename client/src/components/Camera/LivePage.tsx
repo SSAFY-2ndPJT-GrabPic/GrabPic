@@ -10,12 +10,13 @@ import CloseIconUrl from '../../assets/icon/closeX2.png';
 
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
-import { detectVideo } from './Ai/Detect';
+// import { detect, detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
-
+  const [zoom, setZoom] = useState<number>(2);
   let interval: string | number | NodeJS.Timeout | undefined;
+  let interval2: string | number | NodeJS.Timeout | undefined;
 
   // 로딩
   const setLoading = useSetRecoilState(isLoadingState);
@@ -40,10 +41,8 @@ export const LivePage: React.FC = () => {
   // 객체 틀 박스
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // webCam을 가져와서 오픈한다.
+  const webCam = new WebCam();
   useEffect(() => {
-    
-    const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
 
     const videoWidth = Math.max(
@@ -55,7 +54,13 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight, 2);
+    webCam.open(currentVideoRef, videoWidth, videoHeight, zoom);
+
+  },[zoom])
+
+  // webCam을 가져와서 오픈한다.
+  useEffect(() => {
+    
     // 모델 불러오기
     if (!model.net) loadModel();
 
@@ -65,7 +70,8 @@ export const LivePage: React.FC = () => {
     // webCam 닫는다.
     return () => {
       clearInterval(interval);
-      webCam.close(currentVideoRef);
+      clearInterval(interval2);
+      webCam.close(videoRef.current);
 
       // 메모리 해제
       if (model.net) model.net.dispose();
@@ -75,12 +81,16 @@ export const LivePage: React.FC = () => {
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
-    // if(videoRef.current)
-    //   console.log(videoRef.current.srcObject);
-    if (modelLoaded) {
-      detectVideo(videoRef.current!, model, canvasRef.current!);
-    }
+    // if (modelLoaded) {
+    //   detectVideo(videoRef.current!, model, canvasRef.current!);
+    // }
   }, [model, modelLoaded]);
+
+  // const modelDetect = () => {
+  //   interval2 = setInterval(() => {
+  //     detect(videoRef.current!,model,canvasRef.current!)
+  //   },100)
+  // }
 
   const loadModel = () => {
     setLoading({ loading: true, progress: 0 });
@@ -197,9 +207,19 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
+  const zoomChange = async (e:number) => {
+    setZoom(e);
+  }
 
   return (
     <>
+      <L.ZoomInput
+        type="range"
+        min="0"
+        max="7"
+        value={zoom}
+        onChange={(e) => zoomChange(parseInt(e.target.value))}
+      />
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
@@ -207,9 +227,9 @@ export const LivePage: React.FC = () => {
         autoPlay
         muted
         ref={videoRef}
-        onPlay={() => {
-          detectVideo(videoRef.current!, model, canvasRef.current!);
-        }}
+        // onPlay={() => {
+        //   detectVideo(videoRef.current!, model, canvasRef.current!);
+        // }}
       />
       <L.CameraCanvas
         width={model.inputShape[1]}
