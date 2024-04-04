@@ -1,11 +1,17 @@
 
 export class WebCam {
-  open = (videoRef: HTMLVideoElement | null, videoWidth : number, videoHeight:number) => {
+  open = async (videoRef: HTMLVideoElement | null, videoWidth : number, videoHeight:number) => {
     if (
       navigator.mediaDevices &&
       navigator.mediaDevices.getUserMedia &&
       videoRef
     ) {
+
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      console.log(devices);
+      const cameras = devices.filter(device => device.kind === "videoinput")
+
+      console.log(cameras);
 
       navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: videoHeight, height:videoWidth,
