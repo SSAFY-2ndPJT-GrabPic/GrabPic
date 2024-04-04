@@ -22,8 +22,8 @@
 - [서비스 실사용 화면](#-서비스-실사용-화면)
 
 <br/>
+<br/>
 
-<div id='1'></div>
 
 ## 📃 서비스 개요
 
@@ -35,9 +35,10 @@
 지도를 통해 주변에서 수집된 동식물 분포도 확인은 물론이고,
 개체 상세정보를 조회하면 촬영한 사진을 기반으로 생성된 AI 영상도 제공된답니다.
 ```
+
+<br/>
 <br/>
 
-<div id='2'></div>
 
 ## 👨‍👩‍👧‍👦 팀원 소개
 
@@ -90,16 +91,18 @@
     </tr>
     <tr>
       <td align='center'>
-        지도 <br/>
+        PM <br/>
+        지도 UI/UX <br/>
         AI 데이터셋 수집
       </td>
       <td align='center'>
-        유저 <br/>
-        AI 카메라
+        AI 카메라 UI/UX <br/>
+        회원 관리 UI/UX <br/>
       </td>
       <td align='center'>
-        도감 <br/>
-        갤러리
+        차트 UI/UX <br/>
+        도감 UI/UX <br/>
+        SNS UI/UX
       </td>
       <td align='center'>
         AI 프레임 보간 <br/>
@@ -107,10 +110,13 @@
         차트 API
       </td>
       <td align='center'>
-        RestAPI
+        회원 관리 API <br/>
+        도감 API <br/>
+        지도 API <br/>
+        SNS API
       </td>
       <td align='center'>
-        Yolo v8 파인튜닝 <br/>
+        AI 모델 딥러닝 <br/>
         오토 라벨링 <br/>
         AI 데이터셋 수집
       </td>
@@ -119,8 +125,8 @@
 </div>
 
 <br/>
+<br/>
 
-<div id='3'></div>
 
 ## 🛠 기술 스택
 <div align=middle>
@@ -183,9 +189,9 @@
     <img src="https://img.shields.io/badge/mattermost-0058CC?style=for-the-badge&logo=mattermost&logoColor=white">
   </div>
 </div>
-<br/>
 
-<div id='4'></div>
+<br/>
+<br/>
 
 ## 💎 주요 기능
 <table>
@@ -212,7 +218,8 @@
   <tr>
     <td width="120px" height="60px"></td>
     <td width="120px" height="60px">차트</td>
-    <td width="700" height="60px">사용자가 촬영한 생물들을 종류별로 분류하여, Cytoscape 라이브러리 기반의 차트 형태로 표현함으로써 생물의 다양성을 시각적으로 보여줍니다.</td>
+    <td width="700" height="60px">사용자가 촬영한 생물들을 종류별로 분류하여, 차트 형태로 표현함으로써 생물의 다양성을 시각적으로 보여줍니다. <br/>
+    또한 차트의 node를 클릭하면 해당 node의 하위 개체만 필터링하여 확인 가능합니다.</td>
   </tr>
   <tr>
     <td width="120px" height="60px"></td>
@@ -223,6 +230,16 @@
     <td width="120px" height="60px"></td>
     <td width="120px" height="60px">보간 동영상 제공</td>
     <td width="700" height="60px">사용자가 촬영한 사진들을 이용하여 보간 처리를 거친 동영상을 생성, 촬영한 순간들을 연속적으로 보여주어 생생한 경험을 제공합니다.</td>
+  </tr>
+  <tr>
+    <td width="120px" height="60px"><b>지도</b></td>
+    <td width="120px" height="60px">수집 위치 표시</td>
+    <td width="700" height="60px">실제 수집한 위치를 마커로 표시하며, 수집 개체에 대한 정보를 희귀도순 및 수집일자 순의 정렬된 리스트로 제공합니다.</td>
+  </tr>
+  <tr>
+    <td width="120px" height="60px"></td>
+    <td width="120px" height="60px">사용자 위치 추적</td>
+    <td width="700" height="60px">사용자의 실제 위치를 기반으로 주변에서 수집된 개체의 분포를 확인할 수 있습니다.</td>
   </tr>
   <tr>
     <td width="120px" height="60px"><b>커뮤니티</b></td>
@@ -243,8 +260,8 @@
 
 
 <br/>
+<br/>
 
-<div id='5'></div>
 
 ## 📚 명세서
 
@@ -260,22 +277,22 @@
 - <a href='https://indecisive-radius-a20.notion.site/32c5b997a9b84f4d8c64a06274f3cc54?pvs=4'>시퀀스 다이어그램</a>
 
 <br/>
+<br/>
 
-<div id='6'></div>
 
 ## 💡 시스템 아키텍처
 <img src="README_image/architecture.png">
 
 <br/>
+<br/>
 
-<div id='7'></div>
 
 ## 📐 ERD
 <img src="README_image/ERD.png">
 
 <br/>
+<br/>
 
-<div id='8'></div>
 
 ## 💝 서비스 실사용 화면
 
@@ -335,8 +352,8 @@
 
 <table>
   <tr>
-    <td width="240px" height="60px">기능1</td>
-    <td width="240px" height="60px">기능2</td>
+    <td width="240px" height="60px">수집 위치 표시</td>
+    <td width="240px" height="60px">사용자 위치 추적</td>
   </tr>
   <tr>
     <td width="240px" height="400px">
