@@ -10,7 +10,7 @@ import CloseIconUrl from '../../assets/icon/closeX2.png';
 
 import { useSetRecoilState } from 'recoil';
 import { isLoadingState } from '../../recoil/atoms/SettingState';
-import { detect } from './Ai/Detect';
+import { detectVideo } from './Ai/Detect';
 
 export const LivePage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +39,6 @@ export const LivePage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   // 객체 틀 박스
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [selectedCameraIndex, setSelectedCameraIndex] = useState<number>(0);
 
   // webCam을 가져와서 오픈한다.
   useEffect(() => {
@@ -55,7 +54,7 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight,selectedCameraIndex);
+    webCam.open(currentVideoRef, videoWidth, videoHeight);
     
     // webCam
     
@@ -75,31 +74,15 @@ export const LivePage: React.FC = () => {
       if (model.net) model.net.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCameraIndex]);
+  }, []);
 
 
   // 모델을 불러오면 값이 변해 함수를 재 호출해준다.
   useEffect(() => {
     if (modelLoaded) {
-      const detectFrame = async (): Promise<void> => {
-        if (videoRef.current && canvasRef.current && videoRef.current.videoWidth === 0 && videoRef.current.srcObject === null) {
-            const ctx = canvasRef.current.getContext("2d");
-
-            if(!ctx)    return;
-
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 캔버스 지우기
-            return; // 소스가 닫혔을 때 처리
-        }
-        if(videoRef.current && canvasRef.current){
-          await detect(videoRef.current, model, canvasRef.current, () => {
-            requestAnimationFrame(detectFrame); // 다른 프레임 가져오기
-        });
-        }
-    };
-
-    detectFrame(); // 모든 프레임을 감지하도록 초기화
+      detectVideo(videoRef.current!, model, canvasRef.current!);
     }
-  }, [model, modelLoaded, videoRef]);
+  }, [model, modelLoaded]);
 
 
   const loadModel = () => {
@@ -107,7 +90,7 @@ export const LivePage: React.FC = () => {
     tf.setBackend('webgl')
     // AI 모델 불러오기
     tf.ready().then(async () => {
-      const yolo = await tf.loadGraphModel(`animal_n_web_model/model.json`, {
+      const yolo = await tf.loadGraphModel(`final_animal_web_model/model.json`, {
         onProgress: (val) => {
           setLoading({ loading: true, progress: val });
         },
@@ -214,16 +197,8 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
-  const cameraChange = () =>{
-    if(selectedCameraIndex === 0)
-      setSelectedCameraIndex(1);
-    else  
-      setSelectedCameraIndex(0);
-  }
-
   return (
     <>
-      <L.TestButton onClick={cameraChange}>test1</L.TestButton>
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>
