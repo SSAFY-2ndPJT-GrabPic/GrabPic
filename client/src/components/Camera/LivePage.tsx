@@ -39,12 +39,9 @@ export const LivePage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   // 객체 틀 박스
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [selectedCameraIndex, setSelectedCameraIndex] = useState<number>(0);
 
-  // webCam을 가져와서 오픈한다.
   useEffect(() => {
-
-    setLoading({ loading: true, progress: 0 });
-    // webCam
     const webCam = new WebCam();
     const currentVideoRef = videoRef.current;
 
@@ -57,8 +54,19 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight);
+    webCam.open(currentVideoRef, videoWidth, videoHeight,selectedCameraIndex);
 
+    return() => {
+      webCam.close(currentVideoRef);
+    }
+  },[selectedCameraIndex])
+
+  // webCam을 가져와서 오픈한다.
+  useEffect(() => {
+
+    setLoading({ loading: true, progress: 0 });
+    // webCam
+    
     // 모델 불러오기
     loadModel();
 
@@ -68,7 +76,6 @@ export const LivePage: React.FC = () => {
     // webCam 닫는다.
     return () => {
       clearInterval(interval);
-      webCam.close(currentVideoRef);
 
       // 메모리 해제
       if (model.net) model.net.dispose();
@@ -196,8 +203,14 @@ export const LivePage: React.FC = () => {
     navigate('/');
   };
 
+  const cameraChange = (e : number) =>{
+    setSelectedCameraIndex(e);
+  }
+
   return (
     <>
+      <button onClick={() => {cameraChange(0)}}>test1</button>
+      <button onClick={() => {cameraChange(1)}}>test2</button>
       <L.CameraExitBtn onClick={closeBtnClick}>
         <img src={CloseIconUrl} />
       </L.CameraExitBtn>

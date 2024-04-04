@@ -1,6 +1,6 @@
 
 export class WebCam {
-  open = async (videoRef: HTMLVideoElement | null, videoWidth : number, videoHeight:number) => {
+  open = async (videoRef: HTMLVideoElement | null, videoWidth : number, videoHeight:number, selectedCameraIndex:number) => {
     if (
       navigator.mediaDevices &&
       navigator.mediaDevices.getUserMedia &&
@@ -10,8 +10,8 @@ export class WebCam {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const cameras = devices.filter(device => device.kind === "videoinput" && device.label.includes("back"));
 
-      console.log(cameras[1].deviceId);
-      const deviceId = cameras[1].deviceId
+      console.log(cameras[selectedCameraIndex].deviceId);
+      const deviceId = cameras[selectedCameraIndex].deviceId
       navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: videoHeight, height:videoWidth,deviceId: { exact: deviceId},
         // video: { facingMode: "environment", width: videoWidth, height:videoHeight,
