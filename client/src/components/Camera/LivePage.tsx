@@ -55,7 +55,7 @@ export const LivePage: React.FC = () => {
       window.innerHeight || 0
     );
 
-    webCam.open(currentVideoRef, videoWidth, videoHeight, 4);
+    webCam.open(currentVideoRef, videoWidth, videoHeight, 2);
     // 모델 불러오기
     if (!model.net) loadModel();
 
